@@ -151,7 +151,7 @@ namespace HREngine.Bots
         {
             get
             {
-                return "{" + zonepos.ToString() + "} " + " (" + Angr + "/" + Hp + ") " + handcard.card.nameCN + "\n " + 
+                return "{" + zonepos.ToString() + "} " + " (" + Angr + "/" + Hp + ") " + handcard.card.nameCN + "\n " +
                     (frozen ? "[冻结]" : "") + (!Ready || cantAttack ? "[无法攻击]" : "[可攻击]") + (windfury ? "[风怒]" : "") + (taunt ? "[嘲讽]" : "")
                     + (divineshild ? "[圣盾]" : "") + (stealth ? "[隐身]" : "") + (immune ? "[免疫]" : "") + (untouchable ? "[无法被攻击]" : "") + (lifesteal ? "[吸血]" : "")
                      + (dormant != 0 ? "[休眠(" + dormant.ToString() + ")]" : "") + (reborn ? "[复生]" : "") + (handcard.card.Elusive ? "[扰魔]" : "") + (poisonous ? "[剧毒]" : "");
@@ -355,7 +355,7 @@ namespace HREngine.Bots
             this.rush = m.rush;
             this.hChoice = m.hChoice;
             this.dormant = m.dormant;
-            if ((m.charge > 0 || m.rush > 0) && !m.frozen && !m.silenced && m.dormant == 0 ) this.Ready = true;
+            if ((m.charge > 0 || m.rush > 0) && !m.frozen && !m.silenced && m.dormant == 0) this.Ready = true;
             else this.Ready = false;
             if (m.rush > 0 && m.playedThisTurn) this.cantAttackHeroes = true;
             this.poisonous = m.poisonous;
@@ -414,23 +414,24 @@ namespace HREngine.Bots
                     if (p.ownHero.armor < dmg || dmg < 0)
                     {
                         p.healOrDamageTimes++;
-                        foreach(Handmanager.Handcard hc in p.owncards)
+                        foreach (Handmanager.Handcard hc in p.owncards)
                         {
-                            if(hc.card.nameCN == CardDB.cardNameCN.血肉巨人 && hc.getManaCost(p) <= 3 && hc.getManaCost(p) > 0) p.evaluatePenality -= 10;
+                            if (hc.card.nameCN == CardDB.cardNameCN.血肉巨人 && hc.getManaCost(p) <= 3 && hc.getManaCost(p) > 0) p.evaluatePenality -= 10;
                         }
                         p.evaluatePenality -= 3;
-                        if(dmg < 0)
+                        if (dmg < 0)
                         {
                             p.healTimes++;
                         }
-                    }else if(p.ownHero.armor >= dmg)
+                    }
+                    else if (p.ownHero.armor >= dmg)
                     {
                         p.evaluatePenality += 5;
                     }
                     if (p.ownWeapon.name == CardDB.cardNameEN.cursedblade) dmg += dmg;
                     if (p.enemyWeapon.name == CardDB.cardNameEN.theimmovableobject)
                     {
-                        if(dmg % 2 ==0) dmg -= (int)(dmg / 2);
+                        if (dmg % 2 == 0) dmg -= (int)(dmg / 2);
                         else dmg -= (int)(dmg / 2) + 1;
                     }
                     if (p.anzOwnAnimatedArmor > 0 && dmg > 0) dmg = 1;
@@ -459,22 +460,22 @@ namespace HREngine.Bots
                         {
                             p.mana = p.ownMaxMana;
                         }
-                        else if(p.ownQuest.maxProgress != 1000)
+                        else if (p.ownQuest.maxProgress != 1000)
                         {
                             p.evaluatePenality -= 10;
                             if (p.owncarddraw > 0) p.evaluatePenality -= 15;
                         }
                     }
                     // 任务进度
-                    if (p.ownQuest != null  && p.ownQuest.maxProgress != 1000 && dmg > 0)
+                    if (p.ownQuest != null && p.ownQuest.maxProgress != 1000 && dmg > 0)
                     {
                         int spellDmg = p.getSpellDamageDamage(3);
                         // 是无证造成的伤害
-                        if(dmg == 5 && (p.ownHero.Hp < 16 && p.enemyMinions.Count > 3 ) )
+                        if (dmg == 5 && (p.ownHero.Hp < 16 && p.enemyMinions.Count > 3))
                         {
-                            foreach(Minion m in p.ownMinions)
+                            foreach (Minion m in p.ownMinions)
                             {
-                                if(m.handcard.card.nameCN == CardDB.cardNameCN.无证药剂师)
+                                if (m.handcard.card.nameCN == CardDB.cardNameCN.无证药剂师)
                                 {
                                     p.evaluatePenality += 70;
                                 }
@@ -528,7 +529,8 @@ namespace HREngine.Bots
                                 }
                                 break;
                         }
-                    }else if(dmg > 0)
+                    }
+                    else if (dmg > 0)
                     {
                         // 任务完成
                         if (Probabilitymaker.Instance.ownGraveyard.ContainsKey(CardDB.cardIDEnum.SW_091))
@@ -536,7 +538,7 @@ namespace HREngine.Bots
                             p.evaluatePenality += dmg * 8;
                         }
                     }
-                    
+
 
 
                 }
@@ -783,37 +785,58 @@ namespace HREngine.Bots
 
             if (own)
             {
+                //我方随从死亡扳机
                 p.tempTrigger.ownMinionsDied++;
+                //我随从死亡数增加
                 p.ownMinionsDied++;
+                //如果随从有嘲讽,则减少我方嘲讽随从数
                 if (this.taunt) p.anzOwnTaunt--;
+                //我方野兽死亡扳机
                 if (this.handcard.card.race == CardDB.Race.PET)
                 {
                     p.tempTrigger.ownBeastDied++;
                 }
+                //我方机械死亡扳机
                 else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
                 {
                     p.tempTrigger.ownMechanicDied++;
                 }
+                //我方鱼人死亡扳机
                 else if (this.handcard.card.race == CardDB.Race.MURLOC)
                 {
                     p.tempTrigger.ownMurlocDied++;
                 }
+                //我方亡灵死亡扳机
+                else if (this.handcard.card.race == CardDB.Race.UNDEAD)
+                {
+                    p.tempTrigger.ownUndeadDied++;
+                }
             }
             else
             {
+                //敌方随从死亡扳机
                 p.tempTrigger.enemyMinionsDied++;
+                //如果随从有嘲讽,则减少敌方嘲讽随从数
                 if (this.taunt) p.anzEnemyTaunt--;
+                //敌方野兽死亡扳机
                 if (this.handcard.card.race == CardDB.Race.PET)
                 {
                     p.tempTrigger.enemyBeastDied++;
                 }
+                //敌方机械死亡扳机
                 else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
                 {
                     p.tempTrigger.enemyMechanicDied++;
                 }
+                //敌方鱼人死亡扳机
                 else if (this.handcard.card.race == CardDB.Race.MURLOC)
                 {
                     p.tempTrigger.enemyMurlocDied++;
+                }
+                //敌方亡灵死亡扳机
+                else if (this.handcard.card.race == CardDB.Race.UNDEAD)
+                {
+                    p.tempTrigger.enemyUndeadDied++;
                 }
             }
 
@@ -1019,7 +1042,7 @@ namespace HREngine.Bots
             {
                 // reborns and destoyings----------------------------------------------
                 this.enchs += " " + me.CARDID;
-                
+
                 if (me.CARDID == CardDB.cardIDEnum.EX1_363e || me.CARDID == CardDB.cardIDEnum.EX1_363e2) //BlessingOfWisdom
                 {//智慧祝福
                     if (me.controllerOfCreator == ownPlayerControler)
@@ -1212,7 +1235,7 @@ namespace HREngine.Bots
                     return "己方英雄" + "(" + Hp + ")";
                 else
                     return "敌方英雄" + "(" + Hp + ")";
-            } 
+            }
             else if (handcard.card.type == CardDB.cardtype.MOB)
             {
                 return nameCN.ToString() + "(" + Angr + "," + Hp + ")";

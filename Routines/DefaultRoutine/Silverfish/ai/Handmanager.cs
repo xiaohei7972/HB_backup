@@ -109,21 +109,159 @@ namespace HREngine.Bots
                 this.conditionalList = hc.conditionalList;
             }
 
-            public int getManaCost(Playfield p)  //读取卡牌法力值
+            //读取卡牌法力值
+            public int getManaCost(Playfield p)
             {
-                if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                if (this.enchs.Count > 0)
                 {
-                    return 1000;
+                    foreach (CardDB.cardIDEnum ench in this.enchs)
+                    {
+                        switch (ench)
+                        {
+                            case CardDB.cardIDEnum.SW_052t4e:
+                            case CardDB.cardIDEnum.EDR_526e:
+                            case CardDB.cardIDEnum.TTN_744e1:
+                            case CardDB.cardIDEnum.EDR_234e2:
+                                return 1000;
+                            case CardDB.cardIDEnum.MAW_014e2:
+                                if (this.position != 1 && this.position != p.owncards.Count)
+                                    return 1000;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    //     // TODO 游戏内无法使用 声光干扰器
+                    //     if (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                    //         return 1000;
+                    //     // TODO 雷弗拉尔，恶念巨蛛
+                    //     if (this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
+                    //     {
+                    //         return 1000;
+                    //     }
+                    //     // TODO 严寒冰封
+                    //     if (this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
+                    //     {
+                    //         return 1000;
+                    //     }
+                    //     // TODO 翡翠厚赠
+                    //     if (this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
+                    //     {
+                    //         return 1000;
+                    //     }
+                    //     // TODO 公诉人梅尔特拉尼克斯
+                    //     if (this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
+                    //     {
+                    //         if (this.position != 1 && this.position != p.owncards.Count)
+                    //             return 1000;
+                    //     }
                 }
+
+                // TODO 游戏内无法使用 声光干扰器
+                // if (this.enchs.Count > 0 && (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e) || this.enchs.Contains(CardDB.cardIDEnum.EDR_526e) || this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1) || this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2)))
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                // {
+                //     return 1000;
+                // }
+                // // TODO 雷弗拉尔，恶念巨蛛
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
+                // {
+                //     return 1000;
+                // }
+                // // TODO 严寒冰封
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
+                // {
+                //     return 1000;
+                // }
+                // // TODO 翡翠厚赠
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
+                // {
+                //     return 1000;
+                // }
+                // // TODO 公诉人梅尔特拉尼克斯
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
+                // {
+                //     if (this.position != 1 || this.position != p.owncards.Count)
+                //         return 1000;
+                // }
                 return this.card.getManaCost(p, this.manacost);
             }
-            public bool canplayCard(Playfield p, bool own) //判定卡牌是否能够使用
+
+            //判定卡牌是否能够使用
+            public bool canplayCard(Playfield p, bool own)
             {
-                // TODO 游戏内无法使用 声光干扰器
-                if(this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                if (this.enchs.Count > 0)
                 {
-                    return false;
+                    foreach (CardDB.cardIDEnum ench in this.enchs)
+                    {
+                        switch (ench)
+                        {
+                            case CardDB.cardIDEnum.SW_052t4e:
+                            case CardDB.cardIDEnum.EDR_526e:
+                            case CardDB.cardIDEnum.TTN_744e1:
+                            case CardDB.cardIDEnum.EDR_234e2:
+                                return false;
+                            case CardDB.cardIDEnum.MAW_014e2:
+                                if (this.position != 1 && this.position != p.owncards.Count)
+                                    return false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    // // TODO 游戏内无法使用 声光干扰器
+                    // if (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                    //     return false;
+                    // // TODO 雷弗拉尔，恶念巨蛛
+                    // if (this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
+                    // {
+                    //     return false;
+                    // }
+                    // // TODO 严寒冰封
+                    // if (this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
+                    // {
+                    //     return false;
+                    // }
+                    // // TODO 翡翠厚赠
+                    // if (this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
+                    // {
+                    //     return false;
+                    // }
+                    // // TODO 公诉人梅尔特拉尼克斯
+                    // if (this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
+                    // {
+                    //     if (this.position != 1 || this.position != p.owncards.Count)
+                    //         return false;
+                    // }
                 }
+
+                // TODO 游戏内无法使用 声光干扰器
+                // if (this.enchs.Count > 0 && (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e) || this.enchs.Contains(CardDB.cardIDEnum.EDR_526e) || this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1) || this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2)))
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
+                // {
+                //     return false;
+                // }
+                // // TODO 雷弗拉尔，恶念巨蛛
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
+                // {
+                //     return false;
+                // }
+                // // TODO 严寒冰封
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
+                // {
+                //     return false;
+                // }
+                // // TODO 翡翠厚赠
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
+                // {
+                //     return false;
+                // }
+                // // TODO 公诉人梅尔特拉尼克斯
+                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
+                // {
+                //     if (this.position != 1 || this.position != p.owncards.Count)
+                //         return false;
+                // }
                 return this.card.canplayCard(p, this.manacost, own);
             }
         }
@@ -184,16 +322,16 @@ namespace HREngine.Bots
             this.anzcards = anzown;
             this.enemyAnzCards = anzenemy;
         }
-        
+
         public void printcards()
         {
             help.logg("Own Handcards: ");
             foreach (Handmanager.Handcard hc in this.handCards)
             {
                 string s = "pos " + hc.position + " " + hc.card.nameCN + "(" + hc.card.Attack + "/" + hc.card.Health + ")" + " " + hc.manacost + " entity " + hc.entity + " " + hc.card.cardIDenum + " " + hc.addattack + " " + hc.addHp + " " + hc.poweredUp;
-                if(hc.enchs.Count > 0)
+                if (hc.enchs.Count > 0)
                 {
-                    foreach(CardDB.cardIDEnum cardIDEnum in hc.enchs)
+                    foreach (CardDB.cardIDEnum cardIDEnum in hc.enchs)
                     {
                         s += " " + cardIDEnum.ToString();
                     }

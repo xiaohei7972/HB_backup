@@ -14,7 +14,7 @@ namespace HREngine.Bots
 {
     public class Silverfish
     {
-        public string versionnumber = "2021.09.13";
+        public string versionnumber = "2025.08.08";
         private bool singleLog = false;
         private string botbehave = "noname";
         private bool needSleep = false;
@@ -225,7 +225,13 @@ namespace HREngine.Bots
                     foreach (string s in deck.CardIds)
                     {
                         var id = CardDB.Instance.cardIdstringToEnum(s);
-                        if (startDeck.ContainsKey(id)) startDeck[id]++;
+                        if (startDeck.ContainsKey(id))
+                        {
+                            startDeck[id]++;
+                            //TODO:在这里进行套牌宇宙的判断
+
+
+                        }
                         else startDeck.Add(id, 1);
                     }
                     break;
@@ -406,7 +412,7 @@ namespace HREngine.Bots
             this.currentMana = TritonHs.CurrentMana;
             this.ownMaxMana = TritonHs.Resources;
             // 后手
-            if(gTurn % 2 == 0)
+            if (gTurn % 2 == 0)
             {
                 this.enemyMaxMana = ownMaxMana;
             }
@@ -530,7 +536,7 @@ namespace HREngine.Bots
                 // 武器计数器
                 var scriptNum1 = weapon.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
                 ownWeapon.scriptNum1 = scriptNum1;
-                Helpfunctions.Instance.ErrorLog("武器计数器"+ scriptNum1);
+                Helpfunctions.Instance.ErrorLog("武器计数器" + scriptNum1);
                 if (!this.ownHero.windfury) this.ownHero.windfury = ownWeapon.windfury;
             }
 
@@ -611,7 +617,7 @@ namespace HREngine.Bots
                 if (zone != Triton.Game.Mapping.TAG_ZONE.DECK && tmpDeck.ContainsKey(idEnum))
                     tmpDeck[idEnum]--;
             }
-            else if (entityId >= 64) //63之后是双方衍生卡
+            else if (entityId >= 64) //TODO:63之后是双方衍生卡
             {
                 if (controller == ownController && zone == Triton.Game.Mapping.TAG_ZONE.DECK)
                 {
@@ -622,6 +628,7 @@ namespace HREngine.Bots
             }
         }
 
+        //更新奥秘、任务、支线任务，后续光环、咒符效果也要在这里写
         private void updateSecret(HSCard card, Entity entity, int controller, string cardId, int entityId)
         {
             if (card.IsSecret)
@@ -656,6 +663,21 @@ namespace HREngine.Bots
                     Questmanager.Instance.updateQuestStuff(cardId, currentQuestProgress, questProgressTotal, true, true);
                 }
             }
+            // else if (entity.GetTag(1749) > 0)
+            // {
+            //     if (controller == ownController)
+            //     {
+            //         int currentQuestProgress = entity.GetTag(GAME_TAG.SIGIL);
+            //     }
+            // }
+            // else if (entity.GetTag(2311) > 0)
+            // {
+            //     if (controller == ownController)
+            //     {
+            //         int currentQuestProgress = entity.GetTag(GAME_TAG.OBJECTIVE );
+            //         int questProgressTotal = entity.GetTag(GAME_TAG.QUEST_PROGRESS_TOTAL);
+            //     }
+            // }
         }
 
         private void updateHero(HSCard card, Entity entity, int controller, int entityId, string cardId)
@@ -917,7 +939,7 @@ namespace HREngine.Bots
                     hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);
                     hc.darkmoon_num = scriptNum1; //得到暗月先知抽牌数
                     hc.SCRIPT_DATA_NUM_1 = scriptNum1;
-                    
+
                     hc.addattack = card.Attack - card.DefATK;
                     if (card.IsWeapon) hc.addHp = card.Durability - card.DefDurability;
                     else hc.addHp = card.Health - card.DefHealth;
@@ -1097,6 +1119,41 @@ namespace HREngine.Bots
             String myVal = "[我方场面] ";
             String handCard = "[我方手牌] ";
             String enemyGuessHandCard = "[敌方剩余卡牌预测] ";
+            // String playedRaceThisTurn = "[本回合使用种族类型]: ";
+            // String playedRacesLastTurn = "[上回合使用种族类型]: ";
+            // String playedSpellSchoolThisTurn = "[本回合使用法术类型]: ";
+            // String playedSpellSchoolLastTurn = "[上回合使用法术类型]: ";
+            // // playedRaceThisTurn +=  "【 ";
+            // foreach (CardDB.Race race in p.playedRacesThisTurn)
+            // {
+            //     playedRaceThisTurn += race.ToString() + " ";
+            // }
+            // // playedRaceThisTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
+            // playedRaceThisTurn += ";";
+
+            // // playedRacesLastTurn +=  "【 ";
+            // foreach (CardDB.Race race in p.playedRacesLastTurn)
+            // {
+            //     playedRacesLastTurn += race.ToString() + " ";
+            // }
+            // // playedRacesLastTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
+            // playedRacesLastTurn += ";";
+
+            // // playedSpellSchoolThisTurn +=  "【 ";
+            // foreach (CardDB.SpellSchool spellSchool in p.playedSpellSchoolThisTurn)
+            // {
+            //     playedSpellSchoolThisTurn += spellSchool.ToString() + " ";
+            // }
+            // // playedSpellSchoolThisTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
+            // playedSpellSchoolThisTurn += ";";
+
+            // // playedSpellSchoolLastTurn +=  "【 ";
+            // foreach (CardDB.SpellSchool spellSchool in p.playedSpellSchoolLastTurn)
+            // {
+            //     playedSpellSchoolLastTurn += spellSchool.ToString() + " ";
+            // }
+            // // playedSpellSchoolLastTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
+            // playedSpellSchoolLastTurn += ";";
 
             normalInfo += "水晶： " + p.mana + " / " + p.ownMaxMana
     + " [我方英雄] " + p.ownHeroName + " （生命: " + p.ownHero.Hp + " + " + p.ownHero.armor
@@ -1111,7 +1168,9 @@ namespace HREngine.Bots
             }
             foreach (Minion m in p.ownMinions)
             {
-                myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ");
+                myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ")
+                 + (m.handcard.card.Titan ? "[泰坦]" + (m.handcard.card.TitanAbilityUsed1 ? " 技能1可以使用" : " 技能1冷却") + (m.handcard.card.TitanAbilityUsed2 ? " 技能2可以使用" : " 技能2冷却") + (m.handcard.card.TitanAbilityUsed3 ? " 技能3可以使用" : " 技能3冷却") : " ");
+                // myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.handcard.card.GetRaceCount() > 0 ? "[第一种族:" + m.handcard.card.GetRaces()[0].ToString() + "]" : "") + (m.handcard.card.GetRaceCount() > 1 ? "[第二种族:" + m.handcard.card.GetRaces()[1].ToString() + "]" : "") + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ");
             }
             foreach (Handmanager.Handcard hc in p.owncards)
             {
@@ -1123,9 +1182,13 @@ namespace HREngine.Bots
                 enemyGuessHandCard += card.nameCN + (item.Value > 1 ? "(" + item.Value + ")" : "") + ";";
             }
 
+            // Helpfunctions.Instance.logg(playedRaceThisTurn);
+            // Helpfunctions.Instance.logg(playedRacesLastTurn);
+            // Helpfunctions.Instance.logg(playedSpellSchoolThisTurn);
+            // Helpfunctions.Instance.logg(playedSpellSchoolLastTurn);
             Helpfunctions.Instance.logg(normalInfo);
             Helpfunctions.Instance.logg("(猜测对手构筑为:" + p.enemyGuessDeck + " 套牌代码：" + Hrtprozis.Instance.enemyDeckCode);
-            Helpfunctions.Instance.logg("预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + "， 加上场攻一共 " + (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr() ) + " )");
+            Helpfunctions.Instance.logg("预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + "， 加上场攻一共 " + (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr()) + " )");
             Helpfunctions.Instance.logg(enemyVal);
             Helpfunctions.Instance.logg(myVal);
             Helpfunctions.Instance.logg(handCard);

@@ -126,7 +126,7 @@ namespace HREngine.Bots
         public int anzOgOwnCThunTaunt = 0;
         public int anzOwnJadeGolem = 0;//青玉魔像
         public int anzEnemyJadeGolem = 0;
-        public int anzOwnElementalsThisTurn = 0;
+        public int anzOwnElementalsThisTurn = 0;  //这回合使用过元素
         public int anzOwnElementalsLastTurn = 0;  //上回合使用过元素
         public int anzEnemyTaunt = 0;
         public int anzOwnTaunt = 0;
@@ -169,15 +169,15 @@ namespace HREngine.Bots
         public int enemyBaronRivendare = 0;
         public int ownBrannBronzebeard = 0;//友方战吼额外触发次数
         public int enemyBrannBronzebeard = 0;//敌方战吼额外触发次数
-        public int ownTurnEndEffectsTriggerTwice = 0;//达卡莱附魔师，回合结束效果会生效两次
-        public int enemyTurnEndEffectsTriggerTwice = 0;
+        public int ownTurnEndEffectsTriggerTwice = 0;//己方达卡莱附魔师，回合结束效果会生效两次
+        public int enemyTurnEndEffectsTriggerTwice = 0; //敌方达卡莱附魔师，回合结束效果会生效两次
         public int ownFandralStaghelm = 0;//范达尔·鹿盔
         public int tempanzOwnCards = 0; //手牌数 地精工兵
         public int tempanzEnemyCards = 0;//手牌数 地精工兵
         public bool isOwnTurn = true; //是我的回合
         public int turnCounter = 0;
-        public bool attacked = false;
-        public int attackFaceHP = 15;
+        public bool attacked = false;// 标记已执行攻击
+        public int attackFaceHP = 15;//打脸血量
         public int ownController = 0;
         public int evaluatePenality = 0;
         public int ruleWeight = 0;
@@ -234,9 +234,12 @@ namespace HREngine.Bots
         public int startedWithbeschwoerungsportal = 0;
         public int myCardsCostLess = 0;
         public int startedWithmyCardsCostLess = 0;
-        public int anzOwnAviana = 0;
-        public int anzOwnScargil = 0;
-        public int anzOwnCloakedHuntress = 0;
+        public int anzOwnAviana = 0; //艾维娜
+        public int anzOwnScargil = 0; //斯卡基尔
+        public int anzOwnCloakedHuntress = 0;//神秘女猎手
+        public int anzOwnRazorfenRockstar = 0; // 剃刀沼泽摇滚明星
+        public int anzOwnXB931Housekeeper = 0; // XB-931型家政机
+
         public int nerubarweblord = 0;
         public int startedWithnerubarweblord = 0;
         public bool startedWithDamagedMinions = false; //重碾
@@ -665,6 +668,8 @@ namespace HREngine.Bots
             this.ownTurnEndEffectsTriggerTwice = 0;
             this.enemyTurnEndEffectsTriggerTwice = 0;
             this.ownFandralStaghelm = 0;//范达尔·鹿盔
+            this.anzOwnRazorfenRockstar = 0; // 剃刀沼泽摇滚明星
+            this.anzOwnXB931Housekeeper = 0; // XB-931型家政机
             //#########################################
             this.enemycarddraw = 0;
             this.owncarddraw = 0;
@@ -707,9 +712,9 @@ namespace HREngine.Bots
             this.winRazormaneBattleguard = 0;
             this.managespenst = 0;
             this.beschwoerungsportal = 0;
-            this.anzOwnAviana = 0;
-            this.anzOwnScargil = 0;
-            this.anzOwnCloakedHuntress = 0;
+            this.anzOwnAviana = 0; //艾维娜
+            this.anzOwnScargil = 0; //斯卡基尔
+            this.anzOwnCloakedHuntress = 0; //神秘女猎手
             this.nerubarweblord = 0;
             this.myCardsCostLess = 0;
             this.startedWithmyCardsCostLess = 0;
@@ -844,6 +849,12 @@ namespace HREngine.Bots
                         continue;
                     case CardDB.cardNameEN.cloakedhuntress://神秘女猎手
                         this.anzOwnCloakedHuntress++;
+                        continue;
+                    case CardDB.cardNameEN.razorfenrockstar: // 剃刀沼泽摇滚明星
+                        this.anzOwnRazorfenRockstar++;
+                        continue;
+                    case CardDB.cardNameEN.xb931housekeeper: // XB-931型家政机
+                        this.anzOwnXB931Housekeeper++;
                         continue;
                     case CardDB.cardNameEN.baronrivendare://瑞文戴尔男爵
                         this.ownBaronRivendare++;
@@ -1410,9 +1421,11 @@ namespace HREngine.Bots
             this.startedWithbeschwoerungsportal = p.startedWithbeschwoerungsportal;
             this.myCardsCostLess = p.myCardsCostLess;
             this.startedWithmyCardsCostLess = p.startedWithmyCardsCostLess;
-            this.anzOwnScargil = p.anzOwnScargil;
-            this.anzOwnAviana = p.anzOwnAviana;
-            this.anzOwnCloakedHuntress = p.anzOwnCloakedHuntress;
+            this.anzOwnScargil = p.anzOwnScargil;//斯卡基尔
+            this.anzOwnAviana = p.anzOwnAviana; //艾维娜
+            this.anzOwnCloakedHuntress = p.anzOwnCloakedHuntress;//神秘女猎手
+            this.anzOwnRazorfenRockstar = p.anzOwnRazorfenRockstar; // 剃刀沼泽摇滚明星
+            this.anzOwnXB931Housekeeper = p.anzOwnXB931Housekeeper; // XB-931型家政机
             this.nerubarweblord = p.nerubarweblord;
             this.startedWithnerubarweblord = p.startedWithnerubarweblord;
             this.startedWithDamagedMinions = p.startedWithDamagedMinions;
@@ -3805,11 +3818,15 @@ namespace HREngine.Bots
 
             if (!this.isOwnTurn) // 如果是敌方的回合开始
             {
+                //敌方战士任务
+                this.enemyQuest.trigger_startTurn();
                 simulateTrapsStartEnemyTurn(); // 模拟敌方回合开始时触发的陷阱（奥秘）
                 guessHeroDamage(); // 估算敌方英雄可能造成的伤害
             }
             else // 如果是己方的回合开始
             {
+                //己方战士任务
+                this.ownQuest.trigger_startTurn();
                 this.enemyHeroPowerCostLessOnce = 0; // 重置敌方英雄技能一次性费用减少的标记
             }
         }
@@ -5143,7 +5160,7 @@ namespace HREngine.Bots
                 }
             }
         }
-        
+
 
         /// <summary>
         /// 更新自然法术的标志位。
@@ -5251,6 +5268,7 @@ namespace HREngine.Bots
 
         /// <summary>
         /// 处理随从或法术牌的效果。
+        /// 2025-08-10添加武器牌和英雄牌
         /// </summary>
         private void HandleMinionOrSpellPlay(Handmanager.Handcard hc, Minion target, int position, int choice)
         {
@@ -5258,11 +5276,48 @@ namespace HREngine.Bots
             {
                 HandleMinionPlay(hc, position, choice);
             }
-            else
+            else if (hc.card.type == CardDB.cardtype.SPELL)
             {
                 HandleSpellPlay(hc, target, choice);
             }
+            else if (hc.card.type == CardDB.cardtype.WEAPON)
+            {
+                HandleWeaponPlay(hc, target, choice);
+            }
+            else if (hc.card.type == CardDB.cardtype.HERO)
+            {
+                HandleHeroPlay(hc, choice);
+            }
         }
+        private void HandleWeaponPlay(Handmanager.Handcard hc, Minion target, int choice)
+        {
+            if (hc.card.battlecry)
+            {
+                hc.card.sim_card.getBattlecryEffect(this, this.ownWeapon, hc.target, choice);
+            }
+            this.equipWeapon(hc.card, true);
+        }
+
+        private void HandleHeroPlay(Handmanager.Handcard hc, int choice)
+        {
+            Minion m = new Minion
+            {
+                handcard = new Handmanager.Handcard(hc),
+                own = true,
+                isHero = true,
+                entitiyID = hc.entity,
+                playedThisTurn = true,
+                numAttacksThisTurn = 0,
+                divineshild = ownHero.divineshild,
+                lifesteal = ownHero.lifesteal,
+                stealth = ownHero.stealth,
+                name = hc.card.nameEN,
+                nameCN = hc.card.nameCN,
+            };
+
+        }
+
+
 
         /// <summary>
         /// 处理随从卡牌的效果，包括召唤、群兽奔腾等。
@@ -5275,12 +5330,12 @@ namespace HREngine.Bots
                 this.mobsplayedThisTurn++;
             }
 
-            // 处理群兽奔腾效果
+            // 处理奔踏效果
             if (this.stampede > 0 && (TAG_RACE)hc.card.race == TAG_RACE.PET)
             {
                 for (int i = 1; i <= stampede; i++)
                 {
-                    this.drawACard(CardDB.cardNameEN.unknown, true, true); // 抽一张卡
+                    this.drawACard(CardDB.cardNameEN.unknown, true, true); // 随机获取一张野兽
                 }
             }
 
@@ -5747,6 +5802,9 @@ namespace HREngine.Bots
             this.tempTrigger.enemyMurlocDied = 0;
             this.tempTrigger.ownMechanicDied = 0;
             this.tempTrigger.enemyMechanicDied = 0;
+            this.tempTrigger.ownUndeadDied = 0;
+            this.tempTrigger.enemyUndeadDied = 0;
+            this.tempTrigger.ownTreantDied = 0;
         }
 
         /// <summary>
@@ -6285,6 +6343,10 @@ namespace HREngine.Bots
 
                 int burly = 0;
                 int ssm = 0;
+                // getBattlecryEffect只能给随从用,得再一个武器的
+                // if (hc.card.type == CardDB.cardtype.WEAPON && hc.card.battlecry)
+                // {
+                // }
 
                 // 触发己方随从的效果
                 foreach (Minion m in this.ownMinions.ToArray())
@@ -6292,6 +6354,7 @@ namespace HREngine.Bots
                     if (!m.silenced)
                     {
                         m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, m);
+                        // m.handcard.card.sim_card.onCardWasPlayed(this, hc.card, own, m);
                     }
                 }
 
@@ -6302,9 +6365,11 @@ namespace HREngine.Bots
                     {
                         burly++;
                     }
+                    //敌方魔能机甲
                     if (m.name == CardDB.cardNameEN.felreaver)
                     {
                         m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, m);
+
                     }
                     // 处理敌方随从食人魔巫术师的效果
                     if (m.handcard.card.nameCN == CardDB.cardNameCN.食人魔巫术师 && hc.card.type == CardDB.cardtype.SPELL)
@@ -6346,6 +6411,9 @@ namespace HREngine.Bots
                 if (this.ownHeroAblility.card.nameEN == CardDB.cardNameEN.voidform)
                 {
                     this.ownHeroAblility.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, this.ownHeroAblility);
+                    // this.enemyHeroAblility.card.sim_card.onCardWasPlayed(this, hc.card, own, this.enemyHeroAblility);
+
+
                 }
                 if (this.ownWeapon.name == CardDB.cardNameEN.atiesh)
                 {
@@ -6381,6 +6449,8 @@ namespace HREngine.Bots
                     if (!m.silenced)
                     {
                         m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, m);
+                        // m.handcard.card.sim_card.onCardWasPlayed(this, hc.card, own, m);
+
                     }
                 }
                 foreach (Minion m in this.ownMinions)
@@ -6389,9 +6459,11 @@ namespace HREngine.Bots
                     {
                         burly++;
                     }
+                    //我方魔能机甲
                     if (m.name == CardDB.cardNameEN.felreaver)
                     {
                         m.handcard.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, m);
+
                     }
                 }
 
@@ -6399,6 +6471,8 @@ namespace HREngine.Bots
                 if (this.enemyHeroAblility.card.nameEN == CardDB.cardNameEN.voidform)
                 {
                     this.enemyHeroAblility.card.sim_card.onCardIsGoingToBePlayed(this, hc, own, this.enemyHeroAblility);
+                    // this.enemyHeroAblility.card.sim_card.onCardWasPlayed(this, hc.card, own, this.enemyHeroAblility);
+
                 }
                 if (this.enemyWeapon.name == CardDB.cardNameEN.atiesh)
                 {
@@ -6535,6 +6609,9 @@ namespace HREngine.Bots
             // 处理敌方随从的回合结束效果，包括双重触发和随从销毁逻辑
             HandleEndTurnForMinions(this.enemyMinions, ownturn, false, this.enemyTurnEndEffectsTriggerTwice);
 
+            // 处理己方手牌的回合结束效果
+            HandleEndTurnForHandcard(this.owncards, ownturn, true);
+
             // 触发所有伤害触发器，如流血效果、火焰伤害等
             this.doDmgTriggers();
 
@@ -6548,6 +6625,9 @@ namespace HREngine.Bots
             RemoveTemporaryBuffsAndImmunity(this.ownMinions);
             RemoveTemporaryBuffsAndImmunity(this.enemyMinions);
 
+            //将回合结束时会返回到手牌的卡牌添加到手牌，如巅峰无限、甜筒殡淇淋、神性圣契
+            HandlecardsToReturnAtEndOfTurn();
+
             // 如果没有马尔加尼斯，移除英雄的免疫效果
             if (this.anzOwnMalGanis < 1) this.ownHero.immune = false;
             if (this.anzEnemyMalGanis < 1) this.enemyHero.immune = false;
@@ -6555,6 +6635,26 @@ namespace HREngine.Bots
             // 移除武器的免疫效果
             this.ownWeapon.immune = false;
             this.enemyWeapon.immune = false;
+        }
+        private void HandlecardsToReturnAtEndOfTurn()
+        {
+            if (this.cardsToReturnAtEndOfTurn.Count > 0)
+            {
+                foreach (CardDB.cardIDEnum cardIDEnum in this.cardsToReturnAtEndOfTurn.ToArray())
+                {
+                    this.drawACard(cardIDEnum, true, true);
+                    this.cardsToReturnAtEndOfTurn.Remove(cardIDEnum);
+                }
+            }
+        }
+
+        private void HandleEndTurnForHandcard(List<Handmanager.Handcard> owncards, bool ownturn, bool v)
+        {
+            foreach (Handmanager.Handcard hc in owncards.ToArray())
+            {
+                hc.card.sim_card.onTurnEndsTrigger(this, hc, ownturn);
+            }
+
         }
 
         /// <summary>
@@ -8161,7 +8261,16 @@ namespace HREngine.Bots
 
             // 触发敌方奥秘
             secretTrigger_MinionIsPlayed(m);
-
+            //TODO:随从卡牌打出后触发的效果,给术士游客用的
+            foreach (Minion triggerEffectMinion in this.ownMinions)
+            {
+                // 如果随从没被沉默,则触发打出随从后的方法
+                if (!triggerEffectMinion.silenced)
+                {
+                    // 调用随从卡牌的打出随从后触发方法
+                    triggerEffectMinion.handcard.card.sim_card.onCardIsAfterToBePlayed(this, m, m.own, triggerEffectMinion);
+                }
+            }
             // 处理任务进度
             if (this.ownQuest.Id != CardDB.cardIDEnum.None)
             {
@@ -8233,9 +8342,19 @@ namespace HREngine.Bots
             if (m.own)
             {
                 this.tempTrigger.ownMinionsChanged = true;
-                if (m.handcard.card.race == CardDB.Race.PET)
+                if (m.handcard.card.race == CardDB.Race.PET || m.handcard.card.race == CardDB.Race.ALL)
                 {
                     this.tempTrigger.ownBeastSummoned++;
+                }
+
+                if (m.handcard.card.race == CardDB.Race.DRAGON || m.handcard.card.race == CardDB.Race.ALL)
+                {
+                    this.tempTrigger.ownDragonSummoned++;
+
+                }
+                if (m.handcard.card.Treant)
+                {
+                    this.tempTrigger.ownTreantSummoned++;
                 }
             }
             else
@@ -8307,6 +8426,7 @@ namespace HREngine.Bots
 
                 // 装备新武器
                 this.ownWeapon.equip(c);
+
             }
             else
             {
@@ -8737,6 +8857,11 @@ namespace HREngine.Bots
                     manacost = c.calculateManaCost(this),
                     entity = this.getNextEntity()
                 };
+                //TODO:抽到时释放，兄弟抽未知的牌时,不知道这牌是什么,不好做这个效果
+                // if (c.CastsWhenDrawn == 1)
+                // {
+                //     c.sim_card.castsWhenDrawn(this, hc, own);
+                // }
                 this.owncards.Add(hc);
                 this.triggerCardsChanged(true);
             }
@@ -8892,6 +9017,9 @@ namespace HREngine.Bots
         /// <param name="armor">增加的护甲值。</param>
         public void minionGetArmor(Minion m, int armor)
         {
+            // 剃刀沼泽摇滚明星
+            if (this.anzOwnRazorfenRockstar > 0)
+                armor = this.anzOwnRazorfenRockstar * 2;
             m.armor += armor;  // 增加随从的护甲值
 
             // 遍历己方手牌，处理与护甲相关的卡牌效果
@@ -11587,7 +11715,15 @@ namespace HREngine.Bots
                 switch (a.own.handcard.card.cardIDenum.ToString())
                 {
                     case "TTN_092":
+                        if (a.titanAbilityNO == 1) suffix = "t1";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "TTN_858":
+                        if (a.titanAbilityNO == 1) suffix = "t1";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "TTN_862":
                         if (a.titanAbilityNO == 1) suffix = "t1";
                         else if (a.titanAbilityNO == 2) suffix = "t2";
@@ -11595,20 +11731,45 @@ namespace HREngine.Bots
                         break;
 
                     case "TTN_075":
+                        if (a.titanAbilityNO == 1) suffix = "t";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "TTN_800":
+                        if (a.titanAbilityNO == 1) suffix = "t2";
+                        else if (a.titanAbilityNO == 2) suffix = "t3";
+                        else if (a.titanAbilityNO == 3) suffix = "t";
+                        break;
                     case "TTN_415":
+                        if (a.titanAbilityNO == 1) suffix = "t";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "TTN_429":
+                        if (a.titanAbilityNO == 1) suffix = "t";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "YOG_516":
+                        if (a.titanAbilityNO == 1) suffix = "t";
+                        else if (a.titanAbilityNO == 2) suffix = "t2";
+                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        break;
                     case "TTN_903":
                         if (a.titanAbilityNO == 1) suffix = "t";
                         else if (a.titanAbilityNO == 2) suffix = "t2";
                         else if (a.titanAbilityNO == 3) suffix = "t3";
                         break;
+                    case "TTN_721":
+                        if (a.titanAbilityNO == 1) suffix = "t";
+                        else if (a.titanAbilityNO == 2) suffix = "t1";
+                        else if (a.titanAbilityNO == 3) suffix = "t2";
+                        break;
 
                     case "TTN_737":
                         if (a.titanAbilityNO == 1) suffix = "t";
-                        else if (a.titanAbilityNO == 2) suffix = "t1";
-                        else if (a.titanAbilityNO == 3) suffix = "t3";
+                        else if (a.titanAbilityNO == 2) suffix = "t3";
+                        else if (a.titanAbilityNO == 3) suffix = "t1";
                         break;
 
                     case "TTN_960":
@@ -11618,7 +11779,7 @@ namespace HREngine.Bots
                         break;
 
                     default:
-                        if (a.titanAbilityNO == 1) suffix = "t1";
+                        if (a.titanAbilityNO == 1) suffix = "t";
                         else if (a.titanAbilityNO == 2) suffix = "t2";
                         else if (a.titanAbilityNO == 3) suffix = "t3";
                         break;
@@ -11810,11 +11971,13 @@ namespace HREngine.Bots
             // 触发地标的使用效果
             locationCard.sim_card.useLocation(this, own, target);
 
+
+
             // 如果地标能冻结目标，进行冻结操作
-            if (target != null && locationCard.cardIDenum == CardDB.cardIDEnum.REV_602)
-            {
-                minionGetFrozen(target);
-            }
+            // if (target != null && locationCard.cardIDenum == CardDB.cardIDEnum.REV_602)
+            // {
+            //     minionGetFrozen(target);
+            // }
 
             // 特殊处理对于 VAC_334 的逻辑
             if (own.handcard.card.cardIDenum == CardDB.cardIDEnum.VAC_334) // 检查是否为“小玩物小屋”卡牌
@@ -11828,6 +11991,11 @@ namespace HREngine.Bots
                     this.lastDrawnCardEntityID = lastCardEntityID; // 需要在类中定义 lastDrawnCardEntityID 变量
                 }
             }
+
+            if (own.Hp <= 0)
+            {
+                own.handcard.card.sim_card.onDeathrattle(this, own);
+            }
         }
 
         /// <summary>
@@ -11839,6 +12007,7 @@ namespace HREngine.Bots
         /// 
         public void useTitanAbility(Minion own, int titanAbilityNO, Minion target)
         {
+
             // 获取当前要使用技能的泰坦卡牌
             CardDB.Card useAbilityTitan = own.handcard.card;
             //是否继续执行
@@ -11865,8 +12034,8 @@ namespace HREngine.Bots
         /// <summary>
         /// 抽一张临时卡牌
         /// </summary>
-        /// <param name="ss"></param>
-        /// <param name="own"></param>
+        /// <param name="ss">卡牌IdEnum</param>
+        /// <param name="own">是否为我方抽牌</param>
         public void drawTemporaryCard(CardDB.cardIDEnum ss, bool own)
         {
             CardDB.cardIDEnum s = ss;
@@ -12147,6 +12316,10 @@ namespace HREngine.Bots
         /// </summary>
         public int ownBeastSummoned;
         /// <summary>
+        /// 我方龙随从召唤扳机
+        /// </summary>
+        public int ownDragonSummoned;
+        /// <summary>
         /// 我方野兽随从死亡扳机
         /// </summary>
         public int ownBeastDied;
@@ -12186,7 +12359,30 @@ namespace HREngine.Bots
         /// 敌方随从变化扳机
         /// </summary>
         public bool enemyMininsChanged;
-
+        /// <summary>
+        /// 德莱尼扳机提示
+        /// </summary>
+        public bool draeneiTriggerHint;
+        /// <summary>
+        /// 星舰发射时扳机
+        /// </summary>
+        public bool starshipLaunchTrigger;
+        /// <summary>
+        /// 我方亡灵随从死亡扳机
+        /// </summary>
+        public int ownUndeadDied;
+        /// <summary>
+        /// 敌方亡灵随从死亡扳机
+        /// </summary>
+        public int enemyUndeadDied;
+        /// <summary>
+        /// 我方树人随从召唤扳机
+        /// </summary>
+        public int ownTreantSummoned;
+        /// <summary>
+        /// 我方树人随从死亡扳机
+        /// </summary>
+        public int ownTreantDied;
     }
 
     public struct IDEnumOwner
@@ -12207,5 +12403,20 @@ namespace HREngine.Bots
         {
             return race == targetRace || race == CardDB.Race.ALL;
         }
+
+        public static bool MinionBelongsToRace(List<CardDB.Race> races, CardDB.Race targetRace)
+        {
+            bool flag = false;
+            if (races.Count == 0) return false;
+
+            foreach (CardDB.Race race in races)
+            {
+                flag = race == targetRace || race == CardDB.Race.ALL;
+                if (flag) return flag;
+            }
+
+            return flag;
+        }
+
     }
 }

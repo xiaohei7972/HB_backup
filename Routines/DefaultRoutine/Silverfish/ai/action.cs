@@ -23,13 +23,13 @@ namespace HREngine.Bots
         useTitanAbility, //使用泰坦技能
         forge, //锻造
     }
-    
+
     public class Action
     {
         // 用于记录操作的类型。
-        public actionEnum actionType; 
+        public actionEnum actionType;
         // 记录出的牌，在attackWithHero、attackWithMinion、useLocation操作中为null
-        public Handmanager.Handcard card; 
+        public Handmanager.Handcard card;
         // 用于记录位置，如actionType为playcard时就会有内容，
         // 比如出一个随从就会标记出放置的位置（最左边为0），
         // 如果是出一张法术牌的话，具体内容没有研究，应该是有赋值的
@@ -79,7 +79,7 @@ namespace HREngine.Bots
             if (targetM != null) prevHpTarget = targetM.Hp;
             this.titanAbilityNO = abilityNO;
         }
-        
+
         public Action(Action a)
         {
             this.actionType = a.actionType;
@@ -127,7 +127,7 @@ namespace HREngine.Bots
                         str.Append(" 攻击 " + (this.target != null ? this.target.info() : "空"));
                         break;
                     case actionEnum.trade:
-                        str.Append("使用随从 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无")+ " 交易");
+                        str.Append("使用随从 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无") + " 交易");
                         break;
                     case actionEnum.useLocation:
                         str.Append("使用地标 " + this.own.info());
@@ -140,7 +140,15 @@ namespace HREngine.Bots
                         switch (this.own.handcard.card.cardIDenum.ToString())
                         {
                             case "TTN_092":
+                                if (this.titanAbilityNO == 1) suffix = "t1";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
                             case "TTN_858":
+                                if (this.titanAbilityNO == 1) suffix = "t1";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
                             case "TTN_862":
                                 if (this.titanAbilityNO == 1) suffix = "t1";
                                 else if (this.titanAbilityNO == 2) suffix = "t2";
@@ -148,21 +156,45 @@ namespace HREngine.Bots
                                 break;
 
                             case "TTN_075":
-                            case "TTN_800":
-                            case "TTN_415":
-                            case "TTN_429":
-                            case "YOG_516":
-                            case "TTN_903":
-                            case "TTN_721":
                                 if (this.titanAbilityNO == 1) suffix = "t";
                                 else if (this.titanAbilityNO == 2) suffix = "t2";
                                 else if (this.titanAbilityNO == 3) suffix = "t3";
                                 break;
+                            case "TTN_800":
+                                if (this.titanAbilityNO == 1) suffix = "t2";
+                                else if (this.titanAbilityNO == 2) suffix = "t3";
+                                else if (this.titanAbilityNO == 3) suffix = "t";
+                                break;
+                            case "TTN_415":
+                                if (this.titanAbilityNO == 1) suffix = "t";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
+                            case "TTN_429":
+                                if (this.titanAbilityNO == 1) suffix = "t";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
+                            case "YOG_516":
+                                if (this.titanAbilityNO == 1) suffix = "t";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
+                            case "TTN_903":
+                                if (this.titanAbilityNO == 1) suffix = "t";
+                                else if (this.titanAbilityNO == 2) suffix = "t2";
+                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                break;
+                            case "TTN_721":
+                                if (this.titanAbilityNO == 1) suffix = "t";
+                                else if (this.titanAbilityNO == 2) suffix = "t1";
+                                else if (this.titanAbilityNO == 3) suffix = "t2";
+                                break;
 
                             case "TTN_737":
                                 if (this.titanAbilityNO == 1) suffix = "t";
-                                else if (this.titanAbilityNO == 2) suffix = "t1";
-                                else if (this.titanAbilityNO == 3) suffix = "t3";
+                                else if (this.titanAbilityNO == 2) suffix = "t3";
+                                else if (this.titanAbilityNO == 3) suffix = "t1";
                                 break;
 
                             case "TTN_960":
@@ -172,7 +204,7 @@ namespace HREngine.Bots
                                 break;
 
                             default:
-                                if (this.titanAbilityNO == 1) suffix = "t1";
+                                if (this.titanAbilityNO == 1) suffix = "t";
                                 else if (this.titanAbilityNO == 2) suffix = "t2";
                                 else if (this.titanAbilityNO == 3) suffix = "t3";
                                 break;
@@ -246,7 +278,15 @@ namespace HREngine.Bots
                     switch (this.own.handcard.card.cardIDenum.ToString())
                     {
                         case "TTN_092":
+                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
                         case "TTN_858":
+                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
                         case "TTN_862":
                             if (this.titanAbilityNO == 1) suffix = "t1";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
@@ -254,21 +294,45 @@ namespace HREngine.Bots
                             break;
 
                         case "TTN_075":
-                        case "TTN_800":
-                        case "TTN_415":
-                        case "TTN_429":
-                        case "YOG_516":
-                        case "TTN_903":
-                        case "TTN_721":
                             if (this.titanAbilityNO == 1) suffix = "t";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
                             else if (this.titanAbilityNO == 3) suffix = "t3";
                             break;
+                        case "TTN_800":
+                            if (this.titanAbilityNO == 1) suffix = "t2";
+                            else if (this.titanAbilityNO == 2) suffix = "t3";
+                            else if (this.titanAbilityNO == 3) suffix = "t";
+                            break;
+                        case "TTN_415":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_429":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "YOG_516":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_903":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_721":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t1";
+                            else if (this.titanAbilityNO == 3) suffix = "t2";
+                            break;
 
                         case "TTN_737":
                             if (this.titanAbilityNO == 1) suffix = "t";
-                            else if (this.titanAbilityNO == 2) suffix = "t1";
-                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            else if (this.titanAbilityNO == 2) suffix = "t3";
+                            else if (this.titanAbilityNO == 3) suffix = "t1";
                             break;
 
                         case "TTN_960":
@@ -278,7 +342,7 @@ namespace HREngine.Bots
                             break;
 
                         default:
-                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            if (this.titanAbilityNO == 1) suffix = "t";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
                             else if (this.titanAbilityNO == 3) suffix = "t3";
                             break;
@@ -357,7 +421,15 @@ namespace HREngine.Bots
                     switch (this.own.handcard.card.cardIDenum.ToString())
                     {
                         case "TTN_092":
+                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
                         case "TTN_858":
+                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
                         case "TTN_862":
                             if (this.titanAbilityNO == 1) suffix = "t1";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
@@ -365,21 +437,45 @@ namespace HREngine.Bots
                             break;
 
                         case "TTN_075":
-                        case "TTN_800":
-                        case "TTN_415":
-                        case "TTN_429":
-                        case "YOG_516":
-                        case "TTN_903":
-                        case "TTN_721":
                             if (this.titanAbilityNO == 1) suffix = "t";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
                             else if (this.titanAbilityNO == 3) suffix = "t3";
                             break;
+                        case "TTN_800":
+                            if (this.titanAbilityNO == 1) suffix = "t2";
+                            else if (this.titanAbilityNO == 2) suffix = "t3";
+                            else if (this.titanAbilityNO == 3) suffix = "t";
+                            break;
+                        case "TTN_415":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_429":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "YOG_516":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_903":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t2";
+                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            break;
+                        case "TTN_721":
+                            if (this.titanAbilityNO == 1) suffix = "t";
+                            else if (this.titanAbilityNO == 2) suffix = "t1";
+                            else if (this.titanAbilityNO == 3) suffix = "t2";
+                            break;
 
                         case "TTN_737":
                             if (this.titanAbilityNO == 1) suffix = "t";
-                            else if (this.titanAbilityNO == 2) suffix = "t1";
-                            else if (this.titanAbilityNO == 3) suffix = "t3";
+                            else if (this.titanAbilityNO == 2) suffix = "t3";
+                            else if (this.titanAbilityNO == 3) suffix = "t1";
                             break;
 
                         case "TTN_960":
@@ -389,7 +485,7 @@ namespace HREngine.Bots
                             break;
 
                         default:
-                            if (this.titanAbilityNO == 1) suffix = "t1";
+                            if (this.titanAbilityNO == 1) suffix = "t";
                             else if (this.titanAbilityNO == 2) suffix = "t2";
                             else if (this.titanAbilityNO == 3) suffix = "t3";
                             break;

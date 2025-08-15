@@ -43,7 +43,7 @@ namespace HREngine.Bots
         /// </summary>
         public enum cardtrigers
         {
-            newtriger, ///新触发
+            newtriger,///新触发
             getBattlecryEffect,//战吼效果
             onAHeroGotHealedTrigger,//一个英雄受到伤害触发
             onAMinionGotHealedTrigger,//随从受到伤害触发
@@ -70,8 +70,6 @@ namespace HREngine.Bots
             onTurnEnd, //回合结束
             useLocation, //使用地标
             useTitanAbility, //使用泰坦技能
-
-
         }
 
         /// <summary>
@@ -438,7 +436,7 @@ namespace HREngine.Bots
             /// </summary>
             REQ_MINION_CAP_IF_TARGET_AVAILABLE = 19,
             /// <summary>
-            /// <value> 要求随从上限 </value>
+            /// <value> 要求随从空位,param为数量 </value>
             /// </summary>
             REQ_MINION_CAP = 20,
             /// <summary>
@@ -715,6 +713,9 @@ namespace HREngine.Bots
             REQ_MINIMUM_TAVERN_TIER_LEVEL_TO_PLAY = 128,
             REQ_CARD_TAVERN_TIER_LEVEL_TO_PLAY,
             REQ_NOT_EXHAUSTED_LOCATION,
+            /// <summary>
+            /// 要求目标是地标
+            /// </summary>
             REQ_LOCATION_TARGET,
             REQ_TARGET_SILVER_HAND_RECRUIT,
             REQ_MINIMUM_CORPSES,
@@ -828,16 +829,30 @@ namespace HREngine.Bots
             public bool Quickdraw = false;//快枪
             public bool Excavate = false;//发掘
             public bool Elusive = false;//扰魔
+
+            public bool Echo = false; // 回响
+            public bool nonKeywordEcho = false; // 非关键词回响，设计师左右脑互搏的结果。就是个在本回合可以重复使用
+            public bool Twinspell = false; // 双生法术
+
+            public bool Temporary = false; // 临时
+            public int Objective = 0; // 光环 如救生光环
+            public int ObjectiveAura = 0; // 会影响场面的光环 如征战平原
+            public int Sigil = 0; // 咒符
+            public bool markOfEvil = false; // 跟班
+            public bool Treant = false;  // 树人
+            public bool IMP = false;  // 小鬼
+            public bool Whelp = false;  // 雏龙
             public bool StarshipPiece = false;  // 星舰组件
-            public bool Starship = false;   // 星舰
+            public bool Starship = false;   // 星舰           
+            public bool Crewmate = false;  // 乘务员
+            public int MultipleClasses = 0; // 194: 玉莲帮 296: 暗金教 532: 玉莲帮
             public bool Zerg = false;   // 异虫
-
             public bool Terran = false; // 人族
-
             public bool Protoss = false;    // 星灵
             public int costBlood = 0;   // 鲜血符文
             public int costFrost = 0;    // 冰霜符文
             public int costUnholy = 0; // 邪恶符文
+            public int CastsWhenDrawn = 0; // 抽到时触发效果
 
 
             public List<Race> races = new List<Race>(); //TODO:种族集合
@@ -999,6 +1014,7 @@ namespace HREngine.Bots
                 bool targetEnemyHero = false;
                 bool targetOwnHero = false;
                 bool targetOnlyMinion = false;
+                bool targetOnlyLocation = false;
                 bool extraParam = false;
                 bool wereTargets = false;
                 bool REQ_UNDAMAGED_TARGET = false;
@@ -1027,6 +1043,9 @@ namespace HREngine.Bots
                             continue;
                         case ErrorType2.REQ_MINION_TARGET:
                             targetOnlyMinion = true;
+                            continue;
+                        case ErrorType2.REQ_LOCATION_TARGET:
+                            targetOnlyLocation = true;
                             continue;
                         case ErrorType2.REQ_TARGET_IF_AVAILABLE:
                             REQ_TARGET_IF_AVAILABLE = true;
@@ -1197,7 +1216,13 @@ namespace HREngine.Bots
 
                 if (targetAll)
                 {
+
                     wereTargets = true;
+                    if (targetOnlyLocation)
+                    {
+                        foreach (Minion m in targets) if (m.handcard.card.type == cardtype.LOCATION) targets.Add(m);
+                    }
+
                     if (targetAllFriendly != targetAllEnemy)
                     {
                         if (targetAllFriendly)
@@ -1226,6 +1251,9 @@ namespace HREngine.Bots
                         if (targetAllEnemy) targetOwnHero = false;
                         if (targetAllFriendly) targetEnemyHero = false;
                     }
+
+
+
                 }
 
                 if (extraParam)
@@ -1844,6 +1872,7 @@ namespace HREngine.Bots
             {
                 int retval = currentcost;
 
+                // offset < 0费用降低,offset > 0费用增加
                 int offset = 0; // if offset < 0 costs become lower, if >0 costs are higher at the end
 
                 // CARDS that increase/decrease the manacosts of others ##############################
@@ -1980,121 +2009,65 @@ namespace HREngine.Bots
                 }
                 switch (this.nameEN)
                 {
-                    case CardDB.cardNameEN.frenziedfelwing:
+                    case CardDB.cardNameEN.frenziedfelwing://狂暴邪翼蝠
                         if (p.enemyHero.Hp < p.enemyHeroTurnStartedHp)
                         {
                             retval = retval + offset - (p.enemyHeroTurnStartedHp - p.enemyHero.Hp);
                         }
                         break;
-                    case CardDB.cardNameEN.libramofjudgment:
+                    case CardDB.cardNameEN.libramofwisdom: //智慧圣契
+                    case CardDB.cardNameEN.libramofjustice: //正义圣契
+                    case CardDB.cardNameEN.libramofhope: //希望圣契
+                    case CardDB.cardNameEN.libramofjudgment: //审判圣契
+                    case CardDB.cardNameEN.libramofjudgment_YOP_011t: //审判圣契已腐蚀
+                    case CardDB.cardNameEN.libramofdivinity: //信仰圣契
+                    case CardDB.cardNameEN.libramoffaith: //神性圣契
                         retval = retval + offset - p.libram;
                         break;
-                    case CardDB.cardNameEN.libramofwisdom://智慧圣契
-                        retval = retval + offset - p.libram;
-                        break;
-                    case CardDB.cardNameEN.libramofjustice://正义圣契
-                        retval = retval + offset - p.libram;
-                        break;
-                    case CardDB.cardNameEN.libramofhope://希望圣契
-                        retval = retval + offset - p.libram;
-                        break;
-                    case CardDB.cardNameEN.volcaniclumberer:
+                    case CardDB.cardNameEN.volcaniclumberer: //火山邪木
+                    case CardDB.cardNameEN.dragonsbreath: //龙息术
+                    case CardDB.cardNameEN.solemnvigil: //严正警戒
+                    case CardDB.cardNameEN.volcanicdrake: //火山幼龙
+                    case CardDB.cardNameEN.volcanicdrake_Story_09_VolcanicDrake: //火山幼龙
                         retval = retval + offset - p.ownMinionsDiedTurn - p.enemyMinionsDiedTurn;
                         break;
-                    case CardDB.cardNameEN.solemnvigil:
-                        retval = retval + offset - p.ownMinionsDiedTurn - p.enemyMinionsDiedTurn;
+                    case CardDB.cardNameEN.bookofthedead: //亡者之书
+                    case CardDB.cardNameEN.bookofthedead_PVPDR_SCH_Active54: //亡者之书
+                    case CardDB.cardNameEN.bookofthedead_ULDA_006: //亡者之书
+                    case CardDB.cardNameEN.bookofthedead_VAC_464t24: //亡者之书
+                    case CardDB.cardNameEN.reskathepitboss: //矿坑老板雷斯卡
+                        retval = retval + offset - p.tempTrigger.ownMinionsDied - p.tempTrigger.enemyMinionsDied;
                         break;
-                    case CardDB.cardNameEN.volcanicdrake:
-                        retval = retval + offset - p.ownMinionsDiedTurn - p.enemyMinionsDiedTurn;
+                    case CardDB.cardNameEN.urzulgiant: //乌祖尔巨人
+                        retval = retval + offset - p.tempTrigger.ownMinionsDied;
                         break;
-                    case CardDB.cardNameEN.knightofthewild:
+                    case CardDB.cardNameEN.mulchmuncher: //植被破碎机
+                        retval = retval + offset - p.tempTrigger.ownTreantDied;
+                        break;
+                    case CardDB.cardNameEN.knightofthewild: //荒野骑士
+                    case CardDB.cardNameEN.knightofthewild_WON_003: //荒野骑士
+                    case CardDB.cardNameEN.frostsabermatriarch: //霜刃豹头领
                         retval = retval + offset - p.tempTrigger.ownBeastSummoned;
                         break;
-                    case CardDB.cardNameEN.dragonsbreath:
-                        retval = retval + offset - p.ownMinionsDiedTurn - p.enemyMinionsDiedTurn;
+                    case CardDB.cardNameEN.fyethesettingsun: //落日灵龙菲伊
+                        retval = retval + offset - p.tempTrigger.ownDragonSummoned;
                         break;
-                    case CardDB.cardNameEN.dreadcorsair:
+                    case CardDB.cardNameEN.cultivation: //栽培
+                        retval = retval + offset - p.tempTrigger.ownTreantDied;
+                        break;
+                    case CardDB.cardNameEN.dreadcorsair: //恐怖海盗
+                    case CardDB.cardNameEN.dreadcorsair_NEW1_022: //恐怖海盗
+                    case CardDB.cardNameEN.dreadcorsair_VAN_NEW1_022: //恐怖海盗
+                    case CardDB.cardNameEN.cuttingclass: //劈砍课程
+                    case CardDB.cardNameEN.ravenousdrake: //贪食幼龙
+                    case CardDB.cardNameEN.battlehawkstrider: //战斗陆行鸟
                         retval = retval + offset - p.ownWeapon.Angr + p.ownWeaponAttackStarted; // if weapon attack change we change manacost
                         break;
-                    case CardDB.cardNameEN.seagiant:
-                        retval = retval + offset - p.ownMinions.Count - p.enemyMinions.Count + p.ownMobsCountStarted + p.enemyMobsCountStarted;
+                    case CardDB.cardNameEN.spreadtheword_ETC_384: //散布消息
+                        retval = retval + offset - p.ownHero.Angr;
                         break;
-                    case CardDB.cardNameEN.mountaingiant:
-                        retval = retval + offset - p.owncards.Count + p.ownCardsCountStarted;
-                        break;
-                    case CardDB.cardNameEN.clockworkgiant:
-                        retval = retval + offset - p.enemyAnzCards + p.enemyCardsCountStarted;
-                        break;
-                    case CardDB.cardNameEN.moltengiant:
-                        retval = retval + offset - p.ownHeroHpStarted + p.ownHero.Hp;
-                        break;
-                    case CardDB.cardNameEN.frostgiant:
-                        retval = retval + offset - p.anzUsedOwnHeroPower;
-                        break;
-                    case CardDB.cardNameEN.arcanegiant:
-                        retval = retval + offset - p.spellsplayedSinceRecalc;
-                        break;
-                    case CardDB.cardNameEN.snowfurygiant:
-                        retval = retval + offset - p.ueberladung;
-                        break;
-                    case CardDB.cardNameEN.kabalcrystalrunner:
-                        retval = retval + offset - 2 * p.secretsplayedSinceRecalc;
-                        break;
-                    case CardDB.cardNameEN.secondratebruiser:
-                        retval = retval + offset - ((p.enemyMinions.Count < 3) ? 0 : 2) + ((p.enemyMobsCountStarted < 3) ? 0 : 2);
-                        break;
-                    case CardDB.cardNameEN.golemagg:
-                        retval = retval + offset - p.ownHeroHpStarted + p.ownHero.Hp;
-                        break;
-                    case CardDB.cardNameEN.skycapnkragg:
-                        int costBonus = 0;
-                        foreach (Minion m in p.ownMinions)
-                        {
-                            if (m.handcard.card.race == CardDB.Race.PIRATE || m.handcard.card.race == CardDB.Race.ALL) costBonus++;
-                        }
-                        retval = retval + offset - costBonus + p.anzOwnPiratesStarted;
-                        break;
-                    // 恩典
-                    case CardDB.cardNameEN.everyfinisawesome:
-                        int costBonusM = 0;
-                        foreach (Minion m in p.ownMinions)
-                        {
-                            if (m.untouchable || m.dormant > 0) continue;
-                            if (m.handcard.card.race == Race.MURLOC || m.handcard.card.race == Race.ALL) costBonusM++;
-                        }
-                        retval = retval + offset - costBonusM + p.anzOwnMurlocStarted;
-                        break;
-                    // 血肉巨人
-                    case CardDB.cardNameEN.fleshgiant:
-                        retval = retval + offset - p.healOrDamageTimes;
-                        break;
-                    case CardDB.cardNameEN.crush:
-                        // cost 4 less if we have a dmged minion
-                        bool dmgedminions = false;
-                        foreach (Minion m in p.ownMinions)
-                        {
-                            if (m.wounded) dmgedminions = true;
-                        }
-                        if (dmgedminions != p.startedWithDamagedMinions)
-                        {
-                            if (dmgedminions)
-                            {
-                                retval = retval + offset - 4;
-                            }
-                            else
-                            {
-                                retval = retval + offset + 4;
-                            }
-                        }
-                        break;
-                    case CardDB.cardNameEN.happyghoul:
-                        if (p.healTimes > 0)
-                            retval = 0 + offset;
-                        break;
-                    case CardDB.cardNameEN.wildmagic:
-                        retval = 0;
-                        break;
-                    case CardDB.cardNameEN.thingfrombelow:
+                    case CardDB.cardNameEN.thingfrombelow://深渊魔物
+                    case CardDB.cardNameEN.gigantotem://图腾巨像
                         if (p.playactions.Count > 0)
                         {
                             foreach (Action a in p.playactions)
@@ -2128,6 +2101,223 @@ namespace HREngine.Bots
                             }
                         }
                         retval = retval + offset;
+                        break;
+                    case CardDB.cardNameEN.mountaingiant: //山岭巨人
+                    case CardDB.cardNameEN.mountaingiant_EX1_105: //山岭巨人
+                    case CardDB.cardNameEN.mountaingiant_VAN_EX1_105: //山岭巨人
+                    case CardDB.cardNameEN.thesunwell: //太阳之井
+                    case CardDB.cardNameEN.goldshiregnoll: //闪金镇豺狼人
+                    case CardDB.cardNameEN.tableflip: //掀桌子
+                    case CardDB.cardNameEN.livinghorizon: //活体天光
+                        retval = retval + offset - p.owncards.Count + p.ownCardsCountStarted;
+                        break;
+                    case CardDB.cardNameEN.clockworkgiant: //发条巨人
+                        retval = retval + offset - p.enemyAnzCards + p.enemyCardsCountStarted;
+                        break;
+                    case CardDB.cardNameEN.moltengiant: //熔核巨人
+                    case CardDB.cardNameEN.moltengiant_EX1_620: //熔核巨人
+                    case CardDB.cardNameEN.moltengiant_LETLT_081_01: //熔核巨人
+                    case CardDB.cardNameEN.moltengiant_Story_11_MoltenGiantPuzzle: //熔核巨人
+                    case CardDB.cardNameEN.moltengiant_VAN_EX1_620: //熔核巨人
+                        retval = retval + offset - p.ownHeroHpStarted + p.ownHero.Hp;
+                        break;
+                    case CardDB.cardNameEN.frostgiant:
+                        retval = retval + offset - p.anzUsedOwnHeroPower;
+                        break;
+                    case CardDB.cardNameEN.arcanegiant: //奥术巨人
+                    case CardDB.cardNameEN.gravehorror: //墓园恐魔
+                    case CardDB.cardNameEN.umbralowl: //幽影猫头鹰
+                    case CardDB.cardNameEN.umbralowl_DMF_060: //幽影猫头鹰
+                        retval = retval + offset - p.spellsplayedSinceRecalc;
+                        break;
+                    case CardDB.cardNameEN.snowfurygiant: //雪怒巨人
+                    case CardDB.cardNameEN.snowfurygiant_ICC_090: //雪怒巨人
+                        retval = retval + offset - p.ueberladung;
+                        break;
+                    case CardDB.cardNameEN.kabalcrystalrunner: //暗金教水晶侍女
+                    case CardDB.cardNameEN.kabalcrystalrunner_WON_308: //暗金教水晶侍女
+                        retval = retval + offset - 2 * p.secretsplayedSinceRecalc;
+                        break;
+                    case CardDB.cardNameEN.seagiant: //海巨人
+                    case CardDB.cardNameEN.mogufleshshaper: //魔古血肉塑型者
+                        {
+                            int MinionsCount = 0;
+
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.type == cardtype.MOB)
+                                    MinionsCount++;
+                            }
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.type == cardtype.MOB)
+                                    MinionsCount++;
+                            }
+
+                            retval = retval + offset - MinionsCount;
+                        }
+                        // retval = retval + offset - p.ownMinions.Count - p.enemyMinions.Count + p.ownMobsCountStarted + p.enemyMobsCountStarted;
+                        break;
+                    case CardDB.cardNameEN.bloodboilbrute: //沸血蛮兵
+                        {
+                            int woundedMinionsCount = 0;
+
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.type == cardtype.MOB && m.wounded)
+                                    woundedMinionsCount++;
+                            }
+                            foreach (Minion m in p.enemyMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.type == cardtype.MOB && m.wounded)
+                                    woundedMinionsCount++;
+                            }
+                            retval = retval + offset - woundedMinionsCount;
+                        }
+                        break;
+                    case CardDB.cardNameEN.demonbolt: //恶魔之箭
+                        {
+                            int ownMinionsCount = 0;
+                            if (p.ownMinions.Count > 0)
+                            {
+                                foreach (Minion m in p.ownMinions)
+                                {
+                                    if (m.untouchable || m.dormant > 0) continue;
+                                    if (m.handcard.card.type == cardtype.MOB)
+                                        ownMinionsCount++;
+                                }
+                            }
+                            retval = retval + offset - ownMinionsCount;
+                        }
+                        break;
+                    case CardDB.cardNameEN.rabblebouncer: //场馆保镖
+                    case CardDB.cardNameEN.prismaticbeam: //棱彩光束
+                    case CardDB.cardNameEN.eredarbrute: //棱彩光束
+                        {
+                            int enemyMinionsCount = 0;
+                            if (p.enemyMinions.Count > 0)
+                            {
+                                foreach (Minion m in p.enemyMinions)
+                                {
+                                    if (m.untouchable || m.dormant > 0) continue;
+                                    if (m.handcard.card.type == cardtype.MOB)
+                                        enemyMinionsCount++;
+                                }
+                            }
+                            retval = retval + offset - enemyMinionsCount;
+                        }
+                        break;
+                    case CardDB.cardNameEN.secondratebruiser: //二流打手
+                        retval = retval + offset - ((p.enemyMinions.Count < 3) ? 0 : 2) + ((p.enemyMobsCountStarted < 3) ? 0 : 2);
+                        break;
+                    case CardDB.cardNameEN.golemagg: //古雷曼格
+                        retval = retval + offset - p.ownHeroHpStarted + p.ownHero.Hp;
+                        break;
+                    case CardDB.cardNameEN.skycapnkragg: //天空上尉库拉格
+                        {
+                            int costBonusPirate = 0;
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.handcard.card.race == CardDB.Race.PIRATE || m.handcard.card.race == CardDB.Race.ALL) costBonusPirate++;
+                            }
+                            retval = retval + offset - costBonusPirate + p.anzOwnPiratesStarted;
+                        }
+                        break;
+                    case CardDB.cardNameEN.everyfinisawesome: //鱼人恩典
+                        {
+                            int costBonusMurloc = 0;
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.race == Race.MURLOC || m.handcard.card.race == Race.ALL) costBonusMurloc++;
+                            }
+                            retval = retval + offset - costBonusMurloc + p.anzOwnMurlocStarted;
+                        }
+                        break;
+                    case CardDB.cardNameEN.aeroponics: //空气栽培
+                        {
+                            int costBonusTreant = 0;
+                            if (p.ownMinions.Count > 0)
+                            {
+                                foreach (Minion m in p.ownMinions)
+                                {
+                                    if (m.untouchable || m.dormant > 0) continue;
+                                    if (m.handcard.card.Terran)
+                                        costBonusTreant++;
+                                }
+                            }
+                            retval = retval + offset - costBonusTreant;
+                        }
+                        break;
+                    case CardDB.cardNameEN.solarflare: //阳炎耀斑
+                        {
+                            int costBonusElemental = 0;
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.race == Race.ELEMENTAL || m.handcard.card.race == Race.ALL) costBonusElemental++;
+                            }
+                            retval = retval + offset - costBonusElemental + p.anzOwnMurlocStarted;
+                        }
+                        break;
+                    case CardDB.cardNameEN.captainslog: //舰长日志
+                        {
+                            int costBonusDraenei = 0;
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.untouchable || m.dormant > 0) continue;
+                                if (m.handcard.card.race == Race.DRAENEI || m.handcard.card.race == Race.ALL) costBonusDraenei++;
+                            }
+                            retval = retval + offset - costBonusDraenei + p.anzOwnMurlocStarted;
+                        }
+                        break;
+                    case CardDB.cardNameEN.fleshgiant: // 血肉巨人
+                        retval = retval + offset - p.healOrDamageTimes;
+                        break;
+                    case CardDB.cardNameEN.crush: //重碾
+                        // cost 4 less if we have a dmged minion
+                        {
+                            bool dmgedminions = false;
+                            foreach (Minion m in p.ownMinions)
+                            {
+                                if (m.wounded) dmgedminions = true;
+                            }
+                            if (dmgedminions != p.startedWithDamagedMinions)
+                            {
+                                if (dmgedminions) retval = retval + offset - 4;
+                                else retval = retval + offset + 4;
+                            }
+                        }
+                        break;
+                    case CardDB.cardNameEN.happyghoul: //开心的食尸鬼
+                    case CardDB.cardNameEN.happyghoul_ICC_700: //开心的食尸鬼
+                        if (p.healTimes > 0)
+                            retval = 0 + offset;
+                        break;
+                    case CardDB.cardNameEN.wildmagic: //狂野魔法
+                        retval = 0;
+                        break;
+                    case CardDB.cardNameEN.shieldshatter: //裂盾一击
+                    case CardDB.cardNameEN.cryptkeeper: //地穴看守者
+                        retval = retval + offset - p.ownHero.armor;
+                        break;
+                    case CardDB.cardNameEN.safetygoggles: //安全护目镜'
+                        if (p.ownHero.armor == 0)
+                            retval = 0;
+                        break;
+                    case CardDB.cardNameEN.frostwolfwarmaster: //霜狼将领
+                    case CardDB.cardNameEN.scribblingstenographer: //潦草的书记员
+                    case CardDB.cardNameEN.scribblingstenographer_MAW_020: //潦草的书记员
+                    case CardDB.cardNameEN.everburningphoenix: //永燃火凤
+                        retval = retval + offset - p.cardsPlayedThisTurn;
+                        break;
+                    case CardDB.cardNameEN.ireboundbrute: //怒缚蛮兵
+                    case CardDB.cardNameEN.everythingmustgo: //一件不留
+                        retval = retval + offset - p.owncarddraw;
                         break;
                     default:
                         retval = retval + offset;
@@ -2190,8 +2380,8 @@ namespace HREngine.Bots
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_075t3)); // 无限潜能
                         break;
                     case "TTN_800":
-                        titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_800t)); // 狂海怒涛
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_800t2)); // 天空之王
+                        titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_800t)); // 狂海怒涛
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_800t3)); // 沙加恩之怒
                         break;
                     case "TTN_415":
@@ -2216,8 +2406,8 @@ namespace HREngine.Bots
                         break;
                     case "TTN_737":
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_737t)); // 鲜血符文
-                        titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_737t1)); // 邪恶符文
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_737t3)); // 冰霜符文
+                        titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_737t1)); // 邪恶符文
                         break;
                     case "TTN_960":
                         titanSkills.Add(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_960t2)); // 打入虚空！
@@ -2784,6 +2974,54 @@ namespace HREngine.Bots
                                 card.Elusive = true;//扰魔
                             }
                             break;
+                        case "846":
+                            if (!"ReferencedTag".Equals(tag.Name))
+                            {
+                                card.Echo = true; // 回响
+                            }
+                            break;
+                        case "1114":
+                            {
+                                card.nonKeywordEcho = true; // 非关键词回响
+                                break;
+                            }
+                        case "1193":
+                            {
+                                card.Twinspell = true; // 双生法术
+                                break;
+                            }
+                        case "3630":
+                            if (!"ReferencedTag".Equals(tag.Name))
+                            {
+                                card.Temporary = true;//临时
+                            }
+                            break;
+                        case "373":
+                            {
+                                card.immuneWhileAttacking = true; // 攻击时免疫
+                            }
+                            break;
+
+                        case "1077":
+                            {
+                                card.CastsWhenDrawn = int.Parse(tag.GetAttribute("value")); // 抽到时触发效果的属性
+                            }
+                            break;
+                        case "1749":
+                            {
+                                card.Objective = int.Parse(tag.GetAttribute("value")); // 光环 如救生光环
+                            }
+                            break;
+                        case "2311":
+                            {
+                                card.ObjectiveAura = int.Parse(tag.GetAttribute("value")); // 会影响场面的光环 如征战平原
+                            }
+                            break;
+                        case "2329":
+                            {
+                                card.Sigil = int.Parse(tag.GetAttribute("value")); // 咒符
+                            }
+                            break;
                         case "2196":
                             {
                                 card.costBlood = int.Parse(tag.GetAttribute("value")); // 鲜血符文
@@ -2799,6 +3037,26 @@ namespace HREngine.Bots
                                 card.costUnholy = int.Parse(tag.GetAttribute("value")); // 邪恶符文
                             }
                             break;
+                        case "994":
+                            {
+                                card.markOfEvil = true; // 跟班
+                            }
+                            break;
+                        case "2831":
+                            {
+                                card.Treant = true; // 树人
+                            }
+                            break;
+                        case "1965":
+                            {
+                                card.IMP = true; // 小鬼
+                            }
+                            break;
+                        case "2355":
+                            {
+                                card.Whelp = true; // 雏龙
+                            }
+                            break;
                         case "3555":
                             {
                                 card.StarshipPiece = true; // 星舰组件
@@ -2807,6 +3065,16 @@ namespace HREngine.Bots
                         case "3568":
                             {
                                 card.Starship = true; // 星舰
+                            }
+                            break;
+                        case "3631":
+                            {
+                                card.Crewmate = true; // 乘务员
+                            }
+                            break;
+                        case "476":
+                            {
+                                card.MultipleClasses = int.Parse(tag.GetAttribute("value")); // 194: 玉莲帮  296: 暗金教 532: 玉莲帮
                             }
                             break;
                         case "3457":

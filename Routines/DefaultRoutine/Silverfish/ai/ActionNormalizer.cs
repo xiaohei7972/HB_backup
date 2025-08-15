@@ -253,8 +253,8 @@ namespace HREngine.Bots
                             // 判断法力值是否足够
                             if (p.mana >= hc.card.getManaCost(p, hc.manacost))
                             {
-                                // 如果随从已满且尝试打出随从，则返回 false
-                                if (p.ownMinions.Count > 6 && hc.card.type == CardDB.cardtype.MOB)
+                                // 如果随从已满且尝试打出随从或地标，则返回 false
+                                if (p.ownMinions.Count > 6 && (hc.card.type == CardDB.cardtype.MOB || hc.card.type == CardDB.cardtype.LOCATION))
                                     return false;
 
                                 actionFound = true;
@@ -330,7 +330,7 @@ namespace HREngine.Bots
                     {
                         if (m.entitiyID == a.own.entitiyID)
                         {
-                            // 确认泰坦技能可否能使用
+                            // 确认泰坦技能可否能使用       !flase                                !flase                                !flase
                             if (m.handcard.card.Titan && (!m.handcard.card.TitanAbilityUsed1 || !m.handcard.card.TitanAbilityUsed2 || !m.handcard.card.TitanAbilityUsed3))
                             {
                                 actionFound = true;
