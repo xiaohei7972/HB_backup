@@ -93,8 +93,8 @@ namespace HREngine.Bots
                         if (trgts.Count == 0) continue;
 
                         //非地标目标指向，移除地标
-                        if (c.type == CardDB.cardtype.MOB && 
-                            c.cardIDenum != CardDB.cardIDEnum.VAC_529 && 
+                        if (c.type == CardDB.cardtype.MOB &&
+                            c.cardIDenum != CardDB.cardIDEnum.VAC_529 &&
                             c.cardIDenum != CardDB.cardIDEnum.REV_023 && c.cardIDenum != CardDB.cardIDEnum.CORE_REV_023)
                         {
                             trgts.RemoveAll(minion => minion != null &&
@@ -285,11 +285,11 @@ namespace HREngine.Bots
                     CardDB.Card ability = titan.handcard.card.TitanAbility[i];
                     trgts = ability.getTargetsForCard(p, p.isLethalCheck, true);
 
-                     //移除地标
+                    //移除地标
                     trgts.RemoveAll(minion => minion != null &&
-                                                            minion.handcard != null &&
-                                                            minion.handcard.card != null &&
-                                                            minion.handcard.card.type == CardDB.cardtype.LOCATION);
+                                            minion.handcard != null &&
+                                            minion.handcard.card != null &&
+                                            minion.handcard.card.type == CardDB.cardtype.LOCATION);
 
 
                     // 如果技能不需要目标，直接添加动作

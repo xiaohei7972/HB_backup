@@ -20,7 +20,7 @@ namespace HREngine.Bots
 			}
 			if (choice == 2 || (p.ownFandralStaghelm > 0 && ownplay))
 			{
-				p.ownMaxMana = Math.Min(20, p.ownMaxMana++);
+				p.ownMaxMana++;
 			}
 		}
 	}

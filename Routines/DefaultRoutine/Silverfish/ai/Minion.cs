@@ -838,6 +838,10 @@ namespace HREngine.Bots
                 {
                     p.tempTrigger.enemyUndeadDied++;
                 }
+                if (this.handcard.card.Treant)
+                {
+                    p.tempTrigger.ownTreantDied++;
+                }
             }
 
             if (p.diedMinions != null)

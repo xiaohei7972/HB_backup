@@ -11,15 +11,14 @@ namespace HREngine.Bots
 	//在你的英雄攻击后，使你的所有随从获得+1/+1<i>（无论它们在哪）</i>。
 	class Sim_RLK_828 : SimTemplate
 	{
-		CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_416);
-		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_416t);
+		// CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_416);
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-			p.equipWeapon(weapon, ownplay);
-		}
+		// public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		// {
+		// 	p.equipWeapon(weapon, ownplay);
+		// }
 
-		public override void onHeroattack(Playfield p, Minion own, Minion target)
+		public override void afterHeroattack(Playfield p, Minion own, Minion target)
 		{
 			// 检查己方英雄是否装备了“奎尔萨拉斯的希望”
 			if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.RLK_828)
@@ -33,6 +32,7 @@ namespace HREngine.Bots
 					{
 						hc.addattack += 1;
 						hc.addHp += 1;
+						p.anzOwnExtraAngrHp += 2;
 					}
 				}
 

@@ -12,7 +12,7 @@ namespace HREngine.Bots
         searchLowestCost,
         searchHighesCost,
     }
-    
+
     public enum GAME_TAGs
     {
         TAG_SCRIPT_DATA_NUM_1 = 2,  // 脚本数据编号1
@@ -582,7 +582,31 @@ namespace HREngine.Bots
         WARLOCK_TOURIST = 3598,
         ROGUE_TOURIST = 3597,
         PALADIN_TOURIST = 3607,
-
+        SHIFTING_TOP = 3894,
+        STARSHIP = 3555,
+        STARSHIP_PIECE = 3568,
+        TAG_LAUNCHPAD_ABILITY = 3628,
+        STARSHIP_LAUNCH_COST_DISCOUNT = 3640,
+        STARSHIP_LAUNCH_TRIGGER = 4013,
+        IS_RELAUNCHED_STARSHIP = 4030,
+        IS_NIGHTMARE_BONUS = 3567,
+        IMBUE = 3626,
+        DARK_GIFT,
+        BACON_TRINKET = 3407,
+        BONUS_KEYWORDS = 3423,
+        DYNAMIC_KEYWORD1 = 4161,
+        DYNAMIC_KEYWORD2,
+        KINDRED = 4028,
+        PET_ID = 4079,
+        PET_VARIANT_ID = 4037,
+        PET_EVENT_ID,
+        PET_SMALL_XP_TRIGGER_COUNT = 4076,
+        PET_MEDIUM_XP_TRIGGER_COUNT,
+        PET_LARGE_XP_TRIGGER_COUNT,
+        PET_TREATS_FED = 4280,
+        PET_TREATS_GENERATED,
+        BACON_RALLY = 4204,
+        BACON_BOUNTY = 4231,
         None,
         Mob,
         Spell,
@@ -710,8 +734,9 @@ namespace HREngine.Bots
         GOLEM,
         HARPY,
         VULPERA
+
     }
-    
+
     public enum TAG_CARDTYPE
     {
         NONE = 0,
@@ -735,39 +760,133 @@ namespace HREngine.Bots
         BATTLEGROUND_ANOMALY = 43,//战旗畸变
         BATTLEGROUND_SPELL = 42,//战旗法术
         BATTLEGROUND_TRINKET = 44,//战旗饰品
+        // INVALID,
+        // GAME,
+        // PLAYER,
+        // HERO, //英雄
+        // MINION, //随从
+        // SPELL, //法术
+        // ENCHANTMENT, //附加效果（例如：变形术，救赎，力量的代价，自然之力的附加效果）
+        // WEAPON, //武器
+        // ITEM,
+        // TOKEN,
+        // HERO_POWER, //英雄技能
+        // BLANK,
+        // GAME_MODE_BUTTON, //游戏模式按钮
+        // MOVE_MINION_HOVER_TARGET = 22, //移动随从悬停目标
+        // LETTUCE_ABILITY,
+        // BATTLEGROUND_HERO_BUDDY, //战旗英雄伙伴
+        // LOCATION = 39, //地标
+        // BATTLEGROUND_QUEST_REWARD, //战旗奖励
+        // BATTLEGROUND_ANOMALY = 43, //战旗畸变
+        // BATTLEGROUND_SPELL = 42, //战旗法术
+        // BATTLEGROUND_TRINKET = 44, //战旗饰品
+        // PET //宠物
+
+
     }
 
     public enum TAG_CARD_SET
     {
-        INVALID = 0,
-        TEST_TEMPORARY = 1,
-        CORE = 2,
-        EXPERT1 = 3,
-        REWARD = 4,
-        MISSIONS = 5,
-        DEMO = 6,
-        NONE = 7,
-        CHEAT = 8,
-        BLANK = 9,
-        DEBUG_SP = 10,
-        PROMO = 11,
-        FP1 = 12,
-        PE1 = 13,
-        BRM = 14,
-        TGT = 15,
-        CREDITS = 16,
-        HERO_SKINS = 17,
-        TB = 18,
-        SLUSH = 19,
-        LOE = 20,
-        OG = 21,
-        OG_RESERVE = 22,
-        KARA = 23,
-        KARA_RESERVE = 24,
-        GANGS = 25,
-        GANGS_RESERVE = 26,
-        UNGORO = 27,
-        ICECROWN = 1001
+        INVALID = 0,                        // 失效            
+        TEST_TEMPORARY = 1,                 // 测试临时          
+        BASIC = 2,                          // 基础            
+        EXPERT1 = 3,                        // 经典            
+        HOF = 4,                            // 荣誉室           
+        MISSIONS = 5,                       // 任务            
+        DEMO = 6,                           // 演示            
+        NONE = 7,                           // 未知            
+        CHEAT = 8,                           // 愚弄            
+        BLANK = 9,                          // 空白            
+        DEBUG_SP = 10,                      // 调试            
+        PROMO = 11,                         // 纪念            
+        FP1 = 12,                           // 纳克萨玛斯         
+        PE1 = 13,                           // 地精大战侏儒        
+        BRM = 14,                           // 黑石山的火焰        
+        TGT = 15,                           // 冠军的试炼         
+        CREDITS = 16,                       // 暴雪制作人员        
+        HERO_SKINS = 17,                    // 英雄皮肤          
+        TB = 18,                            // 其他模式          
+        SLUSH = 19,                         // 混乱            
+        LOE = 20,                           // 探险者协会         
+        OG = 21,                            // 上古之神的低语       
+        OG_RESERVE = 22,                    // 上古之神保留        
+        KARA = 23,                          // 卡拉赞之夜         
+        KARA_RESERVE = 25,                  // 卡拉赞保留         
+        GANGS = 25,                         // 龙争虎斗加基森       
+        GANGS_RESERVE = 26,                 // 龙争虎斗加基森保留     
+        UNGORO = 27,                        // 勇闯安戈洛         
+        ICECROWN = 1001,                    // 冰封王座的骑士       
+        TB_DEV = 1003,                      // 天梯实验          
+        LOOTAPALOOZA = 1004,                // 狗头人与地下世界      
+        GILNEAS = 1125,                     // 女巫森林          
+        BOOMSDAY = 1127,                    // 砰砰计划          
+        TROLL = 1129,                       // 拉斯塔哈的大乱斗      
+        DALARAN = 1130,                     // 暗影崛起          
+        ULDUM = 1158,                       // 奥丹姆奇兵         
+        DRAGONS = 1347,                     // 巨龙降临          
+        WILD_EVENT = 1439,                  // 狂野活动          
+        YEAR_OF_THE_DRAGON = 1403,          // 迦拉克隆的觉醒       
+        BATTLEGROUNDS = 1453,               // 酒馆战棋          
+        BLACK_TEMPLE = 1414,                // 外域的灰烬         
+        DEMON_HUNTER_INITIATE = 1463,       // 恶魔猎手新兵        
+        SCHOLOMANCE = 1443,                 // 通灵学园          
+        DARKMOON_FAIRE = 1466,              // 疯狂的暗月马戏团      
+        LETTUCE = 1586,                     // 佣兵战纪          
+        THE_BARRENS = 1525,                 // 贫瘠之地的锤炼       
+        LEGACY = 1635,                      // 怀旧            
+        CORE = 1637,                        // 核心            
+        VANILLA = 1646,                     // 经典            
+        STORMWIND = 1578,                   // 暴风城下的集结       
+        MERCENARIES_DEV = 1705,             // 佣兵开发          
+        ALTERAC_VALLEY = 1626,              // 奥特兰克的决裂       
+        THE_SUNKEN_CITY = 1658,             // 探寻沉没之城        
+        REVENDRETH = 1691,                  // 纳斯利亚堡的悬案      
+        RETURN_OF_THE_LICH_KING = 1776,     // 巫妖王的进军        
+        PATH_OF_ARTHAS = 1869,              // 阿尔萨斯之路        
+        BATTLE_OF_THE_BANDS = 1809,         // 传奇音乐节         
+        TITANS = 1858,                      // 泰坦诸神          
+        WONDERS = 1898,                     // 时光之穴          
+        WILD_WEST = 1892,                   // 决战荒芜之地        
+        WHIZBANGS_WORKSHOP = 1897,          // 威兹班的工坊        
+        TUTORIAL = 1904,                    // 教学            
+        EVENT = 1941,                       // 活动            
+        CORE_HIDDEN = 1810,                 // 核心隐藏          
+        ISLAND_VACATION = 1905,             // 圣地历险记         
+        SPACE = 1935,                       // 星舰英雄传         
+        EMERALD_DREAM = 1946,               // 深暗领域          
+        THE_LOST_CITY = 1952,               // 安戈洛龟途         
+        PET = 1961,                         // 宠物               
+
+        // INVALID = 0,
+        // TEST_TEMPORARY = 1,
+        // CORE = 2,
+        // EXPERT1 = 3,
+        // REWARD = 4,
+        // MISSIONS = 5,
+        // DEMO = 6,
+        // NONE = 7,
+        // CHEAT = 8,
+        // BLANK = 9,
+        // DEBUG_SP = 10,
+        // PROMO = 11,
+        // FP1 = 12,
+        // PE1 = 13,
+        // BRM = 14,
+        // TGT = 15,
+        // CREDITS = 16,
+        // HERO_SKINS = 17,
+        // TB = 18,
+        // SLUSH = 19,
+        // LOE = 20,
+        // OG = 21,
+        // OG_RESERVE = 22,
+        // KARA = 23,
+        // KARA_RESERVE = 24,
+        // GANGS = 25,
+        // GANGS_RESERVE = 26,
+        // UNGORO = 27,
+        // ICECROWN = 1001
     }
 
     public enum TAG_RARITY
@@ -792,6 +911,9 @@ namespace HREngine.Bots
         FEL = 7,
         PHYSICAL_COMBAT = 8,
         TAVERN = 9,
-        SPELLCRAFT = 10
+        SPELLCRAFT = 10,
+        LESSER_TRINKET = 11,
+        GREATER_TRINKET = 12,
+        UPGRADE = 13,
     }
 }

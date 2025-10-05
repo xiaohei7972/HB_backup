@@ -1,5 +1,5 @@
 {
-  "CurrAccountHashCode": "111120296",
+  "CurrAccountHashCode": "",
   "FileName": "",
   "Assemblies": "System.dll\r\nSystem.Core.dll\r\nHearthbuddy.exe\r\nlog4net.dll\r\ngreymagic.dll",
   "ClassName": "RuntimeCode",

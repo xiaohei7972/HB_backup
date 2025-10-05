@@ -11,16 +11,12 @@ namespace HREngine.Bots
 	//<b>吸血</b>。<b>冻结</b>任何受到你的英雄伤害的角色。
 	class Sim_DEEP_016 : SimTemplate
 	{
-        public override void onHeroattack(Playfield p, Minion own, Minion target)
+        public override void afterHeroattack(Playfield p, Minion own, Minion target)
         {
             // 处理冻结效果
             if (target != null) // 目标为随从
             {
                 p.minionGetFrozen(target);
-            }
-            else // 目标为英雄
-            {
-                p.enemyHero.frozen = true;
             }
         }
     }

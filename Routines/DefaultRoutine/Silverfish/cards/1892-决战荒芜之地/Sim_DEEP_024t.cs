@@ -20,15 +20,13 @@ namespace HREngine.Bots
                 p.minionGetDamageOrHeal(p.ownHero, -5); // 吸血效果，恢复等同于伤害的生命值
             }
         }
-
+        
         public override PlayReq[] GetPlayReqs()
-        {
-            return new PlayReq[]{
-                new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
-                new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET),
-                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
-            };
-        }
+		{
+			return new PlayReq[] {
+				new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
+			};
+		}
 
     }
 }

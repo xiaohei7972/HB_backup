@@ -16,7 +16,7 @@ namespace HREngine.Bots
         private int hpboarder = 15;
         // 抢脸血线
         private int aggroboarder = 15;
-        
+
 
         public override string BehaviorName() { return "丨通用丨不设惩罚"; }
         PenalityManager penman = PenalityManager.Instance;
@@ -57,11 +57,8 @@ namespace HREngine.Bots
                 case "小玩物小屋":
                     penalty = -48;
                     break;
-                case "荒芜之地监狱":
-                    penalty = -48;
-                    break;
                 default:
-                    penalty = -40; // 如果卡牌名称不匹配，使用初始惩罚值
+                    penalty = -400; // 如果卡牌名称不匹配，使用初始惩罚值
                     break;
             }
             return penalty;
@@ -72,7 +69,7 @@ namespace HREngine.Bots
         {
             if (p.value > -200000) return p.value;
             float retval = 0;
-            retval += getGeneralVal(p);            
+            retval += getGeneralVal(p);
             retval += getHpValue(p, hpboarder, aggroboarder);
             // 出牌序列数量
             int count = p.playactions.Count;
@@ -403,7 +400,7 @@ namespace HREngine.Bots
         /// <returns></returns>
         public override int getUseLocationPenality(Minion m, Minion target, Playfield p)
         {
-            int penalty = 0; // 初始惩罚值为 0
+            int penalty = -100; // 初始惩罚值为 0
 
             switch (m.handcard.card.nameCN.ToString())
             {
@@ -431,14 +428,10 @@ namespace HREngine.Bots
                 case "小玩物小屋":
                     penalty = -48;
                     break;
-                case "荒芜之地监狱":
-                    penalty = -48;
-                    break;
                 default:
-                    penalty = -40; // 如果卡牌名称不匹配，使用初始惩罚值
+                    penalty = -100; // 如果卡牌名称不匹配，使用初始惩罚值
                     break;
             }
-
             return (int)penalty;
         }
 
@@ -451,7 +444,8 @@ namespace HREngine.Bots
         /// <returns></returns>
         public override int getUseTitanAbilityPenality(Minion m, Minion target, Playfield p)
         {
-            return -100;
+            int penalty = -100;
+            return penalty;
         }
 
         /// <summary>

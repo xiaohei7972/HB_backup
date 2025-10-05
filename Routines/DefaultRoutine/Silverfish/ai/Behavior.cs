@@ -270,12 +270,12 @@ namespace HREngine.Bots
                     retval += hc.addattack + hc.addHp + hc.poweredUp;
                 }
                 // 回合结束时丢弃
-                if(hc.enchs.Count > 0 && (hc.enchs.Contains(CardDB.cardIDEnum.BOT_568e) || hc.enchs.Contains(CardDB.cardIDEnum.YOD_027e) ) )
+                if ((hc.enchs.Count > 0 && (hc.enchs.Contains(CardDB.cardIDEnum.BOT_568e) || hc.enchs.Contains(CardDB.cardIDEnum.YOD_027e))) || hc.card.Temporary)
                 {
                     retval -= 15;
                 }
                 // 幸运币留牌跳币策略
-                if(hc.card.nameCN == CardDB.cardNameCN.幸运币 && p.mana == 0)
+                if (hc.card.nameCN == CardDB.cardNameCN.幸运币 && p.mana == 0)
                 {
                     Playfield nextTurn = new Playfield(p);
                     nextTurn.mana = p.ownMaxMana + 2;
@@ -284,7 +284,7 @@ namespace HREngine.Bots
                     foreach (Handmanager.Handcard hhc in p.owncards)
                     {
                         // 下回合需要跳币用的牌
-                        if(hhc.getManaCost(nextTurn) == nextTurn.mana && hhc.canplayCard(nextTurn, true))
+                        if (hhc.getManaCost(nextTurn) == nextTurn.mana && hhc.canplayCard(nextTurn, true))
                         {
                             int pen = this.getComboPenality(hhc.card, nextTurn.ownHero, nextTurn, hc);
                             if (pen < maxPen) maxPen = pen;
@@ -302,14 +302,14 @@ namespace HREngine.Bots
             // 敌方随从
             //bool hasTank = false;
             // 敌方已死，不考虑随从加权
-            if(p.enemyHero.Hp > 0)
+            if (p.enemyHero.Hp > 0)
             {
                 foreach (Minion m in p.enemyMinions)
                 {
                     retval -= this.getEnemyMinionValue(m, p);
                     //hasTank = hasTank || m.taunt;
                 }
-            }            
+            }
             retval -= p.enemyMinions.Count * 2;
             // 敌方奥秘
             retval -= p.enemySecretCount;
@@ -332,7 +332,7 @@ namespace HREngine.Bots
                 retval -= 1000;
             }
             // 确实无法斩杀，并且对面场攻已经斩杀我们了，苟命要紧，但是如果能神抽说不定还有机会
-            if (p.calEnemyTotalAngr() >= p.ownHero.Hp + p.ownHero.armor && (p.calDirectDmg(p.mana, false) < p.enemyHero.Hp + p.enemyHero.armor) && ( p.anzEnemyTaunt > 0 || p.calTotalAngr() + p.calDirectDmg(p.mana, false) < p.enemyHero.Hp + p.enemyHero.armor ) )
+            if (p.calEnemyTotalAngr() >= p.ownHero.Hp + p.ownHero.armor && (p.calDirectDmg(p.mana, false) < p.enemyHero.Hp + p.enemyHero.armor) && (p.anzEnemyTaunt > 0 || p.calTotalAngr() + p.calDirectDmg(p.mana, false) < p.enemyHero.Hp + p.enemyHero.armor))
             {
                 int val = p.owncarddraw * p.mana * 500 - 3000;
                 if (val > -1000) val = -1000;
@@ -369,7 +369,7 @@ namespace HREngine.Bots
             // 血线安全
             if (p.ownHero.Hp + p.ownHero.armor > hpboarder)
             {
-                retval += (2 + p.ownHero.Hp + p.ownHero.armor - hpboarder ) / 2;
+                retval += (2 + p.ownHero.Hp + p.ownHero.armor - hpboarder) / 2;
             }
             // 快死了
             else
@@ -431,8 +431,8 @@ namespace HREngine.Bots
 
 
 
-        public virtual int getComboPenality(CardDB.Card card, Minion target, Playfield p, Handmanager.Handcard nowHandcard)  
-            // 每个策略写自己特定的，通用的放PenalityManager里面getSpecial...，所以要注意不要写重复了，避免双重惩罚
+        public virtual int getComboPenality(CardDB.Card card, Minion target, Playfield p, Handmanager.Handcard nowHandcard)
+        // 每个策略写自己特定的，通用的放PenalityManager里面getSpecial...，所以要注意不要写重复了，避免双重惩罚
         {
             return 0;
         }
@@ -441,13 +441,16 @@ namespace HREngine.Bots
         {
             int retval = 5;
             retval += m.Hp * 2;
-            if(!m.cantAttack || !m.Ready || !m.frozen){
+            if (!m.cantAttack || !m.Ready || !m.frozen)
+            {
                 retval += m.Angr * 2;
-            }else {
+            }
+            else
+            {
                 retval += m.Angr / 2;
             }
             // 风怒价值
-            if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1 )  && m.windfury) retval += m.Angr;
+            if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1) && m.windfury) retval += m.Angr;
             // 圣盾价值
             if (m.divineshild) retval += m.Angr / 2 + 1;
             // 潜行价值
@@ -474,7 +477,7 @@ namespace HREngine.Bots
             if (si.canBe_noblesacrifice)
             {
                 pen -= 10;
-                pen += attacker.Hp ;
+                pen += attacker.Hp;
                 foreach (SecretItem sii in p.enemySecretList)
                 {
                     sii.canBe_noblesacrifice = false;
@@ -491,7 +494,7 @@ namespace HREngine.Bots
             if (si.canBe_iceblock)
             {
                 // 破冰时刻
-                if(p.enemyHero.Hp - dmg < 0 && p.enemyHero.Hp > 0)
+                if (p.enemyHero.Hp - dmg < 0 && p.enemyHero.Hp > 0)
                 {
                     pen -= 1000 / (p.enemyHero.Hp);
                 }
@@ -512,9 +515,9 @@ namespace HREngine.Bots
             {
                 // 3费及以下可以接受
                 pen -= 3;
-                pen += playedMinion.handcard.card.cost ;
+                pen += playedMinion.handcard.card.cost;
                 // 冲锋有可能冲不出哦
-                if (playedMinion.handcard.card.Charge && (playedMinion.handcard.addHp+ playedMinion.handcard.card.Health ) <= 4 ) 
+                if (playedMinion.handcard.card.Charge && (playedMinion.handcard.addHp + playedMinion.handcard.card.Health) <= 4)
                     pen += 5;
                 // 亡语抵消
                 if (playedMinion.handcard.card.deathrattle || playedMinion.handcard.card.reborn)
@@ -532,7 +535,7 @@ namespace HREngine.Bots
         // 打出法术
         public virtual int getSecretPen_SpellIsPlayed(Playfield p, SecretItem si, Minion target, CardDB.Card c)
         {
-            if(c.type != CardDB.cardtype.SPELL)
+            if (c.type != CardDB.cardtype.SPELL)
             {
                 return 0;
             }
@@ -583,15 +586,15 @@ namespace HREngine.Bots
             int pen = 0;
             List<Minion> enemyMinions = new List<Minion>(p.enemyMinions.ToArray());
             List<Minion> ownMinions = new List<Minion>(p.ownMinions.ToArray());
-            enemyMinions.Sort((a, b) => -( a.poisonous ? 10000 : a.Angr + (a.untouchable ? -100 : 0)).CompareTo(b.poisonous ? 10000 : b.Angr + (b.untouchable ? -100 : 0)));
-            ownMinions.Sort((a, b) => -(getMyMinionValue(a,p) + (a.taunt ? 1000 : 0) + (a.Hp > 5 || a.untouchable || a.divineshild || a.stealth ? -100: 0 ) ).CompareTo(getMyMinionValue(b, p)) + (b.taunt ? 1000 : 0) + (b.Hp > 5 || b.untouchable || b.divineshild || b.stealth ? -100 : 0));
+            enemyMinions.Sort((a, b) => -(a.poisonous ? 10000 : a.Angr + (a.untouchable ? -100 : 0)).CompareTo(b.poisonous ? 10000 : b.Angr + (b.untouchable ? -100 : 0)));
+            ownMinions.Sort((a, b) => -(getMyMinionValue(a, p) + (a.taunt ? 1000 : 0) + (a.Hp > 5 || a.untouchable || a.divineshild || a.stealth ? -100 : 0)).CompareTo(getMyMinionValue(b, p)) + (b.taunt ? 1000 : 0) + (b.Hp > 5 || b.untouchable || b.divineshild || b.stealth ? -100 : 0));
             int minCnt = enemyMinions.Count > ownMinions.Count ? ownMinions.Count : enemyMinions.Count;
-            for(int i = 0; i < minCnt; i++)
+            for (int i = 0; i < minCnt; i++)
             {
                 // 对手可以进行交换
-                if( (enemyMinions[i].Angr >= ownMinions[i].Hp || enemyMinions[i].poisonous ) )
+                if ((enemyMinions[i].Angr >= ownMinions[i].Hp || enemyMinions[i].poisonous))
                 {
-                    if(ownMinions[i].untouchable || enemyMinions[i].untouchable || ownMinions[i].divineshild || ownMinions[i].stealth)
+                    if (ownMinions[i].untouchable || enemyMinions[i].untouchable || ownMinions[i].divineshild || ownMinions[i].stealth)
                     {
                         continue;
                     }
@@ -616,7 +619,7 @@ namespace HREngine.Bots
                     //     int x = 10;
                     // }
                     // 对手愿意交换
-                    if(enemyVal1 - enemyVal2 < myVal)
+                    if (enemyVal1 - enemyVal2 < myVal)
                     {
                         pen -= myVal;
                         pen += enemyVal1 - enemyVal2;
@@ -636,11 +639,11 @@ namespace HREngine.Bots
                 int enemyAtk = p.enemyWeapon == null ? 0 : p.enemyWeapon.Angr;
                 switch (p.enemyHeroStartClass)
                 {
-                    case TAG_CLASS.HUNTER: enemyAtk += 2;break;
+                    case TAG_CLASS.HUNTER: enemyAtk += 2; break;
                     case TAG_CLASS.ROGUE:
                     case TAG_CLASS.MAGE:
                     case TAG_CLASS.DRUID:
-                    case TAG_CLASS.DEMONHUNTER: enemyAtk++;break;
+                    case TAG_CLASS.DEMONHUNTER: enemyAtk++; break;
                 }
                 if (p.ownHero.immune) return 0;
                 bool found_flameward = false;
@@ -654,9 +657,9 @@ namespace HREngine.Bots
                         case CardDB.cardIDEnum.EX1_295: return 0;
                         case CardDB.cardIDEnum.EX1_289: enemyAtk -= 8; break;
                         case CardDB.cardIDEnum.VAN_EX1_289: enemyAtk -= 8; break;
-                        case CardDB.cardIDEnum.ULD_239: found_flameward = true;break;
-                        case CardDB.cardIDEnum.CORE_EX1_610: 
-                        case CardDB.cardIDEnum.VAN_EX1_610: 
+                        case CardDB.cardIDEnum.ULD_239: found_flameward = true; break;
+                        case CardDB.cardIDEnum.CORE_EX1_610:
+                        case CardDB.cardIDEnum.VAN_EX1_610:
                         case CardDB.cardIDEnum.EX1_610: found_explosive = true; break;
                     }
                 }
@@ -680,7 +683,7 @@ namespace HREngine.Bots
                     }
                 }
                 // 并且我方(无冰箱)
-                if ( enemyAtk >= p.ownHero.Hp + p.ownHero.armor)
+                if (enemyAtk >= p.ownHero.Hp + p.ownHero.armor)
                 {
                     return -1000;
                 }

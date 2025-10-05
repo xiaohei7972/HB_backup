@@ -528,6 +528,9 @@ def Execute():
             }
             catch (Exception ex)
             {
+                Log.ErrorFormat("[clearLog] An exception occurred: {0}.", ex);
+                BotManager.Stop();
+                return;
             }
         }
 
@@ -998,14 +1001,14 @@ def Execute():
                 await Coroutine.Sleep(555 + makeChoice());
                 switch (dirtychoice)
                 {
-                    case 0: 
+                    case 0:
                         TritonHs.ChooseOneClickMiddle();
                         break;
-                    case 1: 
-                        TritonHs.ChooseOneClickLeft(); 
+                    case 1:
+                        TritonHs.ChooseOneClickLeft();
                         break;
-                    case 2: 
-                        TritonHs.ChooseOneClickRight(); 
+                    case 2:
+                        TritonHs.ChooseOneClickRight();
                         break;
                 }
 
@@ -1208,6 +1211,7 @@ def Execute():
         /// <returns></returns>
         private async Task TitanAbilityUseOnTagets()
         {
+            // Log.InfoFormat("处理泰坦技能的使用目标");
             //处理泰坦技能的使用目标
             if (titanAction != null)
             {
@@ -1253,6 +1257,7 @@ def Execute():
                     switch (moveTodo.card.card.type)
                     {
                         case CardDB.cardtype.MOB:
+                        case CardDB.cardtype.LOCATION:
                             await cardtoplay.UseAt(moveTodo.place);
                             break;
                         case CardDB.cardtype.WEAPON:
@@ -1462,8 +1467,9 @@ def Execute():
         /// <returns></returns>
         private async Task UseTitanAbility(Action moveTodo)
         {
+            // Log.InfoFormat("处理使用泰坦技能的动作");
             HSCard titan = getEntityWithNumber(moveTodo.own.entitiyID);
-            if (titan != null) 
+            if (titan != null)
             {
                 CardDB.Card card = moveTodo.own.handcard.card;
                 StringBuilder stringBuilder = new StringBuilder();
@@ -1708,7 +1714,7 @@ def Execute():
                 int ttf = (int)(DateTime.Now - tmp).TotalMilliseconds;
                 Helpfunctions.Instance.ErrorLog("发现卡牌: " + dirtychoice + (discoverCardsCount > 1 ? " " + discoverCards[1].card.nameCN : "") + (discoverCardsCount > 0 ? " " + discoverCards[0].card.nameCN : "") + (discoverCardsCount > 2 ? " " + discoverCards[2].card.nameCN : ""));
                 Helpfunctions.Instance.logg("发现卡牌: " + dirtychoice + (discoverCardsCount > 1 ? " " + discoverCards[1].card.cardIDenum : "") + (discoverCardsCount > 0 ? " " + discoverCards[0].card.cardIDenum : "") + (discoverCardsCount > 2 ? " " + discoverCards[2].card.cardIDenum : ""));
-                
+
                 if (ttf < 3000) return (new Random().Next(ttf < 1300 ? 1300 - ttf : 0, 3100 - ttf));
 
             }

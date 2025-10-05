@@ -4357,6 +4357,16 @@ namespace HREngine.Bots
         /// </summary>
         private void HandleHeroAttack(Minion attacker, Minion defender, int oldHp)
         {
+            //英雄攻击时方法
+            this.ownWeapon.card.sim_card.onHeroattack(this, this.ownHero, defender, this.ownHero);
+            //当英雄攻击时,随从触发效果
+            foreach (Minion m in this.ownMinions.ToArray())
+            {
+                if (!m.silenced)
+                {
+                    m.handcard.card.sim_card.onHeroattack(this, m, defender);
+                }
+            }
             int dmg = AdjustDamageForWeapon(attacker, attacker.Angr);
             defender.getDamageOrHeal(dmg, this, true, false);
 
@@ -4420,9 +4430,10 @@ namespace HREngine.Bots
                 }
                 // 调用 ExecuteHeroAttackWithAction 方法，传递组合后的附魔效果
                 this.ownWeapon.card.sim_card.ExecuteHeroAttackWithAction(this, this.ownHero, defender, combinedAction);
+                //英雄攻击后方法
                 this.ownWeapon.card.sim_card.onHeroattack(this, this.ownHero, defender, this.ownHero);
             }
-
+            //当英雄攻击后,随从触发效果
             foreach (Minion m in this.ownMinions.ToArray())
             {
                 if (!m.silenced)
@@ -4557,24 +4568,24 @@ namespace HREngine.Bots
                 HealHero(attacker.own, oldHp - defender.Hp);
             }
 
-            // 处理犀牛超杀效果
-            if (!attacker.silenced && attacker.handcard.card.nameEN == CardDB.cardNameEN.tramplingrhino)
-            {
-                if (attacker.own)
-                {
-                    this.minionGetDamageOrHeal(this.enemyHero, -defender.Hp);
-                    this.evaluatePenality += defender.Hp * 4;
-                }
-            }
+            // // 处理犀牛超杀效果
+            // if (!attacker.silenced && attacker.handcard.card.nameEN == CardDB.cardNameEN.tramplingrhino)
+            // {
+            //     if (attacker.own)
+            //     {
+            //         this.minionGetDamageOrHeal(this.enemyHero, -defender.Hp);
+            //         this.evaluatePenality += defender.Hp * 4;
+            //     }
+            // }
 
             // 处理血缚小鬼效果
-            if (!attacker.silenced && attacker.handcard.card.nameCN == CardDB.cardNameCN.血缚小鬼)
-            {
-                if (attacker.own)
-                {
-                    this.minionGetDamageOrHeal(this.ownHero, 2);
-                }
-            }
+            // if (!attacker.silenced && attacker.handcard.card.nameCN == CardDB.cardNameCN.血缚小鬼)
+            // {
+            //     if (attacker.own)
+            //     {
+            //         this.minionGetDamageOrHeal(this.ownHero, 2);
+            //     }
+            // }
         }
 
         /// <summary>
@@ -4587,8 +4598,22 @@ namespace HREngine.Bots
                 switch (defender.handcard.card.nameEN)
                 {
                     case CardDB.cardNameEN.voodoohexxer:
+                    case CardDB.cardNameEN.voodoohexxer_ICC_088:
                     case CardDB.cardNameEN.snowchugger:
+                    case CardDB.cardNameEN.chillomatic:
                     case CardDB.cardNameEN.waterelemental:
+                    case CardDB.cardNameEN.waterelemental_CS2_033:
+                    case CardDB.cardNameEN.waterelemental_Story_11_WaterElemental:
+                    case CardDB.cardNameEN.waterelemental_ICC_833t:
+                    case CardDB.cardNameEN.waterelemental_VAC_509t:
+                    case CardDB.cardNameEN.waterelemental_VAN_CS2_033:
+                    case CardDB.cardNameEN.iceshard_YOD_029t:
+                    case CardDB.cardNameEN.snowman:
+                    case CardDB.cardNameEN.snowbrute:
+                    case CardDB.cardNameEN.frozenstagguard:
+                    case CardDB.cardNameEN.sindragosaswing:
+                    case CardDB.cardNameEN.sindragosaswing_NX2_037t2:
+                    case CardDB.cardNameEN.icehoofprotector:
                         minionGetFrozen(attacker);
                         break;
                 }
@@ -4648,73 +4673,74 @@ namespace HREngine.Bots
         /// </summary>
         private void HandlePostAttackEffects(Minion attacker, Minion defender, bool dontcount)
         {
-            switch (attacker.name)
-            {
-                case CardDB.cardNameEN.parkpanther:
-                    if (attacker.own)
-                    {
-                        this.minionGetTempBuff(this.ownHero, 3, 0);
-                    }
-                    break;
-                case CardDB.cardNameEN.theboogeymonster:
-                    if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0) this.minionGetBuffed(attacker, 2, 2);
-                    break;
-                case CardDB.cardNameEN.overlordrunthak:
-                    foreach (Handmanager.Handcard hc in this.owncards)
-                    {
-                        if (hc.card.type == CardDB.cardtype.MOB)
-                        {
-                            hc.addattack++;
-                            hc.addHp++;
-                            this.anzOwnExtraAngrHp += 2;
-                        }
-                    }
-                    break;
-                case CardDB.cardNameEN.windupburglebot:
-                    if (!defender.isHero && attacker.Hp > 0) this.drawACard(CardDB.cardNameEN.unknown, attacker.own);
-                    break;
-                case CardDB.cardNameEN.lotusassassin:
-                    if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0) attacker.stealth = true;
-                    break;
-                case CardDB.cardNameEN.lotusillusionist:
-                    if (defender.isHero) this.minionTransform(attacker, this.getRandomCardForManaMinion(6));
-                    break;
-                case CardDB.cardNameEN.viciousfledgling:
-                    if (defender.isHero) this.getBestAdapt(attacker);
-                    break;
-                case CardDB.cardNameEN.knuckles:
-                    if (!defender.isHero && attacker.Hp > 0) this.minionAttacksMinion(attacker, attacker.own ? this.enemyHero : this.ownHero, true);
-                    break;
-                case CardDB.cardNameEN.finjatheflyingstar:
-                    if (!defender.isHero && defender.Hp < 1)
-                    {
-                        SummonMurlocs(attacker);
-                    }
-                    break;
-                case CardDB.cardNameEN.giantsandworm:
-                    if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0)
-                    {
-                        attacker.numAttacksThisTurn = 0;
-                        attacker.Ready = true;
-                    }
-                    break;
-                case CardDB.cardNameEN.drakonidslayer:
-                case CardDB.cardNameEN.magnatauralpha:
-                case CardDB.cardNameEN.lakethresher:
-                case CardDB.cardNameEN.darkmoonrabbit:
-                case CardDB.cardNameEN.foereaper4000:
-                    if (!attacker.silenced && !dontcount)
-                    {
-                        AttackAdjacentMinions(attacker, defender);
-                    }
-                    break;
-            }
+            attacker.handcard.card.sim_card.afterMinionAttack(this, attacker, defender, dontcount);
+            // switch (attacker.name)
+            // {
+            //     case CardDB.cardNameEN.parkpanther:
+            //         if (attacker.own)
+            //         {
+            //             this.minionGetTempBuff(this.ownHero, 3, 0);
+            //         }
+            //         break;
+            //     case CardDB.cardNameEN.theboogeymonster:
+            //         if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0) this.minionGetBuffed(attacker, 2, 2);
+            //         break;
+            //     case CardDB.cardNameEN.overlordrunthak:
+            //         foreach (Handmanager.Handcard hc in this.owncards)
+            //         {
+            //             if (hc.card.type == CardDB.cardtype.MOB)
+            //             {
+            //                 hc.addattack++;
+            //                 hc.addHp++;
+            //                 this.anzOwnExtraAngrHp += 2;
+            //             }
+            //         }
+            //         break;
+            //     case CardDB.cardNameEN.windupburglebot:
+            //         if (!defender.isHero && attacker.Hp > 0) this.drawACard(CardDB.cardNameEN.unknown, attacker.own);
+            //         break;
+            //     case CardDB.cardNameEN.lotusassassin:
+            //         if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0) attacker.stealth = true;
+            //         break;
+            //     case CardDB.cardNameEN.lotusillusionist:
+            //         if (defender.isHero) this.minionTransform(attacker, this.getRandomCardForManaMinion(6));
+            //         break;
+            //     case CardDB.cardNameEN.viciousfledgling:
+            //         if (defender.isHero) this.getBestAdapt(attacker);
+            //         break;
+            //     case CardDB.cardNameEN.knuckles:
+            //         if (!defender.isHero && attacker.Hp > 0) this.minionAttacksMinion(attacker, attacker.own ? this.enemyHero : this.ownHero, true);
+            //         break;
+            //     case CardDB.cardNameEN.finjatheflyingstar:
+            //         if (!defender.isHero && defender.Hp < 1)
+            //         {
+            //             SummonMurlocs(attacker);
+            //         }
+            //         break;
+            //     case CardDB.cardNameEN.giantsandworm:
+            //         if (!defender.isHero && defender.Hp < 1 && attacker.Hp > 0)
+            //         {
+            //             attacker.numAttacksThisTurn = 0;
+            //             attacker.Ready = true;
+            //         }
+            //         break;
+            //     case CardDB.cardNameEN.drakonidslayer:
+            //     case CardDB.cardNameEN.magnatauralpha:
+            //     case CardDB.cardNameEN.lakethresher:
+            //     case CardDB.cardNameEN.darkmoonrabbit:
+            //     case CardDB.cardNameEN.foereaper4000:
+            //         if (!attacker.silenced && !dontcount)
+            //         {
+            //             AttackAdjacentMinions(attacker, defender);
+            //         }
+            //         break;
+            // }
         }
 
         /// <summary>
         /// 处理攻击相邻随从的逻辑。
         /// </summary>
-        private void AttackAdjacentMinions(Minion attacker, Minion defender)
+        public void AttackAdjacentMinions(Minion attacker, Minion defender)
         {
             List<Minion> temp = (attacker.own) ? this.enemyMinions : this.ownMinions;
             foreach (Minion mnn in temp)
@@ -4729,7 +4755,7 @@ namespace HREngine.Bots
         /// <summary>
         /// 处理芬杰的效果，召唤鱼人。
         /// </summary>
-        private void SummonMurlocs(Minion attacker)
+        public void SummonMurlocs(Minion attacker)
         {
             if (attacker.own)
             {
@@ -5284,9 +5310,13 @@ namespace HREngine.Bots
             {
                 HandleWeaponPlay(hc, target, choice);
             }
-            else if (hc.card.type == CardDB.cardtype.HERO)
+            // else if (hc.card.type == CardDB.cardtype.HERO)
+            // {
+            //     HandleHeroPlay(hc, choice);
+            // }
+            else
             {
-                HandleHeroPlay(hc, choice);
+                HandleSpellPlay(hc, target, choice);
             }
         }
         private void HandleWeaponPlay(Handmanager.Handcard hc, Minion target, int choice)
@@ -6290,15 +6320,7 @@ namespace HREngine.Bots
         public void triggerAMinionDealedDmg(Minion m, int dmgDone, bool isAttacker)
         {
             // 仅有少数卡牌具有此触发效果
-            switch (m.name)
-            {
-                case CardDB.cardNameEN.alleyarmorsmith: // "街巷护甲匠"：造成伤害时为英雄获得等同于攻击力的护甲值
-                    if (!m.silenced)
-                    {
-                        this.minionGetArmor(m.own ? this.ownHero : this.enemyHero, m.Angr);
-                    }
-                    break;
-            }
+            m.handcard.card.sim_card.onDamageDealtByMinion(this, m, dmgDone, isAttacker);
 
             // 处理随从的吸血效果
             if (m.lifesteal && isAttacker && dmgDone > 0)
@@ -8533,23 +8555,25 @@ namespace HREngine.Bots
                 // 遍历己方随从
                 foreach (Minion m in this.ownMinions)
                 {
-                    // 检查随从是否是摩尔克且未被沉默
-                    if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
-                    {
-                        // 抽取目标随从的复制牌
-                        this.drawACard(target.handcard.card.nameEN, m.own, true);
-                    }
+                    // // 检查随从是否是摩尔克且未被沉默
+                    // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
+                    // {
+                    //     // 抽取目标随从的复制牌
+                    //     this.drawACard(target.handcard.card.nameEN, m.own, true);
+                    // }
+                    m.handcard.card.sim_card.onMinionFrozen(this, m, target);
                 }
 
                 // 遍历敌方随从
                 foreach (Minion m in this.enemyMinions)
                 {
-                    // 检查随从是否是摩尔克且未被沉默
-                    if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
-                    {
-                        // 抽取目标随从的复制牌
-                        this.drawACard(target.handcard.card.nameEN, m.own, true);
-                    }
+                    // // 检查随从是否是摩尔克且未被沉默
+                    // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
+                    // {
+                    //     // 抽取目标随从的复制牌
+                    //     this.drawACard(target.handcard.card.nameEN, m.own, true);
+                    // }
+                    m.handcard.card.sim_card.onMinionFrozen(this, m, target);
                 }
             }
         }

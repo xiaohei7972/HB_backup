@@ -11,7 +11,15 @@ namespace HREngine.Bots
 	//<b>战吼：</b>召唤两个2/5的巢群虫后。对所有敌人造成3点伤害。
 	class Sim_SC_004 : SimTemplate
 	{
-		
-		
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.SC_003);
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			int pos = own.own ? p.ownMinions.Count : p.enemyMinions.Count;
+			p.callKid(kid, pos, own.own);
+			p.callKid(kid, pos, own.own);
+			p.allCharsOfASideGetDamage(!own.own, 3);
+
+		}
+
 	}
 }

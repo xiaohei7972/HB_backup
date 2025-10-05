@@ -1,26 +1,26 @@
 {
-  "LastDeckCachePid": 22308,
+  "LastDeckCachePid": 12840,
   "AllowExternalAccess": true,
   "ShowGlobalTab": false,
   "ShowConfigurationTab": false,
-  "ShowDevTab": true,
+  "ShowDevTab": false,
   "ShowToolsTab": false,
   "TopRowDefinitionHeight": "*",
   "BottomRowDefinitionHeight": "*",
   "SplitterRowDefinitionHeight": "Auto",
-  "MsBetweenTicks": 0,
+  "MsBetweenTicks": 1,
   "InputEventMsDelay": 3,
   "MsBetweenGuiTicks": 1000,
-  "WindowX": 1122,
-  "WindowY": 225,
-  "WindowWidth": 712,
-  "WindowHeight": 700,
+  "WindowX": 1155,
+  "WindowY": 268,
+  "WindowWidth": 709,
+  "WindowHeight": 712,
   "LastBot": "天梯脚本",
   "LastRoutine": "天梯策略",
   "EnabledPlugins": [
     "自动停止插件",
     "监控插件",
-    "统计插件",
-    "任务插件"
+    "任务插件",
+    "统计插件"
   ]
 }

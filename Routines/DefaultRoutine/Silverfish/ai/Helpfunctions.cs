@@ -14,7 +14,7 @@ namespace HREngine.Bots
     public class Helpfunctions
     {
         /// <summary>The logger for this type.</summary>
-        //private static readonly ILog Log = Logger.GetLoggerInstanceForType(); // Todo:  为了能够run Test不用Triton里面组件
+        // private static readonly ILog Log = Logger.GetLoggerInstanceForType(); // Todo:  为了能够run Test不用Triton里面组件
         public List<Playfield> storedBoards = new List<Playfield>();
 
 
@@ -46,7 +46,7 @@ namespace HREngine.Bots
         private Helpfunctions()
         {
 
-            //System.IO.File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, "");
+            // System.IO.File.WriteAllText(Settings.Instance.logpath + Settings.Instance.logfile, "");
         }
 
         public bool writelogg = true;

@@ -747,6 +747,7 @@ namespace HREngine.Bots
             public bool Silence = false;//沉默
             public bool choice = false;//抉择
             public bool windfury = false;//风怒
+            public bool megaWindfury = false;//超级风怒
             public bool poisonous = false;//剧毒
             public bool lifesteal = false;//吸血
             public int dormant = 0;//休眠 0表示非休眠生物或者已醒，还有多少回合醒来
@@ -833,7 +834,8 @@ namespace HREngine.Bots
             public bool Echo = false; // 回响
             public bool nonKeywordEcho = false; // 非关键词回响，设计师左右脑互搏的结果。就是个在本回合可以重复使用
             public bool Twinspell = false; // 双生法术
-
+            public int armor = 0;
+            public cardIDEnum heroPower = cardIDEnum.None;
             public bool Temporary = false; // 临时
             public int Objective = 0; // 光环 如救生光环
             public int ObjectiveAura = 0; // 会影响场面的光环 如征战平原
@@ -2196,7 +2198,7 @@ namespace HREngine.Bots
                         break;
                     case CardDB.cardNameEN.rabblebouncer: //场馆保镖
                     case CardDB.cardNameEN.prismaticbeam: //棱彩光束
-                    case CardDB.cardNameEN.eredarbrute: //棱彩光束
+                    case CardDB.cardNameEN.eredarbrute: //艾瑞达蛮兵
                         {
                             int enemyMinionsCount = 0;
                             if (p.enemyMinions.Count > 0)
@@ -2727,6 +2729,16 @@ namespace HREngine.Bots
                                 card.windfury = true;
                             }
                             break;
+                        case "1207":
+                            {
+                                if ("ReferencedTag".Equals(tag.Name))
+                                {
+                                    // if (cardId == "WW_382" || cardId == "GVG_111t")
+                                    if (!"DAL_742".Equals(cardId))
+                                        card.megaWindfury = true;
+                                }
+                            }
+                            break;
                         case "217":
                             {
                                 card.deathrattle = true;
@@ -2999,6 +3011,17 @@ namespace HREngine.Bots
                         case "373":
                             {
                                 card.immuneWhileAttacking = true; // 攻击时免疫
+                            }
+                            break;
+
+                        case "380":
+                            {
+                                card.heroPower = cardIdstringToEnum(tag.GetAttribute("cardID")); // 英雄牌技能
+                            }
+                            break;
+                        case "292":
+                            {
+                                card.armor = int.Parse(tag.GetAttribute("value")); // 英雄牌护甲
                             }
                             break;
 

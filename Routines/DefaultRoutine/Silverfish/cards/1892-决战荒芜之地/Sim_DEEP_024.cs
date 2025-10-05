@@ -11,24 +11,27 @@ namespace HREngine.Bots
 	//<b><b>吸血</b>。快枪：</b>造成5点伤害。<b>锻造：</b>将<b>快枪</b>变为<b>战吼</b>。
 	class Sim_DEEP_024 : SimTemplate
 	{
+
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
 		{
 			if (hc.card.Quickdraw)
 			{
-				p.minionGetDamageOrHeal(target, 5);
+				if (target != null)
+				{
+					p.minionGetDamageOrHeal(target, 5);
 
-				// 吸血效果，恢复等量生命值
-				p.minionGetDamageOrHeal(p.ownHero, -5);
+					// 吸血效果，恢复等量生命值
+					p.minionGetDamageOrHeal(p.ownHero, -5);
+				}
 			}
 		}
-		
+
 		public override PlayReq[] GetPlayReqs()
-        {
-            return new PlayReq[]{
-                new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
-                new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET),
-                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
-            };
-        }
-    }
+		{
+			return new PlayReq[] {
+				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
+			};
+		}
+
+	}
 }

@@ -11,8 +11,13 @@ namespace HREngine.Bots
 	//在你的英雄攻击后，对所有敌人造成4点伤害。
 	class Sim_VAC_464t31 : SimTemplate
 	{
+        CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.VAC_464t31);
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.equipWeapon(weapon, ownplay);
+        }
 
-        public override void onHeroattack(Playfield p, Minion own, Minion target)
+        public override void afterHeroattack(Playfield p, Minion own, Minion target)
         {
             // 检查英雄是否为持有者，并且该武器是奎尔德拉
             if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.VAC_464t31)

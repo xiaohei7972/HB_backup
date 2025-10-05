@@ -4,18 +4,14 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	class Sim_NAX7_04H : SimTemplate //* 符文巨剑 Massive Runeblade
-//Deals double damage to heroes.
-//对英雄造成双倍伤害。 
+	//武器 中立 费用：3 攻击力：10 耐久度：0
+	//Massive Runeblade
+	//符文巨剑
+	//Deals double damage to heroes.
+	//对英雄造成双倍伤害。
+	class Sim_NAX7_04H : SimTemplate
 	{
 		
 		
-
-		CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.NAX7_04H);
-
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-            p.equipWeapon(weapon, ownplay);
-		}
 	}
 }

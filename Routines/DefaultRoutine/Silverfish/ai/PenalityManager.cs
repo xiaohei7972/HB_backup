@@ -73,7 +73,7 @@ namespace HREngine.Bots
         //buff手牌
         Dictionary<CardDB.cardNameEN, int> buffHandDatabase = new Dictionary<CardDB.cardNameEN, int>();
         //装备武器
-        Dictionary<CardDB.cardNameEN, int> equipWeaponPlayDatabase = new Dictionary<CardDB.cardNameEN, int>(); 
+        Dictionary<CardDB.cardNameEN, int> equipWeaponPlayDatabase = new Dictionary<CardDB.cardNameEN, int>();
         //重点
         public Dictionary<CardDB.cardNameEN, int> priorityDatabase = new Dictionary<CardDB.cardNameEN, int>();
         //有用 需要保持
@@ -98,7 +98,7 @@ namespace HREngine.Bots
         public Dictionary<CardDB.cardNameEN, int> specialMinions = new Dictionary<CardDB.cardNameEN, int>(); //minions with cardtext, but no battlecry
         //我方 亡语效果 召唤的随从
         public Dictionary<CardDB.cardNameEN, int> ownSummonFromDeathrattle = new Dictionary<CardDB.cardNameEN, int>();
-        
+
         Dictionary<TAG_RACE, int> ClassRacePriorityWarloc = new Dictionary<TAG_RACE, int>();//术士职业 重点
         Dictionary<TAG_RACE, int> ClassRacePriorityHunter = new Dictionary<TAG_RACE, int>();//猎人
         Dictionary<TAG_RACE, int> ClassRacePriorityMage = new Dictionary<TAG_RACE, int>();//法师
@@ -108,7 +108,7 @@ namespace HREngine.Bots
         Dictionary<TAG_RACE, int> ClassRacePriorityPriest = new Dictionary<TAG_RACE, int>();//牧师
         Dictionary<TAG_RACE, int> ClassRacePriorityRouge = new Dictionary<TAG_RACE, int>();//盗贼??
         Dictionary<TAG_RACE, int> ClassRacePriorityWarrior = new Dictionary<TAG_RACE, int>();//战士
-        
+
         ComboBreaker cb;//阻断
         Hrtprozis prozis;//对局信息
         Settings settings;//设置
@@ -247,7 +247,8 @@ namespace HREngine.Bots
             if (m != null && !m.silenced && (m.untouchable || m.handcard.card.CantAttack)) return 1000;
             if (m.cantAttackHeroes && target.isHero) return 1000;
             int enfaceReward = 0;
-            if(printUtils.enfaceReward != 0 && target != null && target.isHero){
+            if (printUtils.enfaceReward != 0 && target != null && target.isHero)
+            {
                 enfaceReward = printUtils.enfaceReward;
             }
             return ai.botBase.getAttackWithMininonPenality(m, p, target) - enfaceReward;
@@ -256,7 +257,8 @@ namespace HREngine.Bots
         {
             if (target == null || target.untouchable || target.handcard.card.nameCN == CardDB.cardNameCN.毁灭战舰 || target.Hp <= 0) return 1000;
             int enfaceReward = 0;
-            if(printUtils.enfaceReward != 0 && target != null && target.isHero){
+            if (printUtils.enfaceReward != 0 && target != null && target.isHero)
+            {
                 enfaceReward = printUtils.enfaceReward;
             }
             return ai.botBase.getAttackWithHeroPenality(target, p) - enfaceReward;
@@ -520,7 +522,7 @@ namespace HREngine.Bots
             DamageTargetDatabase.Add(CardDB.cardNameEN.meteor, 15);
             DamageTargetDatabase.Add(CardDB.cardNameEN.mindshatter, 3);
             DamageTargetDatabase.Add(CardDB.cardNameEN.mindspike, 2);
-            DamageTargetDatabase.Add(CardDB.cardNameEN.moonfire, 1); 
+            DamageTargetDatabase.Add(CardDB.cardNameEN.moonfire, 1);
             DamageTargetDatabase.Add(CardDB.cardNameEN.mortalcoil, 1);
             DamageTargetDatabase.Add(CardDB.cardNameEN.mortalstrike, 4);
             DamageTargetDatabase.Add(CardDB.cardNameEN.northseakraken, 4);
@@ -558,16 +560,16 @@ namespace HREngine.Bots
             DamageTargetDatabase.Add(CardDB.cardNameEN.doomerang, 2);
             DamageTargetDatabase.Add(CardDB.cardNameEN.avalanche, 0);
 
-            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.baneofdoom, 2); 
+            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.baneofdoom, 2);
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.bash, 3); //+3 armor
-            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.bloodtoichor, 1); 
+            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.bloodtoichor, 1);
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.crueltaskmaster, 1); // gives 2 attack
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.deathbloom, 5);
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.demonfire, 2); // friendly demon get +2/+2
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.demonheart, 5);
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.earthshock, 1); //SILENCE /good for raggy etc or iced
-            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.feedingtime, 3); 
-            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.flamegeyser, 2); 
+            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.feedingtime, 3);
+            DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.flamegeyser, 2);
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.hammerofwrath, 3); //draw a card
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.holywrath, 2);//draw a card
             DamageTargetSpecialDatabase.Add(CardDB.cardNameEN.innerrage, 1); // gives 2 attack
@@ -587,7 +589,7 @@ namespace HREngine.Bots
             HeroPowerEquipWeapon.Add(CardDB.cardNameEN.shapeshift, 1);
             HeroPowerEquipWeapon.Add(CardDB.cardNameEN.plaguelord, 3);
 
-            
+
             this.maycauseharmDatabase.Add(CardDB.cardNameEN.arcaneblast, 1);
             this.maycauseharmDatabase.Add(CardDB.cardNameEN.arcaneshot, 1);
             this.maycauseharmDatabase.Add(CardDB.cardNameEN.backstab, 1);
@@ -695,7 +697,7 @@ namespace HREngine.Bots
 
         private void setupsilenceDatabase()
         {
-            
+
             this.silenceDatabase.Add(CardDB.cardNameEN.defiascleaner, 1);//迪菲亚清道夫
             this.silenceDatabase.Add(CardDB.cardNameEN.dispel, 1);//禁魔
             this.silenceDatabase.Add(CardDB.cardNameEN.earthshock, 1);//大地震击
@@ -1381,7 +1383,7 @@ namespace HREngine.Bots
             specialMinions.Add(CardDB.cardNameEN.coldarradrake, 0);
             specialMinions.Add(CardDB.cardNameEN.coliseummanager, 0);
             specialMinions.Add(CardDB.cardNameEN.confessorpaletress, 0);
-            specialMinions.Add(CardDB.cardNameEN.crabrider,0);// 螃蟹骑士 
+            specialMinions.Add(CardDB.cardNameEN.crabrider, 0);// 螃蟹骑士 
             specialMinions.Add(CardDB.cardNameEN.crazedworshipper, 0);
             specialMinions.Add(CardDB.cardNameEN.crowdfavorite, 0);
             specialMinions.Add(CardDB.cardNameEN.crueldinomancer, 0);
@@ -1980,7 +1982,7 @@ namespace HREngine.Bots
             lethalHelpers.Add(CardDB.cardNameEN.taintedzealot, 1);//被污染的狂热者
             lethalHelpers.Add(CardDB.cardNameEN.spellweaver, 2);
         }
-        
+
         //设置关系
         private void setupRelations()
         {
@@ -2098,7 +2100,7 @@ namespace HREngine.Bots
             silenceTargets.Add(CardDB.cardNameEN.explosivesheep, 0);
             silenceTargets.Add(CardDB.cardNameEN.eydisdarkbane, 0);
             silenceTargets.Add(CardDB.cardNameEN.fallenhero, 0);
-            silenceTargets.Add(CardDB.cardNameEN.masterchest, 0);            
+            silenceTargets.Add(CardDB.cardNameEN.masterchest, 0);
             silenceTargets.Add(CardDB.cardNameEN.fandralstaghelm, 0);
             silenceTargets.Add(CardDB.cardNameEN.feugen, 0);
             silenceTargets.Add(CardDB.cardNameEN.finjatheflyingstar, 0);
@@ -2495,31 +2497,31 @@ namespace HREngine.Bots
                     break;
                 case TAG_CLASS.WARRIOR:
                     if (this.ClassRacePriorityWarrior.ContainsKey(minionRace)) retval += this.ClassRacePriorityWarrior[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.ROGUE:
                     if (this.ClassRacePriorityRouge.ContainsKey(minionRace)) retval += this.ClassRacePriorityRouge[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.SHAMAN:
                     if (this.ClassRacePriorityShaman.ContainsKey(minionRace)) retval += this.ClassRacePriorityShaman[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.PRIEST:
                     if (this.ClassRacePriorityPriest.ContainsKey(minionRace)) retval += this.ClassRacePriorityPriest[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.PALADIN:
                     if (this.ClassRacePriorityPaladin.ContainsKey(minionRace)) retval += this.ClassRacePriorityPaladin[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.MAGE:
                     if (this.ClassRacePriorityMage.ContainsKey(minionRace)) retval += this.ClassRacePriorityMage[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.HUNTER:
                     if (this.ClassRacePriorityHunter.ContainsKey(minionRace)) retval += this.ClassRacePriorityHunter[minionRace];
-					break;
+                    break;
                 case TAG_CLASS.DRUID:
                     if (this.ClassRacePriorityDruid.ContainsKey(minionRace)) retval += this.ClassRacePriorityDruid[minionRace];
                     break;
                 default:
                     break;
-			}
+            }
             return retval;
         }
 
@@ -2816,6 +2818,7 @@ namespace HREngine.Bots
         /// <returns>惩罚值</returns>
         public int getUseLocationPenality(Minion locationMinion, Minion target, Playfield p)
         {
+            Helpfunctions.Instance.logg("开始使用地标的惩罚值");
             int enfaceReward = 0;
             if (target != null)
             {
@@ -2851,8 +2854,11 @@ namespace HREngine.Bots
         /// <returns>惩罚值</returns>
         public int getUseTitanAbilityPenality(Minion titanMinion, Minion target, Playfield p)
         {
+            Helpfunctions.Instance.logg("开始泰坦技能的惩罚值");
+
             // 如果泰坦随从本身有特殊条件，例如冷却中或无技能可用
-            if ((titanMinion.handcard.card.TitanAbilityUsed1 && titanMinion.handcard.card.TitanAbilityUsed2 && titanMinion.handcard.card.TitanAbilityUsed3) 
+            // !技能1冷却 || !技能2冷却 || !技能3冷却
+            if ((!titanMinion.handcard.card.TitanAbilityUsed1 && !titanMinion.handcard.card.TitanAbilityUsed2 && !titanMinion.handcard.card.TitanAbilityUsed3)
                 || titanMinion.handcard.card.Health <= 0)
             {
                 return 1000; // 泰坦技能在冷却或已无可用资源，不应使用

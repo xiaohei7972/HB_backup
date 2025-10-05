@@ -12,9 +12,9 @@ namespace HREngine.Bots
     public class Ai
     {
 
-        public int maxdeep = 10;
-        public int maxwide = 1500;
-        public int maxCal = 40;
+        public int maxdeep = 12;
+        public int maxwide = 3000;
+        public int maxCal = 60;
         //public int playaroundprob = 40;
         public int playaroundprob2 = 80;
         public int maxNumberOfThreads = 100; //don't change manually, because it changes automatically
@@ -88,7 +88,7 @@ namespace HREngine.Bots
         public void setMaxWide(int mw)
         {
             this.maxwide = mw;
-            if (maxwide <= 0) this.maxwide = 1500;            
+            if (maxwide <= 0) this.maxwide = 3000;            
             if (maxwide <= 100) this.maxwide = 100;
             this.mainTurnSimulator.updateParams(maxdeep, maxwide, 0);
         }
@@ -97,7 +97,7 @@ namespace HREngine.Bots
         public void setMaxDeep(int mw)
         {
             this.maxdeep = mw;
-            if (maxdeep <= 0) this.maxdeep = 10;
+            if (maxdeep <= 0) this.maxdeep = 12;
             if (maxdeep <= 2) this.maxdeep = 2;
             this.mainTurnSimulator.updateParams(maxdeep, maxwide, 0);
         }
@@ -105,7 +105,7 @@ namespace HREngine.Bots
         public void setMaxCal(int mw)
         {
             this.maxCal = mw;
-            if (maxCal <= 0) this.maxCal = 40;
+            if (maxCal <= 0) this.maxCal = 60;
             if (maxCal <= 1) this.maxCal = 1;
         }
 

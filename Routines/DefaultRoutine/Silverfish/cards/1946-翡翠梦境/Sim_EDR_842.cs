@@ -12,14 +12,14 @@ namespace HREngine.Bots
 	//在你的英雄攻击一个敌人后，随机对另一个敌人造成等同于你的英雄攻击力的伤害。
 	class Sim_EDR_842 : SimTemplate
 	{
-		CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_842);
+		// CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_842);
 
-		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-			p.equipWeapon(weapon, ownplay);
-		}
+		// public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		// {
+		// 	p.equipWeapon(weapon, ownplay);
+		// }
 
-		public override void onHeroattack(Playfield p, Minion own, Minion target)
+		public override void afterHeroattack(Playfield p, Minion own, Minion target)
 		{
 			// 检查己方英雄是否装备了“亵渎之矛”
 			if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.EDR_842)
@@ -29,6 +29,7 @@ namespace HREngine.Bots
 				{
 					int damage = p.ownHero.Angr;
 					List<Minion> possibleTargets = own.own ? p.enemyMinions : p.ownMinions;
+					int index = Math.Max(p.getRandomNumber(0, possibleTargets.Count), possibleTargets.Count - 1);
 
 					// 将英雄加入到可能的目标中
 					if (own.own)
@@ -44,7 +45,7 @@ namespace HREngine.Bots
 					possibleTargets = possibleTargets.ToList().Where((m) => m != target).ToList();
 
 					// 从可能的目标中随机选择一个2
-					Minion target2 = possibleTargets[p.getRandomNumber(0, possibleTargets.Count)];
+					Minion target2 = possibleTargets[index];
 
 					// 对选定的目标造成伤害
 					if (target2 != null)

@@ -670,6 +670,14 @@ namespace HREngine.Bots
             this.OwnLastDiedMinion = cid;
         }
 
+        // public void updateplayedLastTurn(int anzOwnElemTT, int anzOwnElemLT, int ownElementalsHaveLS)
+        // {
+        //     //元素
+        //     anzOwnElementalsThisTurn = anzOwnElemTT;
+        //     anzOwnElementalsLastTurn = anzOwnElemLT;
+        //     ownElementalsHaveLifesteal = ownElementalsHaveLS;
+        // }
+
         private Minion createNewMinion(Handmanager.Handcard hc, int id)
         {
             Minion m = new Minion
@@ -719,9 +727,9 @@ namespace HREngine.Bots
 
             help.logg("ownhero:");
             help.logg((this.heroname == HeroEnum.None ? this.heronameingame : this.heroname.ToString()) + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack + " " + this.enemyHero.stealth
-                + ( this.ownHero.enchs.Length > 0 ? " 附魔:" + this.ownHero.enchs : "" )
+                + (this.ownHero.enchs.Length > 0 ? " 附魔:" + this.ownHero.enchs : "")
                 );
-            help.logg("weapon: " + ownWeapon.Angr + " " + ownWeapon.Durability + " " + this.ownWeapon.card.nameCN + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? 1 : 0) + " " + (this.ownWeapon.lifesteal ? 1 : 0) + " " + this.ownWeapon.scriptNum1 );
+            help.logg("weapon: " + ownWeapon.Angr + " " + ownWeapon.Durability + " " + this.ownWeapon.card.nameCN + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? 1 : 0) + " " + (this.ownWeapon.lifesteal ? 1 : 0) + " " + this.ownWeapon.scriptNum1);
             help.logg("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
             string secs = "";
             foreach (CardDB.cardIDEnum sec in this.ownSecretList)
@@ -795,7 +803,7 @@ namespace HREngine.Bots
                     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
                 }
 
-                if (m.enchs.Length > 0) mini += " 附魔:" + m.enchs ;
+                if (m.enchs.Length > 0) mini += " 附魔:" + m.enchs;
 
                 help.logg(mini);
             }

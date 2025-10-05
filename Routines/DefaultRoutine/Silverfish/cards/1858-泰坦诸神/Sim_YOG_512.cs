@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在你召唤一个亡灵后，使其获得<b>剧毒</b>。
 	class Sim_YOG_512 : SimTemplate
 	{
-		
-		
+		public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
+		{
+			if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own && RaceUtils.MinionBelongsToRace(summonedMinion.handcard.card.GetRaces(), CardDB.Race.UNDEAD))
+			{
+				summonedMinion.poisonous = true;
+			}
+		}
+
 	}
 }

@@ -120,6 +120,27 @@ namespace HREngine.Bots
                 case CardDB.cardIDEnum.VAN_HERO_10bp:
                     tempCardIdEnum = CardDB.cardIDEnum.HERO_10bp;
                     break;
+                // 死亡骑士皮肤
+                case CardDB.cardIDEnum.HERO_11bp:
+                case CardDB.cardIDEnum.HERO_11gbp:
+                case CardDB.cardIDEnum.HERO_11cbp:
+                case CardDB.cardIDEnum.HERO_11hbp:
+                case CardDB.cardIDEnum.HERO_11ibp:
+                case CardDB.cardIDEnum.HERO_11lbp:
+                case CardDB.cardIDEnum.HERO_11ohp:
+                case CardDB.cardIDEnum.HERO_11uhp:
+                case CardDB.cardIDEnum.HERO_11vhp:
+                case CardDB.cardIDEnum.HERO_11zhp:
+                case CardDB.cardIDEnum.HERO_11aehp:
+                case CardDB.cardIDEnum.HERO_11ajhp:
+                case CardDB.cardIDEnum.HERO_11aihp:
+                case CardDB.cardIDEnum.HERO_11q_LichKing:
+                case CardDB.cardIDEnum.HERO_11s_Scarlet_hls:
+                case CardDB.cardIDEnum.HERO_11v:
+                case CardDB.cardIDEnum.HERO_11ab:
+                case CardDB.cardIDEnum.HERO_11o_ReskathePitBoss:
+                    tempCardIdEnum = CardDB.cardIDEnum.HERO_11bp;
+                    break;
                 // 异画幸运币
                 case CardDB.cardIDEnum.DMF_COIN1:
                 case CardDB.cardIDEnum.DMF_COIN2:

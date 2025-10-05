@@ -173,7 +173,7 @@ namespace HREngine.Bots
             Settings.Instance.enfacehp = facehp;
             Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp = weaponOnlyAttackMobsUntilEnfacehp;
             Settings.Instance.berserkIfCanFinishNextTour = berserkIfCanFinishNextTour;
-            Settings.Instance.concedeMode = concedeMode;            
+            Settings.Instance.concedeMode = concedeMode;
             Settings.Instance.enemyTurnMaxWide = ets;
             Settings.Instance.enemyTurnMaxWideSecondStep = ets2;
             Settings.Instance.placement = placement;
@@ -196,7 +196,7 @@ namespace HREngine.Bots
             Ai.Instance.setMaxWide(this.maxwide);
             Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
             Ai.Instance.setPlayAround();
-            
+
 
             Hrtprozis.Instance.setOwnPlayer(ownPlayer);
             Handmanager.Instance.setOwnPlayer(ownPlayer);
@@ -255,7 +255,7 @@ namespace HREngine.Bots
             this.ownHero.stealth = ownHeroStealth;
             this.ownHero.enchs = ownHeroEnchs;
 
-            this.enemyHero.Angr = (enemyWeapon == null) ? 0:enemyWeapon.Angr;
+            this.enemyHero.Angr = (enemyWeapon == null) ? 0 : enemyWeapon.Angr;
             this.enemyHero.Hp = enemyherohp;
             this.enemyHero.frozen = enemyFrozen;
             this.enemyHero.armor = enemyherodefence;
@@ -266,12 +266,13 @@ namespace HREngine.Bots
 
             this.ownHero.updateReadyness();
 
-            if(heroability == null)
+            if (heroability == null)
             {
                 heroability = getHeroAbility(ownHero.cardClass);
-            }else
+            }
+            else
             {
-                if(heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp2 || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bbp)
+                if (heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp2 || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bbp)
                 {
                     ownHeroPowerCost = 1;
                 }
@@ -744,16 +745,65 @@ namespace HREngine.Bots
                     anzOwnElementalsLastTurn = Convert.ToInt32(ss[2]);
                     if (ss.Length > 3) ownElementalsHaveLifesteal = (ss[3] == "1") ? 1 : 0;
                 }
+                
+
+                // if (s.StartsWith("[本回合使用种族类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[本回合使用种族类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string race = str.Split(' ')[0];
+                //         if (race.Length > 1)
+                //         playedRacesThisTurn.Add(CardDB.Instance.raceNameStringToEnum(race));
+                //     }
+                // }
+
+                // if (s.StartsWith("[上回合使用种族类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[上回合使用种族类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string race = str.Split(' ')[0];
+                //         if (race.Length > 1)
+                //         playedRacesLastTurn.Add(CardDB.Instance.raceNameStringToEnum(race));
+                //     }
+                // }
+
+                // if (s.StartsWith("[本回合使用法术类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[本回合使用法术类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string spellSchool = str.Split(' ')[0];
+                //         if (spellSchool.Length > 1)
+                //         playedSpellSchoolThisTurn.Add(CardDB.Instance.spellSchoolNameStringToEnum(spellSchool));
+                //     }
+                // }
+                // if (s.StartsWith("[上回合使用法术类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[上回合使用法术类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string spellSchool = str.Split(' ')[0];
+                //         if (spellSchool.Length > 1)
+                //         playedSpellSchoolLastTurn.Add(CardDB.Instance.spellSchoolNameStringToEnum(spellSchool));
+                //     }
+                // }
 
                 if (s.StartsWith("quests: "))
                 {
                     String[] ss = s.Split(' ');
                     Questmanager.Instance.updateQuestStuff(ss[1], Convert.ToInt32(ss[2]), Convert.ToInt32(ss[3]), true);
                     Questmanager.Instance.updateQuestStuff(ss[4], Convert.ToInt32(ss[5]), Convert.ToInt32(ss[6]), false);
-                    if(ss.Length > 8)
+                    if (ss.Length > 8)
                     {
                         Questmanager.Instance.updateQuestStuff(ss[7], Convert.ToInt32(ss[8]), Convert.ToInt32(ss[9]), true, true);
-                    }else
+                    }
+                    else
                     {
                         Questmanager.Instance.sideQuest.Reset();
                     }
