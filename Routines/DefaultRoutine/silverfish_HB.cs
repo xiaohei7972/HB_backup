@@ -936,7 +936,7 @@ namespace HREngine.Bots
                     hc.position = zp;
                     hc.entity = entityId;
                     hc.manacost = cost;
-                    hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);
+                    hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);//手牌高亮
                     hc.darkmoon_num = scriptNum1; //得到暗月先知抽牌数
                     hc.SCRIPT_DATA_NUM_1 = scriptNum1;
 

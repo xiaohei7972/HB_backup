@@ -14,7 +14,18 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
 			int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2); // 如果目标不是自己，则使用伤害
-			p.minionGetDamageOrHeal(target, dmg); // 对目标造成伤害
+
+			if (target != null)
+			{
+				p.minionGetDamageOrHeal(target, dmg); // 对目标造成伤害
+				foreach (Minion minion in ownplay ? p.enemyMinions : p.ownMinions)
+				{
+					if(minion.zonepos == target.zonepos -1 || minion.zonepos == target.zonepos  + 1)
+                    {
+                        p.minionGetDamageOrHeal(target, dmg); // 对目标造成伤害
+                    }
+				}
+			}
 		}
 
 		public override PlayReq[] GetPlayReqs()

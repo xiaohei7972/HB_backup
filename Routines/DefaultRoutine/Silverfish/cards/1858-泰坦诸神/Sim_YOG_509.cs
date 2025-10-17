@@ -13,13 +13,12 @@ namespace HREngine.Bots
 	{
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			// 如果目标是友方野兽
-			if (target != null && target.own)
+			if (target != null)
 			{
 				// 增加2点攻击力和2点生命值
 				p.minionGetBuffed(target, 2, 2);
-				int damage = ownplay ? p.getSpellDamageDamage(target.Angr) : p.getEnemySpellDamageDamage(target.Angr);
-				p.allMinionsGetDamage(damage, target.entitiyID);
+				// int damage = ownplay ? p.getSpellDamageDamage(target.Angr) : p.getEnemySpellDamageDamage(target.Angr);
+				p.allMinionsGetDamage(target.Angr, target.entitiyID);
 			}
 		}
 

@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>延系：</b>使你的其他随从获得<b>突袭</b>。
 	class Sim_DINO_404 : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (own.handcard.poweredUp > 0)
+			{
+				p.minionGetDamageOrHeal(target, own.Angr);
+			}
+		}
 		
 	}
 }

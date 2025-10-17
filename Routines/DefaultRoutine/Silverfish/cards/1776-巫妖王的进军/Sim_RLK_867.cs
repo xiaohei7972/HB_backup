@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
             if (target != null)
             {
-				target.enchs += "RLK_867e";
+                target.itsnecrolit++;
             }
         }
 

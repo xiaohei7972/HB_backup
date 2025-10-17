@@ -21,5 +21,14 @@ namespace HREngine.Bots
             }
         }
 
+
+        public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[]
+            {
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
+                new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
+            };
+        }
     }
 }

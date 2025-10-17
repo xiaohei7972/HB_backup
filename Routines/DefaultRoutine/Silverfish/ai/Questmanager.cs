@@ -94,6 +94,10 @@ namespace HREngine.Bots
 
                 }
             }
+            public void trigger_played()
+            {
+                
+            }
 
             /// <summary>
             /// 随从召唤时扳机
@@ -117,15 +121,17 @@ namespace HREngine.Bots
             /// </summary>
             /// <param name="target"></param>
             /// <param name="qId"></param>
-            public void trigger_SpellWasPlayed(Minion target, int qId)
+            public void trigger_SpellWasPlayed(Handmanager.Handcard hc,Minion target, int qId)
             {
                 switch (Id)
                 {
                     case CardDB.cardIDEnum.UNG_954: if (target != null && target.own && !target.isHero) questProgress++; break;
                     case CardDB.cardIDEnum.UNG_028: if (qId > 67) questProgress++; break;
-                    // 
-                    case CardDB.cardIDEnum.TLC_817t: if (qId > 67) questProgress++; break;
-                    case CardDB.cardIDEnum.TLC_817t2: if (qId > 67) questProgress++; break;
+                    case CardDB.cardIDEnum.SW_450:  break;
+                    case CardDB.cardIDEnum.SW_450t: break;
+                    case CardDB.cardIDEnum.SW_450t2: break;
+                    case CardDB.cardIDEnum.TLC_817t: if (hc.card.SpellSchool== CardDB.SpellSchool.HOLY) questProgress++; break;
+                    case CardDB.cardIDEnum.TLC_817t2: if (hc.card.SpellSchool== CardDB.SpellSchool.SHADOW) questProgress++; break;
 
                 }
             }

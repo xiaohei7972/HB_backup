@@ -10,7 +10,7 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.AV_143);
 		public override void onDeathrattle(Playfield p, Minion m)
 		{
-			if(m.Hp!=0) p.callKid(kid, m.zonepos - 1, m.own);
+			if (m.Hp != 0) p.callKid(kid, m.zonepos - 1, m.own);
 		}
 
 	}

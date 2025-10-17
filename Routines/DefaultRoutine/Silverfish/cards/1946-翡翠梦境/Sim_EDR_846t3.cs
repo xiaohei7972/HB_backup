@@ -11,7 +11,16 @@ namespace HREngine.Bots
 	//<b>扰魔</b>。你的英雄拥有<b>扰魔</b>。
 	class Sim_EDR_846t3 : SimTemplate
 	{
-		
-		
+		public override void onAuraStarts(Playfield p, Minion m)
+		{
+			Minion hero = m.own ? p.ownHero : p.enemyHero;
+			hero.Elusive = true;
+		}
+
+        public override void onAuraEnds(Playfield p, Minion m)
+        {
+            Minion hero = m.own ? p.ownHero : p.enemyHero;
+			hero.Elusive = false;
+        }
 	}
 }

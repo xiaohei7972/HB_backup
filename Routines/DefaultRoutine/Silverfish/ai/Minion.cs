@@ -50,21 +50,118 @@ namespace HREngine.Bots
         public bool changeOwnerOnTurnStart = false; //己方回合开始时更改所有者
 
         public bool conceal = false;//隐藏（直到你的下个回合，使所有友方随从获得潜行）
-        public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
-        public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
-        public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
-        public int stegodon = 0;//剑龙骑术
-        public int livingspores = 0;//活性孢子 亡语：召唤两个1/1的植物。
-        public int explorershat = 0;//探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
-        public int libramofwisdom = 0;//智慧圣契
+        // public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
+        // public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
+        // public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
+        // public int stegodon = 0;//剑龙骑术
+        // public int itsnecrolit = 0;//通灵之光
+        // public int greybud = 0;//灰枝幼芽
+        // public int infected = 0;//被感染
+        // public int finalsession = 0;//最后一团
+        // public int sheepmask = 0;//绵羊面具
 
-        public int returnToHand = 0;//回到手牌
-        public int infest = 0;//寄生感染 使你的所有随从获得 “亡语：随机将一张野兽牌置入你的手牌”。
+        // public int livingspores = 0;//活性孢子 亡语：召唤两个1/1的植物。
+        // public int explorershat = 0;//探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
+        // public int libramofwisdom = 0;//智慧圣契
+        // public int returnToHand = 0;//回到手牌
+        // public int infest = 0;//寄生感染 使你的所有随从获得 “亡语：随机将一张野兽牌置入你的手牌”。
+        // public int ownBlessingOfWisdom = 0;//我方智慧祝福
+        // public int enemyBlessingOfWisdom = 0;//敌方智慧祝福
+        // public int ownPowerWordGlory = 0;//我方真言术：耀
+        // public int enemyPowerWordGlory = 0;//敌方真言术：耀
+         /// <summary>
+        /// 我方智慧祝福
+        /// </summary>
+        public int ownBlessingOfWisdom = 0;
+        /// <summary>
+        /// 敌方智慧祝福
+        /// </summary>
+        public int enemyBlessingOfWisdom = 0;
+        /// <summary>
+        /// 我方真言术：耀
+        /// </summary>
+        public int ownPowerWordGlory = 0;
+        /// <summary>
+        /// 敌方真言术：耀
+        /// </summary>
+        public int enemyPowerWordGlory = 0;
+        /// <summary>
+        /// 先祖之魂，使一个随从获得“亡语：再次召唤该随从。
+        /// </summary>
+        public int ancestralspirit = 0;
+        /// <summary>
+        /// 殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
+        /// </summary>
+        public int desperatestand = 0;
+        /// <summary>
+        /// 丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
 
-        public int ownBlessingOfWisdom = 0;//我方智慧祝福
-        public int enemyBlessingOfWisdom = 0;//敌方智慧祝福
-        public int ownPowerWordGlory = 0;//我方真言术：耀
-        public int enemyPowerWordGlory = 0;//敌方真言术：耀
+        /// </summary>
+        public int souloftheforest = 0;
+        /// <summary>
+        /// 剑龙骑术
+        /// </summary>
+        public int stegodon = 0;
+        /// <summary>
+        /// 骑乘雷象,+4/+7并具有嘲讽。亡语：召唤一只雷象。
+        /// </summary>
+        public int onanelekk = 0;
+        /// <summary>
+        /// 骑乘战马,+1/+1和圣盾。亡语：召唤一匹战马。
+        /// </summary>
+        public int onahorse = 0;
+        /// <summary>
+        /// 骑乘山羊,+2/+2和攻击时免疫。亡语：召唤一只山羊。
+        /// </summary>
+        public int onaram = 0;
+        /// <summary>
+        /// 骑乘科多兽,+4/+2和突袭，亡语：召唤一只科多兽。
+        /// </summary>
+        public int onakodo = 0;
+        /// <summary>
+        /// 通灵之光，亡语：召唤一个2/2并具有<b>突袭</b>的僵尸。
+        /// </summary>
+        public int itsnecrolit = 0;
+        /// <summary>
+        /// 染疫，亡语：为你的对手召唤一个2/2并具有<b>嘲讽</b>的僵尸。
+        /// </summary>
+        public int plagued = 0;
+        /// <summary>
+        /// 灰枝幼芽，召唤格雷布
+        /// </summary>
+        public int greybud = 0;
+        /// <summary>
+        /// 被感染，亡语：召唤一个感染的食尸鬼。
+        /// </summary>
+        public int infected = 0;
+        /// <summary>
+        /// 最后一团
+        /// </summary>
+        public int finalsession = 0;
+        /// <summary>
+        /// 绵羊面具
+        /// </summary>
+        public int sheepmask = 0;
+        /// <summary>
+        /// 活性孢子 亡语：召唤两个1/1的植物。
+        /// </summary>
+        public int livingspores = 0;
+        /// <summary>
+        /// 探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
+        /// </summary>
+        public int explorershat = 0;
+        /// <summary>
+        /// 智慧圣契
+        /// </summary>
+        public int libramofwisdom = 0;
+        /// <summary>
+        /// 回到手牌
+        /// </summary>
+        public int returnToHand = 0;
+        /// <summary>
+        /// 寄生感染 使你的所有随从获得 “亡语：随机将一张野兽牌置入你的手牌”。
+        /// </summary>
+        public int infest = 0;
         public int spellpower = 0;//法术强度
         public bool cantBeTargetedBySpellsOrHeroPowers = false;//无法成为法术或英雄技能的目标
         public int Hp = 0;//当前血量
@@ -93,7 +190,7 @@ namespace HREngine.Bots
         public bool reborn = false;//复生
         public bool poisonous = false;//剧毒
 
-        //public bool modular = false; //磁力
+        public bool modular = false; //磁力
         public int charge = 0;//冲锋
         public int rush = 0;//突袭
         private bool _elusive = false; //扰魔
@@ -144,6 +241,7 @@ namespace HREngine.Bots
             get { return _elusive; }
             set { _elusive = value; }
         }
+        public bool Aura{ get; set; }
         public int hChoice = 0;
         public bool cantLowerHPbelowONE = false;//血量无法低于1
 
@@ -162,7 +260,7 @@ namespace HREngine.Bots
                     (frozen ? "[冻结]" : "") + (!Ready || cantAttack ? "[无法攻击]" : "[可攻击]") + (windfury ? "[风怒]" : "") + (taunt ? "[嘲讽]" : "")
                     + (divineshild ? "[圣盾]" : "") + (stealth ? "[隐身]" : "") + (immune ? "[免疫]" : "") + (untouchable ? "[不可触碰]" : "") + (lifesteal ? "[吸血]" : "")
                      + (dormant != 0 ? "[休眠(" + dormant.ToString() + ")]" : "") + (reborn ? "[复生]" : "") + (poisonous ? "[剧毒]" : "")
-                      + (Spellburst ? "[法术迸发]" : "") + (HonorableKill ? "[荣耀击杀]" : "") + (Overkill ? "[超杀]" : "") + (Elusive ? "[扰魔]" : "");
+                      + (Spellburst ? "[法术迸发]" : "") + (HonorableKill ? "[荣誉击杀]" : "") + (Overkill ? "[超杀]" : "") + (Elusive ? "[扰魔]" : "" + (Aura ? "[光环]" : ""));
             }
         }
 
@@ -217,13 +315,17 @@ namespace HREngine.Bots
             this.conceal = m.conceal;
             this.souloftheforest = m.souloftheforest;
             this.stegodon = m.stegodon;
+            this.greybud = m.greybud;
+            this.finalsession = m.finalsession;
+            this.infected = m.infected;
             this.livingspores = m.livingspores;
             this.explorershat = m.explorershat;
             this.libramofwisdom = m.libramofwisdom;
+            this.itsnecrolit = m.itsnecrolit;
 
             this.returnToHand = m.returnToHand;
             this.infest = m.infest;
-
+            this.sheepmask = m.sheepmask;
             this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
             this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
             this.ownPowerWordGlory = m.ownPowerWordGlory;
@@ -256,6 +358,7 @@ namespace HREngine.Bots
             this.Overkill = m.Overkill;//超杀
             this.Frenzy = m.Frenzy;//暴怒
             this.HonorableKill = m.HonorableKill;//荣耀击杀
+            this.Aura = m.Aura;//光环
             this.charge = m.charge;
             this.rush = m.rush;
             this.hChoice = m.hChoice;
@@ -315,10 +418,14 @@ namespace HREngine.Bots
             this.conceal = m.conceal;
             this.souloftheforest = m.souloftheforest;
             this.stegodon = m.stegodon;
+            this.greybud = m.greybud;
+            this.finalsession = m.finalsession;
+            this.infected = m.infected;
+            this.itsnecrolit = m.itsnecrolit;
             this.livingspores = m.livingspores;
             this.explorershat = m.explorershat;
             this.libramofwisdom = m.libramofwisdom;
-
+            this.sheepmask = m.sheepmask;
             this.returnToHand = m.returnToHand;
             this.infest = m.infest;
 
@@ -353,6 +460,7 @@ namespace HREngine.Bots
             this.Overkill = m.Overkill; //超杀
             this.Frenzy = m.Frenzy;//暴怒
             this.HonorableKill = m.HonorableKill;//荣耀击杀
+            this.Aura = m.Aura;//光环
             this.charge = m.charge;
             this.rush = m.rush;
             this.hChoice = m.hChoice;
@@ -383,10 +491,10 @@ namespace HREngine.Bots
         /// <summary>
         /// 受到伤害
         /// </summary>
-        /// <param name="dmg"></param>
+        /// <param name="dmg">伤害值</param>
         /// <param name="p"></param>
-        /// <param name="isMinionAttack"></param>
-        /// <param name="dontCalcLostDmg"></param>
+        /// <param name="isMinionAttack">是随从攻击</param>
+        /// <param name="dontCalcLostDmg">是否计算失去的伤害值</param>
         public void getDamageOrHeal(int dmg, Playfield p, bool isMinionAttack, bool dontCalcLostDmg)
         {
             if (this.Hp <= 0) return;
@@ -801,10 +909,12 @@ namespace HREngine.Bots
                             p.tempTrigger.ownBeastDied++;
                             p.tempTrigger.ownMechanicDied++;
                             p.tempTrigger.ownMurlocDied++;
-                            continue;
-                        case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; continue;
-                        case CardDB.Race.MECHANICAL: p.tempTrigger.ownMechanicDied++; continue;
-                        case CardDB.Race.MURLOC: p.tempTrigger.ownMurlocDied++; continue;
+                            break;
+                        case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; break;
+                        case CardDB.Race.MECHANICAL: p.tempTrigger.ownMechanicDied++; break;
+                        case CardDB.Race.MURLOC: p.tempTrigger.ownMurlocDied++; break;
+                                                case CardDB.Race.BLANK: break;
+
                     }
                 }
                 // if (this.handcard.card.race == CardDB.Race.PET)
@@ -832,10 +942,11 @@ namespace HREngine.Bots
                             p.tempTrigger.enemyBeastDied++;
                             p.tempTrigger.enemyMechanicDied++;
                             p.tempTrigger.enemyMurlocDied++;
-                            continue;
-                        case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; continue;
-                        case CardDB.Race.MECHANICAL: p.tempTrigger.enemyMechanicDied++; continue;
-                        case CardDB.Race.MURLOC: p.tempTrigger.enemyMurlocDied++; continue;
+                            break;
+                        case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; break;
+                        case CardDB.Race.MECHANICAL: p.tempTrigger.enemyMechanicDied++; break;
+                        case CardDB.Race.MURLOC: p.tempTrigger.enemyMurlocDied++; break;
+                        case CardDB.Race.BLANK: break;
                     }
                 }
 
@@ -1157,6 +1268,7 @@ namespace HREngine.Bots
                         continue;
 
                     // deathrattles-------------------------------------------------
+                    //亡语
                     case CardDB.cardIDEnum.LOE_105e: this.explorershat++; continue;
                     case CardDB.cardIDEnum.UNG_956e: this.returnToHand++; continue;
 
@@ -1165,8 +1277,14 @@ namespace HREngine.Bots
                     case CardDB.cardIDEnum.EX1_158e: this.souloftheforest++; continue;
                     case CardDB.cardIDEnum.UNG_952e: this.stegodon++; continue;
                     case CardDB.cardIDEnum.UNG_999t2e: this.livingspores++; continue;
-
+                    case CardDB.cardIDEnum.DINO_429e: this.sheepmask++; continue;
                     case CardDB.cardIDEnum.OG_045a: this.infest++; continue;
+                    case CardDB.cardIDEnum.RLK_867e: this.itsnecrolit++; continue;
+                    case CardDB.cardIDEnum.DMF_734e: this.greybud++; continue;
+                    case CardDB.cardIDEnum.RLK_653e: this.infected++; continue;
+                    case CardDB.cardIDEnum.TOY_527e: this.finalsession++; continue;
+
+
                     //conceal-------------------------------------------------
                     case CardDB.cardIDEnum.EX1_128e: this.conceal = true; continue;
                     case CardDB.cardIDEnum.NEW1_014e: this.conceal = true; continue;
@@ -1178,21 +1296,25 @@ namespace HREngine.Bots
                     case CardDB.cardIDEnum.NEW1_036e2: this.cantLowerHPbelowONE = true; continue; //commandingshout
 
                     //spellpower-------------------------------------------------
+                    //法强
                     case CardDB.cardIDEnum.GVG_010b: this.spellpower++; continue; //velenschosen
                     case CardDB.cardIDEnum.AT_006e: this.spellpower++; continue; //dalaran
                     case CardDB.cardIDEnum.EX1_584e: this.spellpower++; continue; //ancient mage
 
                     //charge-------------------------------------------------
+                    //冲锋
                     case CardDB.cardIDEnum.AT_071e: this.charge++; continue;
                     case CardDB.cardIDEnum.CS2_103e2: this.charge++; continue;
                     case CardDB.cardIDEnum.TB_AllMinionsTauntCharge: this.charge++; continue;
                     case CardDB.cardIDEnum.DS1_178e: this.charge++; continue;
 
                     //adjacentbuffs-------------------------------------------------
+                    //相邻buff
                     case CardDB.cardIDEnum.EX1_565o: this.AdjacentAngr += 2; continue; //flametongue
                     case CardDB.cardIDEnum.EX1_162o: this.AdjacentAngr += 1; continue; //dire wolf alpha
 
                     //tempbuffs-------------------------------------------------
+                    //临时buff
                     case CardDB.cardIDEnum.CS2_083e: this.tempAttack += 1; continue;
                     case CardDB.cardIDEnum.EX1_549o: this.tempAttack += 2; this.immuneWhileAttacking = true; continue;
                     case CardDB.cardIDEnum.AT_057o: this.immuneWhileAttacking = true; continue;
@@ -1296,6 +1418,14 @@ namespace HREngine.Bots
         public int controllerOfCreator = 0; // own or enemys buff?
         public int copyDeathrattle = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">卡牌cardIDEnum</param>
+        /// <param name="crtr">创作者</param>
+        /// <param name="controler">控制者 英雄？</param>
+        /// <param name="copydr">复制亡语</param>
+        /// <param name="entity">实体 英雄？</param>
         public miniEnch(CardDB.cardIDEnum id, int crtr, int controler, int copydr, Entity entity)
         {
             this.CARDID = id;

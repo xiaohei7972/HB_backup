@@ -12,6 +12,26 @@ namespace HREngine.Bots
 	class Sim_RLK_741 : SimTemplate
 	{
 		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+
+            foreach (Minion m in p.ownMinions.ToArray())
+            {
+                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.addCorpses(1);
+                    p.minionGetDestroyed(m);
+                }
+            }
+            foreach (Minion m in p.enemyMinions.ToArray())
+            {
+                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.addCorpses(1);
+                    p.minionGetDestroyed(m);
+                }
+            }
+
+        }
 	}
 }

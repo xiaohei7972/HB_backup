@@ -21,7 +21,7 @@ namespace HREngine.Bots
         public override void afterHeroattack(Playfield p, Minion own, Minion target)
         {
             // 检查己方英雄是否装备了“沙滩排槌”
-            if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.WW_010t)
+            if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.VAC_921)
             {
                 p.drawACard(CardDB.cardIDEnum.VAC_917t, own.own, true); // 英雄攻击后，抽一张防晒霜卡牌
             }

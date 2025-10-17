@@ -11,7 +11,22 @@ namespace HREngine.Bots
 	//<b>战吼：</b>消灭一个敌方随从。<b>注能（@）：</b>改为夺取其控制权。
 	class Sim_CORE_MAW_033 : SimTemplate
 	{
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if (target != null)
+            {
+				p.minionGetDestroyed(target);
+            }
+        }
+        public override PlayReq[] GetPlayReqs()
+        {
+			return new PlayReq[]
+			{
+				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE), //如果有目标
+				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),//目标只能是随从
+				new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET),//目标只能是敌方
+			};
+        }
 		
 	}
 }

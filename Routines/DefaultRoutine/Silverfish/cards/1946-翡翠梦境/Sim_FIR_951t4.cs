@@ -12,6 +12,12 @@ namespace HREngine.Bots
 	class Sim_FIR_951t4 : SimTemplate
 	{
 		
-		
+		public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+
+				new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_CORPSES,30),   // 最少需要5份残骸
+            };
+        }
 	}
 }

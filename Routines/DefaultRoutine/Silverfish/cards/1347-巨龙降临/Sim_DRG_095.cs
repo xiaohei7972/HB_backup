@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>战吼：</b>将所有敌方随从的生命值变为1。
 	class Sim_DRG_095 : SimTemplate
 	{
-		
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            foreach (Minion minion in own.own ? p.enemyMinions: p.ownMinions)
+			{
+				p.minionSetLifetoX(minion, 1);
+			}
+        }
 		
 	}
 }

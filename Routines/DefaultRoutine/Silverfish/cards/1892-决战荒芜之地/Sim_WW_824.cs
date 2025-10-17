@@ -14,10 +14,10 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.WW_824t);
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			if (p.prozis.noDuplicates)
+			// if (p.prozis.noDuplicates)
+			if(own.handcard.card.heroPower > 0)
 			{
-				int pos = own.own ? p.ownMinions.Count : p.enemyMinions.Count;
-				p.callKid(kid, pos, own.own);
+				p.callKid(kid, own.zonepos, own.own);
 			}
 		}
 		

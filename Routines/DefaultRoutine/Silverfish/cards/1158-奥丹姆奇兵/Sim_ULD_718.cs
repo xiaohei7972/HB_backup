@@ -11,7 +11,23 @@ namespace HREngine.Bots
 	//<b>沉默</b>并消灭所有随从。
 	class Sim_ULD_718 : SimTemplate
 	{
-		
-		
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
+			foreach (Minion m in p.ownMinions.ToArray())
+			{
+				if (m.untouchable) continue;
+				p.minionGetSilenced(m);
+				p.minionGetDestroyed(m);
+
+			}
+			foreach (Minion m in p.enemyMinions.ToArray())
+			{
+				if (m.untouchable) continue;
+				p.minionGetSilenced(m);
+				p.minionGetDestroyed(m);
+
+			}
+		}
+
 	}
 }

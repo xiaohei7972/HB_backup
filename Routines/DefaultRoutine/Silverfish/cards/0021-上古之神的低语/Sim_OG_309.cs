@@ -4,11 +4,12 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_OG_309 : SimTemplate //* 哈霍兰公主 Princess Huhuran
-//<b>Battlecry:</b> Trigger a friendly minion's <b>Deathrattle</b>.
-//<b>战吼：</b>触发一个友方随从的<b>亡语</b>。 
+    //* 哈霍兰公主 Princess Huhuran
+    //<b>Battlecry:</b> Trigger a friendly minion's <b>Deathrattle</b>.
+    //<b>战吼：</b>触发一个友方随从的<b>亡语</b>。 
+    class Sim_OG_309 : SimTemplate
     {
-        
+
 
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {

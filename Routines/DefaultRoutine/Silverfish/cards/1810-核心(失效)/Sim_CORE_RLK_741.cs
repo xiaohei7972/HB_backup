@@ -11,7 +11,27 @@ namespace HREngine.Bots
 	//<b>战吼：</b>消灭所有其他随从。每消灭一个敌方随从，获得1份<b>残骸</b>。
 	class Sim_CORE_RLK_741 : SimTemplate
 	{
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+
+            foreach (Minion m in p.ownMinions.ToArray())
+            {
+                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.addCorpses(1);
+                    p.minionGetDestroyed(m);
+                }
+            }
+            foreach (Minion m in p.enemyMinions.ToArray())
+            {
+                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.addCorpses(1);
+                    p.minionGetDestroyed(m);
+                }
+            }
+
+        }
 		
 	}
 }

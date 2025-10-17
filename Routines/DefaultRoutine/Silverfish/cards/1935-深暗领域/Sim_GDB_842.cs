@@ -11,7 +11,20 @@ namespace HREngine.Bots
 	//<b>休眠</b>5回合。在你的回合结束时，消灭本随从右边的随从以提前1回合唤醒。
 	class Sim_GDB_842 : SimTemplate
 	{
-		
-		
+		public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
+		{
+			if (triggerEffectMinion.own == turnEndOfOwner && triggerEffectMinion.dormant > 0)
+			{
+				foreach (Minion minion in triggerEffectMinion.own ? p.ownMinions : p.enemyMinions)
+				{
+					if (minion.zonepos == triggerEffectMinion.zonepos + 1)
+					{
+						p.minionGetDestroyed(minion);
+						triggerEffectMinion.dormant--;
+					}
+				}
+			}
+		}
+
 	}
 }

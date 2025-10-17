@@ -17,7 +17,7 @@ namespace HREngine.Bots
 			int bestAdapt = 0;
             foreach (Minion m in temp)
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC)
+                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.MURLOC))
 				{
 					if (first )
 					{

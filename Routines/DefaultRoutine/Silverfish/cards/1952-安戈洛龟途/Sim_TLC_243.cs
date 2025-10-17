@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>突袭</b>。<b>风怒</b><b>延系：</b>在本回合中获得<b>免疫</b>。
 	class Sim_TLC_243 : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, Minion own, Minion target, int choice)
+        {
+            if(own.handcard.poweredUp > 0)
+            {
+				own.immune = true;
+            }
+        }
 		
 	}
 }

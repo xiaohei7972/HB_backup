@@ -19,15 +19,6 @@ namespace HREngine.Bots
 				p.minionGetDestroyed(target);
 			}
 		}
-		//需要改进下onCardIsGoingToBePlayed方法,不然不好对打出的卡牌继续处理
-		// public override void onCardIsGoingToBePlayed(Playfield p, Handmanager.Handcard hc, bool wasOwnCard, Minion triggerEffectMinion)
-		// {
-		// 	if (triggerEffectMinion.own == wasOwnCard && (hc.card.cardIDenum == CardDB.cardIDEnum.SC_752 || hc.card.cardIDenum == CardDB.cardIDEnum.SC_765))
-		// 	{
-		// 		p.minionGetDestroyed(triggerEffectMinion);
-		// 		p.callKid(kid, triggerEffectMinion.zonepos - 1, triggerEffectMinion.own);
-		// 	}
-		// }
 
 		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
@@ -42,10 +33,9 @@ namespace HREngine.Bots
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_DRAG_TO_PLAY), // 需要一个目标
 				new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET), // 目标只能是敌方
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标只能是随从
-				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE), // 物目标时也能使用
+				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE), // 无目标时也能使用
 			};
 		}
 	}

@@ -254,8 +254,11 @@ namespace HREngine.Bots
                             if (p.mana >= hc.card.getManaCost(p, hc.manacost))
                             {
                                 // 如果随从已满且尝试打出随从或地标，则返回 false
-                                if (p.ownMinions.Count > 6 && (hc.card.type == CardDB.cardtype.MOB || hc.card.type == CardDB.cardtype.LOCATION))
-                                    return false;
+                                // if (p.ownMinions.Count > 6 && (hc.card.type == CardDB.cardtype.MOB || hc.card.type == CardDB.cardtype.LOCATION))
+                                //     return false;
+                                if (p.ownMinions.Count >= 7)
+                                    if (hc.card.type == CardDB.cardtype.MOB || hc.card.type == CardDB.cardtype.LOCATION)
+                                        return actionFound;
 
                                 actionFound = true;
                             }

@@ -1366,6 +1366,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 					await GameplaySceneMainAction(pegasusScene_0);
 					break;
 				case TAG_STEP.MAIN_COMBAT:
+				case TAG_STEP.MAIN_START_TRIGGERS:
 					await GameplaySceneMainCombat(pegasusScene_0);
 					break;
 				case TAG_STEP.FINAL_WRAPUP:
@@ -1419,6 +1420,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 						case PresenceStatus.PLAY_CASUAL_TWIST:
 						case PresenceStatus.PRACTICE_GAME:
 						case PresenceStatus.TUTORIAL_GAME:
+						case PresenceStatus.FRIENDLY_GAME://友谊赛
+						case PresenceStatus.ADVENTURE_SCENARIO_PLAYING_GAME://冒险模式
 							await GamePlayAllProc(gameplay_0);
 							return;
 						default:

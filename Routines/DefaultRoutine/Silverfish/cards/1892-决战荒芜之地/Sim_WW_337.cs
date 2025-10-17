@@ -11,7 +11,15 @@ namespace HREngine.Bots
 	//<b>战吼：</b>如果你的套牌里没有相同的牌，则获取一张<i>永久</i>的幻象牌。
 	class Sim_WW_337 : SimTemplate
 	{
-		
+
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            // if (m.own && p.prozis.noDuplicates)
+            if (own.handcard.card.heroPower > 0) 
+            {
+				p.drawACard(CardDB.cardIDEnum.WW_337t, own.own, true);
+            }
+        }
 		
 	}
 }

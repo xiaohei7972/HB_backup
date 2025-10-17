@@ -11,7 +11,21 @@ namespace HREngine.Bots
 	//<b>战吼：</b>从+3攻击力，<b>圣盾</b>或“<b>亡语：</b>召唤两个1/1的植物”中选择一项并获得。
 	class Sim_TLC_245 : SimTemplate
 	{
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (choice == 1)
+			{
+				p.minionGetBuffed(own, 3, 0);
+			}
+			if (choice == 2)
+			{
+				own.divineshild = true;
+			}
+			if (choice == 3)
+			{
+				own.livingspores++;
+			}
+		}
 		
 	}
 }

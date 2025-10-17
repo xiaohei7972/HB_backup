@@ -686,7 +686,6 @@ def Execute():
 
             Extensions.ResetMaxId();
             Silverfish.Instance.updateStartDeck();
-
             Log.InfoFormat("[开局留牌] {0} 对阵 {1}.", mulliganData.UserClass, mulliganData.OpponentClass);
             var count = mulliganData.Cards.Count;
 

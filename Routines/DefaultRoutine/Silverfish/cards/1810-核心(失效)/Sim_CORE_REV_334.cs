@@ -11,7 +11,31 @@ namespace HREngine.Bots
 	//召唤三个1/3并具有<b>嘲讽</b>的狱卒。如果你的生命值小于或等于20点，使其获得+1/+1。
 	class Sim_CORE_REV_334 : SimTemplate
 	{
-		
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.REV_334t);
+
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
+			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+			Minion hero = ownplay ? p.ownHero : p.enemyHero;
+			if (hero.Hp <= 20)
+			{
+				// kid = (CardDB.Card)kid.Clone();
+				kid.Attack += 1;
+				kid.Health += 1;
+			}
+			p.callKid(kid, pos, ownplay);
+			p.callKid(kid, pos, ownplay);
+			p.callKid(kid, pos, ownplay);
+
+
+		}
+
+		public override PlayReq[] GetPlayReqs()
+		{
+			return new PlayReq[]{
+				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
+			};
+		}
 		
 	}
 }

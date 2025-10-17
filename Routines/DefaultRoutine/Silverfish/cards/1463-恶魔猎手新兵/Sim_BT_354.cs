@@ -12,6 +12,14 @@ namespace HREngine.Bots
 	class Sim_BT_354 : SimTemplate
 	{
 		
-		
+		public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_HERO_HAS_ATTACK),
+                new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_ENEMY_MINIONS,1),
+
+            };
+        }
 	}
 }

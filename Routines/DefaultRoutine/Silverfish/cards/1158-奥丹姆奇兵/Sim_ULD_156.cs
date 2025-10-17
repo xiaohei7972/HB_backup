@@ -14,7 +14,9 @@ namespace HREngine.Bots
 		
         public override void getBattlecryEffect(Playfield p, Minion m, Minion target, int choice)
         {
-            if (m.own && p.prozis.noDuplicates) p.callKid(kid, m.zonepos, m.own);
+            // if (m.own && p.prozis.noDuplicates) 
+            if (m.handcard.card.heroPower > 0) 
+            p.callKid(kid, m.zonepos, m.own);
         }
     }
 }

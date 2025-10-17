@@ -15,18 +15,22 @@ namespace HREngine.Bots
 		{
 			if (target != null)
 			{
-				CardDB.Race race = target.handcard.card.race;
-				List<Minion> minions = new List<Minion>();
-				minions.AddRange(p.ownMinions);
-				minions.AddRange(p.enemyMinions);
-				minions.Remove(target);
 				int damage = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
+				List<CardDB.Race> races = target.handcard.card.GetRaces();
 				p.minionGetDamageOrHeal(target, damage);
-				minions.ForEach((m) =>
+				foreach (Minion m in p.ownMinions)
 				{
-					if (m.handcard.card.race == race)
-						p.minionGetDamageOrHeal(m, damage);
-				});
+					if (m.entitiyID == target.entitiyID) continue;
+					if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), races))
+						p.minionGetDamageOrHeal(target, damage);
+				}
+
+				foreach (Minion m in p.enemyMinions)
+				{
+					if (m.entitiyID == target.entitiyID) continue;
+					if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), races))
+						p.minionGetDamageOrHeal(target, damage);
+				}
 			}
 		}
 

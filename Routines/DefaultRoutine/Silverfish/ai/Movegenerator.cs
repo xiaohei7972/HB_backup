@@ -32,17 +32,17 @@ namespace HREngine.Bots
         /// <returns>返回动作列表。</returns>
         public List<Action> getMoveList(Playfield p, bool usePenalityManager, bool useCutingTargets, bool own)
         {
-            var ret = new List<Action>();
+            List<Action> ret = new List<Action>();
             if (p.complete || p.ownHero.Hp <= 0) return ret;
 
-            var trgts = new List<Minion>();
+            List<Minion> trgts = new List<Minion>();
 
             if (own)
             {
-                var playedcards = new HashSet<string>();
+                HashSet<string> playedcards = new HashSet<string>();
                 var cardNcost = new StringBuilder();
 
-                foreach (var hc in p.owncards)
+                foreach (Handmanager.Handcard hc in p.owncards)
                 {
                     if (hc.card.nameEN == CardDB.cardNameEN.unknown) continue;
 
@@ -75,7 +75,7 @@ namespace HREngine.Bots
                                 // 找到包含伤害或治疗效果的选择项
                                 for (int i = 1; i <= 2; i++)
                                 {
-                                    var cTmp = pen.getChooseCard(hc.card, i);
+                                    CardDB.Card cTmp = pen.getChooseCard(hc.card, i);
                                     if (pen.DamageTargetDatabase.ContainsKey(cTmp.nameEN) ||
                                         (p.anzOwnAuchenaiSoulpriest > 0 && pen.HealTargetDatabase.ContainsKey(cTmp.nameEN)))
                                     {
@@ -87,39 +87,16 @@ namespace HREngine.Bots
                             }
                         }
 
-                        if (p.ownMinions.Count > 6 && c.type == CardDB.cardtype.MOB) continue;
-
+                        if (p.ownMinions.Count >= 7)
+                            if (hc.card.type == CardDB.cardtype.MOB || hc.card.type == CardDB.cardtype.LOCATION)
+                                continue;
                         trgts = c.getTargetsForCard(p, p.isLethalCheck, true);
                         if (trgts.Count == 0) continue;
 
-                        //非地标目标指向，移除地标
-                        if (c.type == CardDB.cardtype.MOB &&
-                            c.cardIDenum != CardDB.cardIDEnum.VAC_529 &&
-                            c.cardIDenum != CardDB.cardIDEnum.REV_023 && c.cardIDenum != CardDB.cardIDEnum.CORE_REV_023)
-                        {
-                            trgts.RemoveAll(minion => minion != null &&
-                                  minion.handcard != null &&
-                                  minion.handcard.card != null &&
-                                  minion.handcard.card.type == CardDB.cardtype.LOCATION);
-
-                        }
-
-                        //如果是法术，移除扰魔、地标
-                        if (c.type == CardDB.cardtype.SPELL)
-                        {
-                            trgts.RemoveAll(minion => minion != null &&
-                                  minion.handcard != null &&
-                                  minion.handcard.card != null &&
-                                  minion.handcard.card.Elusive);
-                            trgts.RemoveAll(minion => minion != null &&
-                                  minion.handcard != null &&
-                                  minion.handcard.card != null &&
-                                  minion.handcard.card.type == CardDB.cardtype.LOCATION);
-                        }
 
                         int bestplace = p.getBestPlace(c, p.isLethalCheck);
 
-                        foreach (var trgt in trgts)
+                        foreach (Minion trgt in trgts)
                         {
                             int cardplayPenality = usePenalityManager ? pen.getPlayCardPenality(c, trgt, p, hc) : 0;
                             if (cardplayPenality <= 499)
@@ -131,7 +108,7 @@ namespace HREngine.Bots
                 }
 
                 // 处理可交易的卡牌
-                foreach (var hc in p.owncards)
+                foreach (Handmanager.Handcard hc in p.owncards)
                 {
                     if (hc.card.nameEN == CardDB.cardNameEN.unknown) continue;
                     if (hc.card.Tradeable && p.mana >= hc.card.TradeCost && p.ownDeckSize > 0)
@@ -141,7 +118,7 @@ namespace HREngine.Bots
                 }
 
                 // 处理可锻造的卡牌
-                foreach (var hc in p.owncards)
+                foreach (Handmanager.Handcard hc in p.owncards)
                 {
                     if (hc.card.nameEN == CardDB.cardNameEN.unknown) continue;
                     if (hc.card.Forge && p.mana >= hc.card.ForgeCost && !hc.card.Forged)
@@ -156,14 +133,15 @@ namespace HREngine.Bots
             if (!p.isLethalCheck) trgts = this.cutAttackList(trgts);
 
             // 处理随从攻击
-            var attackingMinions = new List<Minion>();
-            foreach (var m in p.ownMinions)
+             List<Minion> attackingMinions = new List<Minion>();
+            foreach (Minion m in p.ownMinions)
             {
-                if (m.numAttacksThisTurn == 1 && !m.frozen && !m.cantAttack)
-                {
-                    m.Ready = m.windfury && !m.silenced ||
-                              p.ownMinions.Exists(prev => prev.handcard.card.nameCN == CardDB.cardNameCN.战场军官 && !prev.silenced);
-                }
+                m.updateReadyness();
+                // if (m.numAttacksThisTurn == 1 && !m.frozen && !m.cantAttack)
+                // {
+                //     m.Ready = m.windfury && !m.silenced ||
+                //               p.ownMinions.Exists(prev => prev.handcard.card.nameCN == CardDB.cardNameCN.战场军官 && !prev.silenced);
+                // }
 
                 if (m.Ready && m.Angr >= 1 && !m.frozen)
                 {
@@ -174,9 +152,9 @@ namespace HREngine.Bots
             attackingMinions = this.cutAttackList(attackingMinions);
 
             // 计算随从攻击的惩罚值
-            foreach (var m in attackingMinions)
+            foreach (Minion m in attackingMinions)
             {
-                foreach (var trot in trgts)
+                foreach (Minion trot in trgts)
                 {
                     if (trot == null) continue;
                     if (trot.untouchable == true || (m.cantAttackHeroes && trot.isHero)) continue;
@@ -192,11 +170,11 @@ namespace HREngine.Bots
             // 处理英雄攻击（武器）
             if ((own && p.ownHero.Ready && p.ownHero.Angr >= 1) || (!own && p.enemyHero.Ready && p.enemyHero.Angr >= 1))
             {
-                foreach (var trot in trgts)
+                foreach (Minion trot in trgts)
                 {
                     if ((own ? p.ownWeapon.cantAttackHeroes : p.enemyWeapon.cantAttackHeroes) && trot.isHero) continue;
 
-                    var heroAttackPen = usePenalityManager ? pen.getAttackWithHeroPenality(trot, p) : 0;
+                    int heroAttackPen = usePenalityManager ? pen.getAttackWithHeroPenality(trot, p) : 0;
                     if (heroAttackPen <= 499)
                     {
                         ret.Add(new Action(actionEnum.attackWithHero, null, own ? p.ownHero : p.enemyHero, 0, trot, heroAttackPen, 0));
@@ -207,12 +185,12 @@ namespace HREngine.Bots
             // 使用己方英雄技能
             if (own && p.ownAbilityReady && p.mana >= p.ownHeroAblility.card.getManaCost(p, p.ownHeroAblility.manacost))
             {
-                var c = p.ownHeroAblility.card;
-                var choiceCount = c.choice ? 2 : 1;  // 如果是抉择卡牌，choiceCount为2，否则为1
+                CardDB.Card c = p.ownHeroAblility.card;
+                int choiceCount = c.choice ? 2 : 1;  // 如果是抉择卡牌，choiceCount为2，否则为1
                 trgts = p.ownHeroAblility.card.getTargetsForHeroPower(p, true);
-                for (var choice = 1; choice <= choiceCount; choice++)
+                for (int choice = 1; choice <= choiceCount; choice++)
                 {
-                    var chosenCard = c;
+                    CardDB.Card chosenCard = c;
 
                     // 如果是抉择卡牌，根据choice获取不同的卡牌
                     if (c.choice)
@@ -220,10 +198,10 @@ namespace HREngine.Bots
                         chosenCard = pen.getChooseCard(p.ownHeroAblility.card, choice);
                     }
 
-                    var playCardPenalty = 0;
-                    var place = p.ownMinions.Count + 1;
+                    int playCardPenalty = 0;
+                    int place = p.ownMinions.Count + 1;
 
-                    foreach (var trot in trgts)
+                    foreach (Minion trot in trgts)
                     {
                         if (p.ownHeroAblility.card.nameCN == CardDB.cardNameCN.未知 && p.ownHeroName == HeroEnum.thief)
                         {
@@ -236,39 +214,41 @@ namespace HREngine.Bots
                         }
 
                         if (playCardPenalty > 499) continue;
-                        var a = new Action(actionEnum.useHeroPower, p.ownHeroAblility, null, place, trot, playCardPenalty, choice);
+                        Action a = new Action(actionEnum.useHeroPower, p.ownHeroAblility, null, place, trot, playCardPenalty, choice);
                         ret.Add(a);
                     }
                 }
             }
 
             // 使用地标逻辑
-            var usingMinions = (own ? p.ownMinions : p.enemyMinions)
+            List<Minion> usingMinions = (own ? p.ownMinions : p.enemyMinions)
                 .Where(m => m.handcard.card.type == CardDB.cardtype.LOCATION && m.CooldownTurn == 0 && m.Ready)
                 .ToList();
-            foreach (var minion in usingMinions)
+            foreach (Minion minion in usingMinions)
             {
                 trgts = minion.handcard.card.getTargetsForLocation(p, p.isLethalCheck, true);
                 if (trgts.Count > 0)
                 {
-                    foreach (var trot in trgts)
+                    foreach (Minion trot in trgts)
                     {
                         int useLocationPenalty = usePenalityManager ? pen.getUseLocationPenality(minion, trot, p) : 0;
                         if (useLocationPenalty <= 499)
                         {
-                            ret.Add(new Action(actionEnum.useLocation, null, minion, 0, trot, 0, 0));
+                            ret.Add(new Action(actionEnum.useLocation, null, minion, 0, trot, useLocationPenalty, 0));
                         }
                     }
                 }
+                ///无目标地标
                 else if (minion.handcard.card.sim_card.GetUseAbilityReqs().Length == 0)
                 {
-                    ret.Add(new Action(actionEnum.useLocation, null, minion, 0, null, 0, 0));
+
+                    ret.Add(new Action(actionEnum.useLocation, null, minion, 0, null, -50, 0));
                 }
             }
 
             // 使用泰坦技能逻辑
-            var titans = (own ? p.ownMinions : p.enemyMinions).Where(m => m.handcard.card.Titan).ToList();
-            foreach (var titan in titans)
+            List<Minion> titans = (own ? p.ownMinions : p.enemyMinions).Where(m => m.handcard.card.Titan).ToList();
+            foreach (Minion titan in titans)
             {
                 //初始化技能列表
                 titan.handcard.card.TitanAbility = titan.handcard.card.GetTitanAbility();
@@ -285,27 +265,20 @@ namespace HREngine.Bots
                     CardDB.Card ability = titan.handcard.card.TitanAbility[i];
                     trgts = ability.getTargetsForCard(p, p.isLethalCheck, true);
 
-                    //移除地标
-                    trgts.RemoveAll(minion => minion != null &&
-                                            minion.handcard != null &&
-                                            minion.handcard.card != null &&
-                                            minion.handcard.card.type == CardDB.cardtype.LOCATION);
-
-
                     // 如果技能不需要目标，直接添加动作
                     if (trgts.Count == 0)
                     {
-                        ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, null, 0, 0, i + 1));
+                        ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, null, -100, 0, i + 1));
                         continue;
                     }
 
                     // 如果技能需要一个目标，生成对应的动作
-                    foreach (var trot in trgts)
+                    foreach (Minion trot in trgts)
                     {
                         int titanAbilityPenalty = usePenalityManager ? pen.getUseTitanAbilityPenality(titan, trot, p) : 0;
                         if (titanAbilityPenalty <= 499)
                         {
-                            ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, trot, titanAbilityPenalty, 0, i + 1));
+                            ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, trot, titanAbilityPenalty-100, 0, i + 1));
                         }
                     }
                 }

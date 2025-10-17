@@ -11,7 +11,25 @@ namespace HREngine.Bots
 	//<b>已注能</b>消灭所有攻击力小于或等于6的随从。
 	class Sim_REV_252t : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+			foreach (Minion m in p.ownMinions.ToArray())
+            {
+                if (m.untouchable) continue;
+				if (m.Angr <= 6)
+                {
+                    p.minionGetDestroyed(m);
+                }
+            }
+            foreach (Minion m in p.enemyMinions.ToArray())
+            {
+                if (m.untouchable) continue;
+                if (m.Angr <= 6)
+                {
+                    p.minionGetDestroyed(m);
+                }
+            }
+        }
 		
 	}
 }

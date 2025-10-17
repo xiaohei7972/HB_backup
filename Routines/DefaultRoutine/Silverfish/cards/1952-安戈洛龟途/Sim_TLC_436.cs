@@ -12,6 +12,12 @@ namespace HREngine.Bots
 	class Sim_TLC_436 : SimTemplate
 	{
 		
-		
+		public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+
+				new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_CORPSES,5),   // 最少需要5份残骸
+            };
+        }
 	}
 }

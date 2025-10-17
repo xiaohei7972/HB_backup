@@ -1446,7 +1446,7 @@ namespace HREngine.Bots
             this.anzOwnRazorfenRockstar = p.anzOwnRazorfenRockstar; // 剃刀沼泽摇滚明星
             this.anzOwnXB931Housekeeper = p.anzOwnXB931Housekeeper; // XB-931型家政机
             this.anzOwnPopGarThePutrid = p.anzOwnPopGarThePutrid;//我方腐臭淤泥波普加
-            
+
             this.nerubarweblord = p.nerubarweblord;
             this.startedWithnerubarweblord = p.startedWithnerubarweblord;
             this.startedWithDamagedMinions = p.startedWithDamagedMinions;
@@ -2668,7 +2668,7 @@ namespace HREngine.Bots
             }
 
             // 为军官准备
-            if (Ai.Instance.botBase.BehaviorName() == "骑士" || Ai.Instance.botBase.BehaviorName() == "黑眼任务术")
+            /* if (Ai.Instance.botBase.BehaviorName() == "骑士" || Ai.Instance.botBase.BehaviorName() == "黑眼任务术")
             {
                 int nowAngr = card.Attack;
                 for (int ii = 0; ii < this.ownMinions.Count; ii++)
@@ -2679,7 +2679,7 @@ namespace HREngine.Bots
                     }
                 }
                 return this.ownMinions.Count + 1;
-            }
+            } */
 
 
             int omCount = this.ownMinions.Count;
@@ -4823,7 +4823,7 @@ namespace HREngine.Bots
             // 处理武器的吸血效果
             if (weapon.lifesteal)
             {
-                this.minionGetDamageOrHeal(hero, -weapon.Angr);
+                this.minionGetDamageOrHeal(hero, -hero.Angr);
             }
 
             // 处理保护甲板支线任务
@@ -5438,7 +5438,7 @@ namespace HREngine.Bots
             }
 
             // 处理流放效果
-            HandleOutcastEffect(hc, hc.card.Outcast);
+            // HandleOutcastEffect(hc, hc.card.Outcast);
         }
 
         /// <summary>
@@ -5447,13 +5447,13 @@ namespace HREngine.Bots
         private void HandleSpellPlay(Handmanager.Handcard hc, Minion target, int choice)
         {
             // 处理锁定装载特效
-            if (this.lockandload > 0 && hc.card.type == CardDB.cardtype.SPELL)
-            {
-                // for (int i = 1; i <= lockandload; i++)
-                // {
-                this.drawACard(CardDB.cardNameEN.unknown, true, true);
-                // }
-            }
+            // if (this.lockandload > 0 && hc.card.type == CardDB.cardtype.SPELL)
+            // {
+            //     for (int i = 1; i <= lockandload; i++)
+            //     {
+            //     this.drawACard(CardDB.cardNameEN.unknown, true, true);
+            //     }
+            // }
 
             // 处理流放效果
             HandleOutcastEffect(hc, hc.card.Outcast);
@@ -5473,7 +5473,7 @@ namespace HREngine.Bots
             // 执行卡牌的主要效果
             hc.card.sim_card.onCardPlay(this, true, target, choice);
             hc.card.sim_card.onCardPlay(this, true, target, choice, hc);
-
+            this.ownQuest.trigger_SpellWasPlayed(hc, target, 0);
             // 处理法术迸发效果
             HandleSpellburstEffect(hc);
         }
@@ -6310,45 +6310,7 @@ namespace HREngine.Bots
 
                 //调用随从攻击时的sim方法
                 attacker.handcard.card.sim_card.onMinionAttack(this, attacker, target);
-            // // 根据随从的名称触发特定效果
-            // switch (attacker.name)
-            // {
-            //     case CardDB.cardNameEN.cutpurse: // "潜行者"：如果攻击英雄，抽取一张"硬币"卡
-            //         if (target.isHero)
-            //             this.drawACard(CardDB.cardNameEN.thecoin, attacker.own, true);
-            //         break;
 
-            //     case CardDB.cardNameEN.wretchedtiller: // "卑劣的农夫"：如果攻击英雄，对敌方英雄造成2点伤害
-            //         if (target.isHero)
-            //             minionGetDamageOrHeal(attacker.own ? this.enemyHero : this.ownHero, 2);
-            //         break;
-
-            //     case CardDB.cardNameEN.shakuthecollector: // "收集者沙库"：攻击时随机抽一张牌
-            //         this.drawACard(CardDB.cardNameEN.unknown, attacker.own, true);
-            //         break;
-
-            //     case CardDB.cardNameEN.genzotheshark: // "鲨鱼仁佐"：双方玩家的手牌数补充到3张
-            //         while (this.owncards.Count < 3 && this.ownDeckSize > 0)
-            //         {
-            //             this.drawACard(CardDB.cardNameEN.unknown, true, true);
-            //         }
-            //         while (this.enemyAnzCards < 3 && this.enemyDeckSize > 0)
-            //         {
-            //             this.drawACard(CardDB.cardNameEN.unknown, false, true);
-            //         }
-            //         break;
-
-            //     case CardDB.cardNameEN.carielroame: // "凯瑞尔·罗姆"：攻击时己方手牌中的神圣法术法力值减少1点
-            //         foreach (Handmanager.Handcard hc in this.owncards)
-            //         {
-            //             if (hc.card.SpellSchool == CardDB.SpellSchool.HOLY)
-            //             {
-            //                 hc.manacost--;
-            //                 //this.evaluatePenality -= 5; // TODO: 这里可能需要调整评分
-            //             }
-            //         }
-            //         break;
-            // }
 
             // 处理随从上附加的智慧祝福效果：每次攻击时抽取一张牌
             if (attacker.ownBlessingOfWisdom >= 1)
@@ -7780,6 +7742,39 @@ namespace HREngine.Bots
                     callKid(kid, pos, m.own, false, true);
                     callKid(kid, pos, m.own, false, true);
                 }
+                //绵羊面具,对所有随从造成2点伤害
+                for (int i = 0; i < m.sheepmask; i++)
+                {
+                    allMinionsGetDamage(2);
+                }
+
+                //通灵之光，召唤一个狂暴僵尸
+                for (int i = 0; i < m.itsnecrolit; i++)
+                {
+                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_018t); // 狂暴僵尸
+                    int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                    callKid(kid, pos, m.own, false, true);
+                }
+                for (int i = 0; i < m.greybud; i++)
+                {
+                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DMF_734); // 格雷布
+                    int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                    callKid(kid, pos, m.own, false, true);
+                }
+                for (int i = 0; i < m.infected; i++)
+                {
+                    CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_653); //感染的食尸鬼
+                    int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                    callKid(kid, pos, m.own, false, true);
+                }
+                for (int i = 0; i < m.finalsession; i++)//诅咒之旅
+                {
+                    CardDB.Card kid = m.handcard.card; //死亡的随从
+                    int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                    kid.dormant = 2;
+                    callKid(kid, pos, m.own, false, true);
+                    callKid(kid, pos, m.own, false, true);
+                }
 
                 // 如果有额外的亡语效果，触发它
                 if (m.deathrattle2 != null)
@@ -7875,6 +7870,34 @@ namespace HREngine.Bots
                             callKid(kid, pos, m.own);
                         }
 
+                        //通灵之光，召唤一个狂暴僵尸
+                        for (int i = 0; i < m.itsnecrolit; i++)
+                        {
+                            CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_018t); // 狂暴僵尸
+                            int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                            callKid(kid, pos, m.own, false, true);
+                        }
+                        for (int i = 0; i < m.greybud; i++)
+                        {
+                            CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DMF_734); // 格雷布
+                            int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                            callKid(kid, pos, m.own, false, true);
+                        }
+                        for (int i = 0; i < m.infected; i++)
+                        {
+                            CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_653); //感染的食尸鬼
+                            int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                            callKid(kid, pos, m.own, false, true);
+                        }
+                        for (int i = 0; i < m.finalsession; i++)//诅咒之旅
+                        {
+                            CardDB.Card kid = m.handcard.card; //死亡的随从
+                            int pos = m.own ? this.ownMinions.Count : this.enemyMinions.Count;
+                            kid.dormant = 2;
+                            callKid(kid, pos, m.own, false, true);
+                            callKid(kid, pos, m.own, false, true);
+                        }
+
                         if (m.deathrattle2 != null)
                         {
                             m.deathrattle2.sim_card.onDeathrattle(this, m);
@@ -7926,7 +7949,7 @@ namespace HREngine.Bots
                         // 检查随从是否有亡语或其他相关效果
                         if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.desperatestand >= 1 ||
                             m.souloftheforest >= 1 || m.stegodon >= 1 || m.livingspores >= 1 || m.infest >= 1 ||
-                            m.explorershat >= 1 || m.returnToHand >= 1 || m.deathrattle2 != null)
+                            m.explorershat >= 1 || m.returnToHand >= 1 || m.itsnecrolit >= 1 || m.sheepmask >= 1 || m.greybud >= 1 || m.infected >= 1 || m.finalsession >= 1 || m.deathrattle2 != null)
                         {
                             deathrattleMinions.Add(m);
                         }
@@ -7972,7 +7995,7 @@ namespace HREngine.Bots
                         // 检查随从是否有亡语或其他相关效果
                         if ((!m.silenced && m.handcard.card.deathrattle) || m.ancestralspirit >= 1 || m.desperatestand >= 1 ||
                             m.souloftheforest >= 1 || m.stegodon >= 1 || m.livingspores >= 1 || m.infest >= 1 ||
-                            m.explorershat >= 1 || m.returnToHand >= 1 || m.deathrattle2 != null)
+                            m.explorershat >= 1 || m.returnToHand >= 1 || m.greybud >= 1 || m.infected >= 1 || m.finalsession >= 1 || m.deathrattle2 != null)
                         {
                             deathrattleMinions.Add(m);
                         }
@@ -8211,26 +8234,27 @@ namespace HREngine.Bots
             {
                 handcard = new Handmanager.Handcard(hc),
                 own = own,
-                isHero = false,
-                entitiyID = hc.entity,
-                playedThisTurn = true,
-                numAttacksThisTurn = 0,
-                zonepos = zonepos,
-                reborn = hc.card.reborn,
-                windfury = hc.card.windfury,
-                taunt = hc.card.tank,
+                isHero = false, //是否为英雄
+                entitiyID = hc.entity,  //实体id
+                playedThisTurn = true,  //从手牌打出
+                numAttacksThisTurn = 0, //这回合攻击过几次
+                zonepos = zonepos,  //位置
+                name = hc.card.nameEN,  //英文名
+                nameCN = hc.card.nameCN,    //中文名
+
+                divineshild = hc.card.Shield,   //圣盾
+                windfury = hc.card.windfury,    //风怒
+                rush = hc.card.Rush ? 1 : 0,    //突袭
+                lifesteal = hc.card.lifesteal,  //吸血
+                poisonous = hc.card.poisonous,  //剧毒
+                stealth = hc.card.Stealth,  //潜行
+                reborn = hc.card.reborn,    //复生
+                taunt = hc.card.tank,   //嘲讽
+
                 charge = hc.card.Charge ? 1 : 0,
                 Spellburst = hc.card.Spellburst, // 法术迸发
-                dormant = hc.card.dormant,
-                untouchable = hc.card.dormant > 0 || hc.card.untouchable,
-                rush = hc.card.Rush ? 1 : 0,
-                divineshild = hc.card.Shield,
-                poisonous = hc.card.poisonous,
-                lifesteal = hc.card.lifesteal,
-                stealth = hc.card.Stealth,
-                Elusive = hc.card.Elusive,
-                name = hc.card.nameEN,
-                nameCN = hc.card.nameCN,
+                dormant = hc.card.dormant,  //休眠
+                untouchable = hc.card.dormant > 0 || hc.card.untouchable,   //不可接触
             };
 
             // 如果己方所有元素随从具有吸血效果
@@ -8360,6 +8384,7 @@ namespace HREngine.Bots
 
             // 触发敌方奥秘
             secretTrigger_MinionIsPlayed(m);
+
             //TODO:随从卡牌打出后触发的效果,给术士游客用的
             foreach (Minion triggerEffectMinion in this.ownMinions)
             {
@@ -8381,47 +8406,47 @@ namespace HREngine.Bots
                 }
             }
             // 处理任务进度
-            // if (this.ownQuest.Id != CardDB.cardIDEnum.None)
-            // {
-            //     ownQuest.trigger_MinionWasPlayed(m);
-            //     // 如果任务完成，执行奖励效果
-            //     if (ownQuest.maxProgress <= ownQuest.questProgress)
-            //     {
-            //         switch (this.ownQuest.Id)
-            //         {
-            //             case CardDB.cardIDEnum.SW_028:
-            //                 // 寻找并抽取武器牌
-            //                 foreach (KeyValuePair<CardDB.cardIDEnum, int> kvp in this.prozis.turnDeck)
-            //                 {
-            //                     CardDB.Card card = CardDB.Instance.getCardDataFromID(kvp.Key);
-            //                     if (card.type == CardDB.cardtype.WEAPON)
-            //                     {
-            //                         this.drawACard(kvp.Key, true, true);
-            //                         break;
-            //                     }
-            //                 }
-            //                 // 更新任务为下一阶段
-            //                 ownQuest = new Questmanager.QuestItem() { Id = CardDB.cardIDEnum.SW_028t, questProgress = 0, maxProgress = 2 };
-            //                 break;
+            if (this.ownQuest.Id != CardDB.cardIDEnum.None)
+            {
+                ownQuest.trigger_MinionWasPlayed(m);
+                // 如果任务完成，执行奖励效果
+                if (ownQuest.maxProgress <= ownQuest.questProgress)
+                {
+                    switch (this.ownQuest.Id)
+                    {
+                        case CardDB.cardIDEnum.SW_028:
+                            // 寻找并抽取武器牌
+                            foreach (KeyValuePair<CardDB.cardIDEnum, int> kvp in this.prozis.turnDeck)
+                            {
+                                CardDB.Card card = CardDB.Instance.getCardDataFromID(kvp.Key);
+                                if (card.type == CardDB.cardtype.WEAPON)
+                                {
+                                    this.drawACard(kvp.Key, true, true);
+                                    break;
+                                }
+                            }
+                            // 更新任务为下一阶段
+                            ownQuest = new Questmanager.QuestItem() { Id = CardDB.cardIDEnum.SW_028t, questProgress = 0, maxProgress = 2 };
+                            break;
 
-            //             case CardDB.cardIDEnum.SW_028t:
-            //                 // 对敌方角色造成2点伤害
-            //                 minionGetDamageOrHeal(getEnemyCharTargetForRandomSingleDamage(2), 2, true);
-            //                 // 更新任务为下一阶段
-            //                 ownQuest = new Questmanager.QuestItem() { Id = CardDB.cardIDEnum.SW_028t2, questProgress = 0, maxProgress = 2 };
-            //                 break;
+                        case CardDB.cardIDEnum.SW_028t:
+                            // 对敌方角色造成2点伤害
+                            minionGetDamageOrHeal(getEnemyCharTargetForRandomSingleDamage(2), 2, true);
+                            // 更新任务为下一阶段
+                            ownQuest = new Questmanager.QuestItem() { Id = CardDB.cardIDEnum.SW_028t2, questProgress = 0, maxProgress = 2 };
+                            break;
 
-            //             case CardDB.cardIDEnum.SW_028t2:
-            //                 // 抽取任务完成奖励牌
-            //                 drawACard(CardDB.cardIDEnum.SW_028t5, true, true);
-            //                 // 如果当前法力水晶为4，减少评估惩罚
-            //                 if (this.ownMaxMana == 4) evaluatePenality -= 20;
-            //                 // 重置任务
-            //                 ownQuest.Reset();
-            //                 break;
-            //         }
-            //     }
-            // }
+                        case CardDB.cardIDEnum.SW_028t2:
+                            // 抽取任务完成奖励牌
+                            drawACard(CardDB.cardIDEnum.SW_028t5, true, true);
+                            // 如果当前法力水晶为4，减少评估惩罚
+                            if (this.ownMaxMana == 4) evaluatePenality -= 20;
+                            // 重置任务
+                            ownQuest.Reset();
+                            break;
+                    }
+                }
+            }
 
             // 记录日志信息
             if (logging) Helpfunctions.Instance.logg("added " + m.handcard.card.nameEN);
@@ -9107,14 +9132,14 @@ namespace HREngine.Bots
             // 销毁己方所有随从
             foreach (Minion m in this.ownMinions.ToArray())
             {
-                if (m.handcard.card.type != CardDB.cardtype.MOB || m.handcard.card.untouchable) continue;
+                if (m.handcard.card.type != CardDB.cardtype.MOB || m.untouchable) continue;
                 this.minionGetDestroyed(m);
             }
 
             // 销毁敌方所有随从
             foreach (Minion m in this.enemyMinions.ToArray())
             {
-                if (m.handcard.card.type != CardDB.cardtype.MOB || m.handcard.card.untouchable) continue;
+                if (m.handcard.card.type != CardDB.cardtype.MOB || m.untouchable) continue;
                 this.minionGetDestroyed(m);
             }
         }
@@ -9608,7 +9633,7 @@ namespace HREngine.Bots
         public void allMinionOfASideGetBuffed(bool own, int attackbuff, int hpbuff)
         {
             List<Minion> temp = own ? this.ownMinions : this.enemyMinions;
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
                 minionGetBuffed(m, attackbuff, hpbuff);
             }
@@ -10785,18 +10810,24 @@ namespace HREngine.Bots
             // 对己方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.ownMinions.ToArray())
             {
-                if (m.entitiyID != exceptID)
-                {
-                    minionGetDamageOrHeal(m, damages, true);
-                }
+                if (m.entitiyID == exceptID) continue;
+                minionGetDamageOrHeal(m, damages, true);
+
+                // if (m.entitiyID != exceptID)
+                // {
+                //     minionGetDamageOrHeal(m, damages, true);
+                // }
             }
             // 对敌方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.enemyMinions.ToArray())
             {
-                if (m.entitiyID != exceptID)
-                {
-                    minionGetDamageOrHeal(m, damages, true);
-                }
+                if (m.entitiyID == exceptID) continue;
+                minionGetDamageOrHeal(m, damages, true);
+
+                // if (m.entitiyID != exceptID)
+                // {
+                //     minionGetDamageOrHeal(m, damages, true);
+                // }
             }
         }
 
@@ -12522,18 +12553,38 @@ namespace HREngine.Bots
             return race == targetRace || race == CardDB.Race.ALL;
         }
 
+        public static bool MinionBelongsToRace(List<CardDB.Race> races, List<CardDB.Race> targetRace)
+        {
+            if (races.Count == 0) return false;
+
+            if (targetRace.Contains(CardDB.Race.ALL))
+            {
+                return true;
+            }
+
+            foreach (CardDB.Race race in races)
+            {
+                if (targetRace.Contains(race) || race == CardDB.Race.ALL)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool MinionBelongsToRace(List<CardDB.Race> races, CardDB.Race targetRace)
         {
             if (races.Count == 0) return false;
 
             if (targetRace == CardDB.Race.ALL)
             {
-                return races.Count > 1;
+                return true;
             }
 
             foreach (CardDB.Race race in races)
             {
-                if (race == targetRace || race == CardDB.Race.ALL)
+                if (targetRace == race || race == CardDB.Race.ALL)
                 {
                     return true;
                 }

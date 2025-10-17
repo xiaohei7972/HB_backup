@@ -13,7 +13,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if (m.name == CardDB.cardNameEN.silverhandrecruit)
+                if (m.handcard.card.SilverHandRecruit)
                 {
                     p.minionGetBuffed(m, 1, 0);
                     m.divineshild = true;

@@ -1,37 +1,57 @@
-.vs
-用户配置教程
-开发配置教程
-
-Routines/DefaultRoutine/Silverfish/Test/Data/对局记录
+.vs/
+用户配置教程/
+开发配置教程/
+Routines/DefaultRoutine/Silverfish/Test/Data/对局记录/
 Routines/DefaultRoutine/Silverfish/UltimateLogs/
 Routines/DefaultRoutine/Silverfish/Test/Data/
 Logs/
 obj/
 Settings/
-
+Settings/Default/
+Settings/DefaultCustomDecks
 .vscode/
 Hearthbuddy_SimTemplate/
-Hearthbuddy_backed.csproj
-
-Hearthbuddy_backed.sln
+# Hearthbuddy_backed.csproj
+# Hearthbuddy_backed.sln
 CompiledAssemblies/AutoStop.dll
 CompiledAssemblies/DefaultBot.dll
 CompiledAssemblies/DefaultRoutine.dll
 CompiledAssemblies/Monitor.dll
 CompiledAssemblies/Quest.dll
 CompiledAssemblies/Stats.dll
-
-
 Hearthbuddy_backed.csproj.user
 myLog.txt
-Settings/Default/CustomDecks/8912427472.json
+# Settings/Default/CustomDecks/8912427472.json
+# Settings/Default/CustomDecks/8951491327.json
+# Settings/Default/CustomDecks/8973092920.json
+# Settings/Default/CustomDecks/8980146684.json
+# Settings/Default/CustomDecks/8984341972.json
+# Settings/Default/CustomDecks/8993263768.json
+# Settings/Default/CustomDecks/8994626363.json
+# Settings/Default/CustomDecks/9037667406.json
+# Settings/Default/CustomDecks/9041131742.json
+# Settings/Default/CustomDecks/9049736005.json
+# Settings/Default/CustomDecks/9061933690.json
+# Settings/Default/Quest111120296.json
+
+Routines/DefaultRoutine/Silverfish/Test/debugTest.cs
+Settings/Default/AutoStop-700513338.json
+Settings/Default/AutoStop111120296.json
+Settings/Default/DefaultBot-700513338.json
+Settings/Default/DefaultBot111120296.json
+Settings/Default/DefaultRoutine-700513338.json
+Settings/Default/DefaultRoutine111120296.json
+Settings/Default/Dev.json
+Settings/Default/HearthHelper.xml
+Settings/Default/Main.json
+Settings/Default/Monitor-700513338.json
+Settings/Default/Monitor111120296.json
+Settings/Default/Quest-700513338.json
+Settings/Default/Quest111120296.json
+Settings/Default/routine.xml
+Settings/Default/Stats-700513338.json
+Settings/Default/Stats111120296.json
+Settings/Default/CustomDecks/8501201778.json
 Settings/Default/CustomDecks/8951491327.json
-Settings/Default/CustomDecks/8973092920.json
-Settings/Default/CustomDecks/8980146684.json
-Settings/Default/CustomDecks/8984341972.json
-Settings/Default/CustomDecks/8993263768.json
-Settings/Default/CustomDecks/8994626363.json
-Settings/Default/CustomDecks/9037667406.json
-Settings/Default/CustomDecks/9041131742.json
-Settings/Default/CustomDecks/9049736005.json
-Settings/Default/CustomDecks/9061933690.json
+Settings/Default/CustomDecks/9066077420.json
+Settings/Global/GlobalSettings.json

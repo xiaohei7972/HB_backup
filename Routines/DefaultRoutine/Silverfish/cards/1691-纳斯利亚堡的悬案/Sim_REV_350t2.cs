@@ -11,7 +11,25 @@ namespace HREngine.Bots
 	//<b>已注能</b>召唤两只2/1的蝙蝠。使其获得+1/+2。
 	class Sim_REV_350t2 : SimTemplate
 	{
-		
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.REV_350t);
+
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+		{
+			// kid = (CardDB.Card)kid.Clone();
+			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+			kid.Attack += 1;
+			kid.Health += 2;
+			p.callKid(kid, pos, ownplay);
+			p.callKid(kid, pos, ownplay);
+
+		}
+
+		public override PlayReq[] GetPlayReqs()
+        {
+			return new PlayReq[]{
+				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
+			};
+        }
 		
 	}
 }

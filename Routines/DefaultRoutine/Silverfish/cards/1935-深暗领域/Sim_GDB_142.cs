@@ -13,23 +13,20 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			List<Minion> minions = new List<Minion>();
-			minions.AddRange(p.ownMinions);
-			minions.AddRange(p.enemyMinions);
-			minions.Remove(own);
-
-			foreach (Minion m in minions.ToArray())
+			foreach (Minion m in p.ownMinions.ToArray())
 			{
-				p.minionGetDestroyed(m);
+				if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.minionGetDestroyed(m);
+				}
 			}
-			// foreach (Minion m in p.ownMinions)
-			// {
-			// 	if (m.entitiyID != own.entitiyID) p.minionGetDestroyed(m);
-			// }
-			// foreach (Minion m in p.enemyMinions)
-			// {
-			//     if (m.entitiyID != own.entitiyID) p.minionGetDestroyed(m);
-			// }
+			foreach (Minion m in p.enemyMinions.ToArray())
+			{
+				if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+				{
+					p.minionGetDestroyed(m);
+				}
+			}
 		}
 
 	}

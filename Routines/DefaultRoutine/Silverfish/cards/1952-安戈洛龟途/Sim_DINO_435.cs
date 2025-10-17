@@ -11,7 +11,14 @@ namespace HREngine.Bots
 	//<b>延系：</b>召唤一个本随从的复制。
 	class Sim_DINO_435 : SimTemplate
 	{
-		
-		
+		public override void onCardPlay(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (own.handcard.poweredUp > 0)
+			{
+				p.callKid(own.handcard.card, own.zonepos, own.own);
+
+			}
+		}
+
 	}
 }

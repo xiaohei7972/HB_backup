@@ -8,28 +8,26 @@ namespace HREngine.Bots
 	{
         //Destroy ALLodd-Attack minions.
         //消灭所有攻击力为奇数的随从。
+        
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            bool found = false;
-            foreach(Minion m in p.ownMinions)
+
+            
+            foreach (Minion m in p.ownMinions.ToArray())
             {
-                if(m.Angr % 2 == 1)
-                {
-                    p.minionGetDestroyed(m);
-                    found = true;
-                }
-            }
-            foreach (Minion m in p.enemyMinions)
-            {
+                if (m.untouchable) continue;
                 if (m.Angr % 2 == 1)
                 {
                     p.minionGetDestroyed(m);
-                    found = true;
                 }
             }
-            if (!found)
+            foreach (Minion m in p.enemyMinions.ToArray())
             {
-                p.evaluatePenality += 1000;
+                if (m.untouchable) continue;
+                if (m.Angr % 2 == 1)
+                {
+                    p.minionGetDestroyed(m);
+                }
             }
         }
 

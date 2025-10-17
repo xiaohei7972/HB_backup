@@ -12,10 +12,10 @@ namespace HREngine.Bots
 		
 		public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
 		{
-			if (turnStartOfOwner == triggerEffectMinion.own)
+			if (triggerEffectMinion.own ==turnStartOfOwner)
 			{
-				int pos = (triggerEffectMinion.own) ? p.ownMinions.Count : p.enemyMinions.Count;
-            	p.callKid(kid, pos, triggerEffectMinion.own);
+            	p.callKid(kid, triggerEffectMinion.zonepos -1, triggerEffectMinion.own);
+            	p.callKid(kid, triggerEffectMinion.zonepos, triggerEffectMinion.own);
 			}
 		}
 	}

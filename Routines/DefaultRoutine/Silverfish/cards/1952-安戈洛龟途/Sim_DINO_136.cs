@@ -21,7 +21,17 @@ namespace HREngine.Bots
 			p.callKid(kid, pos, ownplay);
 
 		}
-		
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, bool outcast)
+        {
+            foreach (Minion minion in ownplay ? p.ownMinions : p.enemyMinions)
+			{
+				if (minion.handcard.card.cardIDenum == CardDB.cardIDEnum.DINO_136t)
+				{
+					minion.immuneWhileAttacking = true;
+				}
+			}
+        }
+
 		public override PlayReq[] GetPlayReqs()
         {
 			return new PlayReq[]{

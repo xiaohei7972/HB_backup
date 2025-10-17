@@ -11,7 +11,16 @@ namespace HREngine.Bots
 	//使所有友方随从获得+2/+1。<i>（+2攻击力/+1生命值）</i>
 	class Sim_TUTR_RLK_707 : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            int addattack = 1;
+            if (p.getCorpseCount() >= 5)
+            {
+                p.corpseConsumption(5);
+                addattack = 3;
+            }
+            p.allMinionOfASideGetBuffed(ownplay, addattack, 0);
+        }
 		
 	}
 }

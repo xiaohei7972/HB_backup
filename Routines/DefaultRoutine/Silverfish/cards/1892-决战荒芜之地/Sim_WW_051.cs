@@ -14,6 +14,15 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.WW_051t);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
+
+			for (int i = 0; i < 3; i++)
+			{
+				int pos1 = ownplay ? p.enemyMinions.Count : p.ownMinions.Count;
+				p.callKid(kid, pos1, !ownplay);
+			}
+
+			// kid = (CardDB.Card)kid.Clone();
+			kid.Rush = true;
 			for (int i = 0; i < 3; i++)
 			{
 				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
@@ -23,12 +32,6 @@ namespace HREngine.Bots
 					p.ownMinions[0 > pos - 1 ? 0 : pos - 1].rush = 1;
 				}
 
-			}
-
-			for (int i = 0; i < 3; i++)
-			{
-				int pos1 = ownplay ? p.enemyMinions.Count : p.ownMinions.Count;
-				p.callKid(kid, pos1, !ownplay);
 			}
 		}
 

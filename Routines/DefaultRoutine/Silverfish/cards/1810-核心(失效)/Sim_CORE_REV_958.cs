@@ -11,7 +11,12 @@ namespace HREngine.Bots
 	//<b>战吼：</b>召唤两个白银之手新兵。<b>注能（@）：</b>使其获得+2攻击力和<b>圣盾</b>。
 	class Sim_CORE_REV_958 : SimTemplate
 	{
-		
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t);
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			p.callKid(kid, own.zonepos - 1, own.own);
+			p.callKid(kid, own.zonepos, own.own);
+		}
 		
 	}
 }

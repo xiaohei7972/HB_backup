@@ -9,8 +9,13 @@ namespace HREngine.Bots
     public partial class Behavior丨通用丨不设惩罚 : Behavior
     {
         private static readonly ILog ilog_0 = Logger.GetLoggerInstanceForType();
-
+        /// <summary>
+        /// 敌方奖励
+        /// </summary>
         private int bonus_enemy = 4;
+        /// <summary>
+        /// 我方奖励
+        /// </summary>
         private int bonus_mine = 4;
         // 危险血线
         private int hpboarder = 15;
@@ -161,103 +166,125 @@ namespace HREngine.Bots
             }
             if (m.silenced) return retval;
 
+            //嘲讽
             if (m.taunt) retval += 2;
+            //圣盾
             if (m.divineshild) retval += m.Angr * 2;
+            //圣盾嘲讽
             if (m.divineshild && m.taunt) retval += 5;
+            //潜行
             if (m.stealth) retval += 2;
-
+            //扰魔
+            if (m.Elusive) retval += 5;
+            //复生
+            if (m.reborn) retval += 5;
+            //法术迸发
+            if (m.Spellburst) retval += 5;
+            //暴怒
+            if (m.Frenzy) retval += 5;
+            //荣誉消灭
+            if (m.HonorableKill) retval += 5;
+            //超杀
+            if (m.Overkill) retval += 5;
+            //吸血
             if (m.lifesteal) retval += m.Angr * bonus_enemy;
-
+            // 剧毒
             if (m.poisonous)
             {
-                retval += 4;
-                if (p.ownMinions.Count < p.enemyMinions.Count) retval += 10;
+                retval += 10;
+                if (p.ownMinions.Count < p.enemyMinions.Count) retval += 15;
+            }
+            //光环
+            if (m.Aura) retval += 30;
+            if (m.dormant > 0)
+            {
+                retval -= bonus_mine * m.dormant;
             }
             // 异能价值
-            switch (m.handcard.card.nameCN)
-            {
-                // 解不掉游戏结束
-                case CardDB.cardNameCN.对空奥术法师:
-                case CardDB.cardNameCN.火焰术士弗洛格尔:
-                case CardDB.cardNameCN.黑眼:
-                case CardDB.cardNameCN.聒噪怪:
-                case CardDB.cardNameCN.鲨鱼之灵:
-                case CardDB.cardNameCN.农夫:
-                case CardDB.cardNameCN.尼鲁巴蛛网领主:
-                case CardDB.cardNameCN.前沿哨所:
-                case CardDB.cardNameCN.洛萨:
-                case CardDB.cardNameCN.考内留斯罗姆:
-                case CardDB.cardNameCN.战场军官:
-                case CardDB.cardNameCN.大领主弗塔根:
-                case CardDB.cardNameCN.圣殿蜡烛商:
-                case CardDB.cardNameCN.伯尔纳锤喙:
-                case CardDB.cardNameCN.魅影歹徒:
-                case CardDB.cardNameCN.灵魂窃贼:
-                case CardDB.cardNameCN.甜水鱼人斥候:
-                case CardDB.cardNameCN.原野联络人:
-                case CardDB.cardNameCN.狂欢报幕员:
-                case CardDB.cardNameCN.巫师学徒:
-                case CardDB.cardNameCN.塔姆辛罗姆:
-                case CardDB.cardNameCN.导师火心:
-                case CardDB.cardNameCN.伊纳拉碎雷:
-                case CardDB.cardNameCN.暗影珠宝师汉纳尔:
-                case CardDB.cardNameCN.伦萨克大王:
-                case CardDB.cardNameCN.洛卡拉:
-                case CardDB.cardNameCN.布莱恩铜须:
-                case CardDB.cardNameCN.观星者露娜:
-                case CardDB.cardNameCN.大法师瓦格斯:
-                case CardDB.cardNameCN.火妖:
-                case CardDB.cardNameCN.下水道渔人:
-                case CardDB.cardNameCN.空中炮艇:
-                case CardDB.cardNameCN.船载火炮:
-                case CardDB.cardNameCN.团伙核心:
-                case CardDB.cardNameCN.巡游领队:
-                case CardDB.cardNameCN.科卡尔驯犬者:
-                case CardDB.cardNameCN.火舌图腾:
-                    retval += bonus_enemy * 8;
-                    break;
-                // 不解巨大劣势
-                case CardDB.cardNameCN.拍卖师亚克森:
-                case CardDB.cardNameCN.法师猎手:
-                case CardDB.cardNameCN.萨特监工:
-                case CardDB.cardNameCN.甩笔侏儒:
-                case CardDB.cardNameCN.精英牛头人酋长金属之神:
-                case CardDB.cardNameCN.莫尔杉哨所:
-                case CardDB.cardNameCN.凯瑞尔罗姆:
-                case CardDB.cardNameCN.鱼人领军:
-                case CardDB.cardNameCN.南海船长:
-                case CardDB.cardNameCN.坎雷萨德埃伯洛克:
-                case CardDB.cardNameCN.人偶大师多里安:
-                case CardDB.cardNameCN.暗鳞先知:
-                case CardDB.cardNameCN.灭龙弩炮:
-                case CardDB.cardNameCN.神秘女猎手:
-                case CardDB.cardNameCN.鲨鳍后援:
-                case CardDB.cardNameCN.怪盗图腾:
-                case CardDB.cardNameCN.矮人神射手:
-                case CardDB.cardNameCN.任务达人:
-                case CardDB.cardNameCN.贪婪的书虫:
-                case CardDB.cardNameCN.战马训练师:
-                case CardDB.cardNameCN.相位追猎者:
-                case CardDB.cardNameCN.鱼人宝宝车队:
-                case CardDB.cardNameCN.科多兽骑手:
-                case CardDB.cardNameCN.奥秘守护者:
-                case CardDB.cardNameCN.获救的流民:
-                case CardDB.cardNameCN.白银之手新兵:
-                case CardDB.cardNameCN.低阶侍从:
-                    retval += bonus_enemy * 3;
-                    break;
-                // 算有点用
-                case CardDB.cardNameCN.幽灵狼前锋:
-                case CardDB.cardNameCN.战斗邪犬:
-                case CardDB.cardNameCN.饥饿的秃鹫:
-                case CardDB.cardNameCN.法力浮龙:
-                case CardDB.cardNameCN.加基森拍卖师:
-                case CardDB.cardNameCN.飞刀杂耍者:
-                case CardDB.cardNameCN.锈水海盗:
-                case CardDB.cardNameCN.大法师安东尼达斯:
-                    retval += bonus_enemy * 2;
-                    break;
-            }
+            // switch (m.handcard.card.nameCN)
+            // {
+            //     // 解不掉游戏结束
+            //     case CardDB.cardNameCN.对空奥术法师:
+            //     case CardDB.cardNameCN.火焰术士弗洛格尔:
+            //     case CardDB.cardNameCN.黑眼:
+            //     case CardDB.cardNameCN.聒噪怪:
+            //     case CardDB.cardNameCN.鲨鱼之灵:
+            //     case CardDB.cardNameCN.农夫:
+            //     case CardDB.cardNameCN.尼鲁巴蛛网领主:
+            //     case CardDB.cardNameCN.前沿哨所:
+            //     case CardDB.cardNameCN.洛萨:
+            //     case CardDB.cardNameCN.考内留斯罗姆:
+            //     case CardDB.cardNameCN.战场军官:
+            //     case CardDB.cardNameCN.大领主弗塔根:
+            //     case CardDB.cardNameCN.圣殿蜡烛商:
+            //     case CardDB.cardNameCN.伯尔纳锤喙:
+            //     case CardDB.cardNameCN.魅影歹徒:
+            //     case CardDB.cardNameCN.灵魂窃贼:
+            //     case CardDB.cardNameCN.甜水鱼人斥候:
+            //     case CardDB.cardNameCN.原野联络人:
+            //     case CardDB.cardNameCN.狂欢报幕员:
+            //     case CardDB.cardNameCN.巫师学徒:
+            //     case CardDB.cardNameCN.塔姆辛罗姆:
+            //     case CardDB.cardNameCN.导师火心:
+            //     case CardDB.cardNameCN.伊纳拉碎雷:
+            //     case CardDB.cardNameCN.暗影珠宝师汉纳尔:
+            //     case CardDB.cardNameCN.伦萨克大王:
+            //     case CardDB.cardNameCN.洛卡拉:
+            //     case CardDB.cardNameCN.布莱恩铜须:
+            //     case CardDB.cardNameCN.观星者露娜:
+            //     case CardDB.cardNameCN.大法师瓦格斯:
+            //     case CardDB.cardNameCN.火妖:
+            //     case CardDB.cardNameCN.下水道渔人:
+            //     case CardDB.cardNameCN.空中炮艇:
+            //     case CardDB.cardNameCN.船载火炮:
+            //     case CardDB.cardNameCN.团伙核心:
+            //     case CardDB.cardNameCN.巡游领队:
+            //     case CardDB.cardNameCN.科卡尔驯犬者:
+            //     case CardDB.cardNameCN.火舌图腾:
+            //         retval += bonus_enemy * 8;
+            //         break;
+            //     // 不解巨大劣势
+            //     case CardDB.cardNameCN.拍卖师亚克森:
+            //     case CardDB.cardNameCN.法师猎手:
+            //     case CardDB.cardNameCN.萨特监工:
+            //     case CardDB.cardNameCN.甩笔侏儒:
+            //     case CardDB.cardNameCN.精英牛头人酋长金属之神:
+            //     case CardDB.cardNameCN.莫尔杉哨所:
+            //     case CardDB.cardNameCN.凯瑞尔罗姆:
+            //     case CardDB.cardNameCN.鱼人领军:
+            //     case CardDB.cardNameCN.南海船长:
+            //     case CardDB.cardNameCN.坎雷萨德埃伯洛克:
+            //     case CardDB.cardNameCN.人偶大师多里安:
+            //     case CardDB.cardNameCN.暗鳞先知:
+            //     case CardDB.cardNameCN.灭龙弩炮:
+            //     case CardDB.cardNameCN.神秘女猎手:
+            //     case CardDB.cardNameCN.鲨鳍后援:
+            //     case CardDB.cardNameCN.怪盗图腾:
+            //     case CardDB.cardNameCN.矮人神射手:
+            //     case CardDB.cardNameCN.任务达人:
+            //     case CardDB.cardNameCN.贪婪的书虫:
+            //     case CardDB.cardNameCN.战马训练师:
+            //     case CardDB.cardNameCN.相位追猎者:
+            //     case CardDB.cardNameCN.鱼人宝宝车队:
+            //     case CardDB.cardNameCN.科多兽骑手:
+            //     case CardDB.cardNameCN.奥秘守护者:
+            //     case CardDB.cardNameCN.获救的流民:
+            //     case CardDB.cardNameCN.白银之手新兵:
+            //     case CardDB.cardNameCN.低阶侍从:
+            //         retval += bonus_enemy * 3;
+            //         break;
+            //     // 算有点用
+            //     case CardDB.cardNameCN.幽灵狼前锋:
+            //     case CardDB.cardNameCN.战斗邪犬:
+            //     case CardDB.cardNameCN.饥饿的秃鹫:
+            //     case CardDB.cardNameCN.法力浮龙:
+            //     case CardDB.cardNameCN.加基森拍卖师:
+            //     case CardDB.cardNameCN.飞刀杂耍者:
+            //     case CardDB.cardNameCN.锈水海盗:
+            //     case CardDB.cardNameCN.大法师安东尼达斯:
+            //         retval += bonus_enemy * 2;
+            //         break;
+            // }
             // 血量越低，解怪优先度越高
             if (p.ownHero.Hp <= 15)
             {
@@ -303,13 +330,30 @@ namespace HREngine.Bots
             if (m.stealth) retval += m.Angr / 2 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 2 + 1;
+            
             // 圣盾嘲讽
             if (m.divineshild && m.taunt) retval += 4;
-            switch (m.handcard.card.nameCN)
-            {
-                case CardDB.cardNameCN.黑眼:
-                    break;
-            }
+            //扰魔
+            if (m.Elusive) retval += 5;
+            //复生
+            if (m.reborn) retval += 5;
+            //法术迸发
+            if (m.Spellburst) retval += 5;
+            //暴怒
+            if (m.Frenzy) retval += 5;
+            //荣誉消灭
+            if (m.HonorableKill) retval += 5;
+            //超杀
+            if (m.Overkill) retval += 5;
+            // 剧毒
+            if (m.poisonous) retval += 10;
+            // switch (m.handcard.card.nameCN)
+            // {
+            //     case CardDB.cardNameCN.黑眼:
+            //         break;
+            // }
+            //光环
+            if (m.Aura) retval += 30;
             if (m.dormant > 0)
             {
                 retval -= bonus_mine * m.dormant;

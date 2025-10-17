@@ -21,7 +21,9 @@ namespace HREngine.Bots
 				// 招募野兽
 				if (deckMinion.type == CardDB.cardtype.MOB && RaceUtils.MinionBelongsToRace(deckMinion.races, CardDB.Race.PET))
 				{
+					// deckMinion = (CardDB.Card)deckMinion.Clone();
 					int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
+					deckMinion.lifesteal = true;
 					p.callKid(deckMinion, pos, m.own);
 					break;
 				}

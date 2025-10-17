@@ -14,17 +14,23 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_118t3);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
+			if (ownplay && p.getCorpseCount() >= 4)
+			{
+				// kid = (CardDB.Card)kid.Clone();
+				p.corpseConsumption(4);
+				kid.reborn = true;
+			}
 			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 			p.callKid(kid, pos, ownplay);
 			p.callKid(kid, pos, ownplay);
-        }
+		}
 
-        public override PlayReq[] GetPlayReqs()
-        {
+		public override PlayReq[] GetPlayReqs()
+		{
 			return new PlayReq[]{
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1), //需要一个空位
 			};
-        }
+		}
 
 	}
 }

@@ -1,7 +1,7 @@
 <XmlConfig>
-  <RoutinePath>C:\Users\xiaohei\Desktop\Hearthbuddy_SimTemplate\Hearthbuddy_SimTemplate\Routines\DefaultRoutine</RoutinePath>
+  <RoutinePath>D:\Hearthbuddy_backed\Routines\DefaultRoutine</RoutinePath>
   <SilverfishPath>
   </SilverfishPath>
-  <LastTestFile>C:\Users\xiaohei\Desktop\Hearthbuddy_SimTemplate\Hearthbuddy_SimTemplate\Routines\DefaultRoutine\Silverfish\Test\Data\对局记录\日期2025-07-14\22-39-23-WARLOCK-PALADIN\1法力水晶 第2回合 第0步操作.txt</LastTestFile>
+  <LastTestFile>D:\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\Test\Data\对局记录\日期2025-10-12\17-14-59-PALADIN-HUNTER\5法力水晶 第9回合 第0步操作.txt</LastTestFile>
   <LastRoutine>10</LastRoutine>
 </XmlConfig>

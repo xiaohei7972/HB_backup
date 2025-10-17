@@ -19,13 +19,6 @@ namespace HREngine.Bots
 			p.allCharsOfASideGetRandomDamage(!own.own, damage);
         }
 
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
-        {
-            {
-                if (target != null)
-                    p.minionGetDamageOrHeal(target, 2);
-            }
-        }
 		
 	}
 }

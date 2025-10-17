@@ -14,8 +14,10 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
 			CardDB.Card selectedCard = CardDB.Instance.getCardDataFromID(Hrtprozis.Instance.enchs.LastOrDefault());
+			CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.ULD_193);
 			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 			p.callKid(selectedCard, pos, ownplay);
+			p.callKid(kid, pos, ownplay);
 		}
 
 	}

@@ -13,7 +13,9 @@ namespace HREngine.Bots
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.MURLOC) && own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 1);
+                if (own.entitiyID != m.entitiyID) continue;
+                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.MURLOC))
+                    p.minionGetBuffed(m, 1, 1);
             }
         }
     }

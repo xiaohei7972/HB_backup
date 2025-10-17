@@ -4,11 +4,12 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_ICC_830p: SimTemplate //* 虚空形态 Voidform
-//[x]<b>Hero Power</b>Deal $2 damage.After you play a card,refresh this.
-//<b>英雄技能</b>造成$2点伤害。在你使用一张牌后，复原你的英雄技能。 
+    //* 虚空形态 Voidform
+    //[x]<b>Hero Power</b>Deal $2 damage.After you play a card,refresh this.
+    //<b>英雄技能</b>造成$2点伤害。在你使用一张牌后，复原你的英雄技能。 
+
+    class Sim_ICC_830p : SimTemplate
     {
-        
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {

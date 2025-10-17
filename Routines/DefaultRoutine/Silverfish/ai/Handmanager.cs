@@ -14,7 +14,7 @@ namespace HREngine.Bots
             public int addHp = 0; //增加的血量
             public CardDB.Card card; //卡牌，指向CardDB.cs
             public Minion target; //目标
-            public int poweredUp = 0; //上回合是否使用元素牌
+            public int poweredUp = 0; //手牌高亮
             public int darkmoon_num = 0; //暗月先知抽牌数：战斗中已触发的奥秘数
             public int extraParam2 = 0; //扩展参数2，可以用来记录一些此卡需要的特殊数据
             public bool extraParam3 = false; //扩展参数3
@@ -88,6 +88,10 @@ namespace HREngine.Bots
                 this.card = c;
                 this.addattack = 0;
                 this.addHp = 0;
+                //临时卡牌
+                this.temporary = c.Temporary;
+
+
             }
             public void setHCtoHC(Handcard hc)
             {
@@ -112,157 +116,66 @@ namespace HREngine.Bots
             //读取卡牌法力值
             public int getManaCost(Playfield p)
             {
+                
+                if (this.card.HideCost)
+                {
+                    return 1000;
+                }
                 if (this.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum ench in this.enchs)
                     {
                         switch (ench)
                         {
-                            case CardDB.cardIDEnum.SW_052t4e:
-                            case CardDB.cardIDEnum.EDR_526e:
-                            case CardDB.cardIDEnum.TTN_744e1:
-                            case CardDB.cardIDEnum.EDR_234e2:
+                            case CardDB.cardIDEnum.SW_052t4e:// TODO 游戏内无法使用 声光干扰器
+                            case CardDB.cardIDEnum.EDR_526e: // TODO 雷弗拉尔，恶念巨蛛
+                            case CardDB.cardIDEnum.TTN_744e1:// TODO 严寒冰封
+                            case CardDB.cardIDEnum.EDR_234e2:// TODO 翡翠厚赠
                                 return 1000;
-                            case CardDB.cardIDEnum.MAW_014e2:
+                            case CardDB.cardIDEnum.MAW_014e2:// TODO 公诉人梅尔特拉尼克斯
                                 if (this.position != 1 && this.position != p.owncards.Count)
                                     return 1000;
                                 break;
                             default:
-                                break;
+                                continue;
                         }
                     }
-                    //     // TODO 游戏内无法使用 声光干扰器
-                    //     if (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
-                    //         return 1000;
-                    //     // TODO 雷弗拉尔，恶念巨蛛
-                    //     if (this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
-                    //     {
-                    //         return 1000;
-                    //     }
-                    //     // TODO 严寒冰封
-                    //     if (this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
-                    //     {
-                    //         return 1000;
-                    //     }
-                    //     // TODO 翡翠厚赠
-                    //     if (this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
-                    //     {
-                    //         return 1000;
-                    //     }
-                    //     // TODO 公诉人梅尔特拉尼克斯
-                    //     if (this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
-                    //     {
-                    //         if (this.position != 1 && this.position != p.owncards.Count)
-                    //             return 1000;
-                    //     }
                 }
 
-                // TODO 游戏内无法使用 声光干扰器
-                // if (this.enchs.Count > 0 && (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e) || this.enchs.Contains(CardDB.cardIDEnum.EDR_526e) || this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1) || this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2)))
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
-                // {
-                //     return 1000;
-                // }
-                // // TODO 雷弗拉尔，恶念巨蛛
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
-                // {
-                //     return 1000;
-                // }
-                // // TODO 严寒冰封
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
-                // {
-                //     return 1000;
-                // }
-                // // TODO 翡翠厚赠
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
-                // {
-                //     return 1000;
-                // }
-                // // TODO 公诉人梅尔特拉尼克斯
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
-                // {
-                //     if (this.position != 1 || this.position != p.owncards.Count)
-                //         return 1000;
-                // }
                 return this.card.getManaCost(p, this.manacost);
             }
 
             //判定卡牌是否能够使用
             public bool canplayCard(Playfield p, bool own)
             {
+
+                if (this.card.HideCost)
+                {
+                    return false;
+                }
                 if (this.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum ench in this.enchs)
                     {
                         switch (ench)
                         {
-                            case CardDB.cardIDEnum.SW_052t4e:
-                            case CardDB.cardIDEnum.EDR_526e:
-                            case CardDB.cardIDEnum.TTN_744e1:
-                            case CardDB.cardIDEnum.EDR_234e2:
+                            case CardDB.cardIDEnum.SW_052t4e:// TODO 游戏内无法使用 声光干扰器
+                            case CardDB.cardIDEnum.EDR_526e:// TODO 雷弗拉尔，恶念巨蛛
+                            case CardDB.cardIDEnum.TTN_744e1:// TODO 严寒冰封
+                            case CardDB.cardIDEnum.EDR_234e2:// TODO 翡翠厚赠
                                 return false;
-                            case CardDB.cardIDEnum.MAW_014e2:
+                            case CardDB.cardIDEnum.MAW_014e2:// TODO 公诉人梅尔特拉尼克斯
                                 if (this.position != 1 && this.position != p.owncards.Count)
                                     return false;
                                 break;
                             default:
-                                break;
+                                continue;
                         }
                     }
-                    // // TODO 游戏内无法使用 声光干扰器
-                    // if (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
-                    //     return false;
-                    // // TODO 雷弗拉尔，恶念巨蛛
-                    // if (this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
-                    // {
-                    //     return false;
-                    // }
-                    // // TODO 严寒冰封
-                    // if (this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
-                    // {
-                    //     return false;
-                    // }
-                    // // TODO 翡翠厚赠
-                    // if (this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
-                    // {
-                    //     return false;
-                    // }
-                    // // TODO 公诉人梅尔特拉尼克斯
-                    // if (this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
-                    // {
-                    //     if (this.position != 1 || this.position != p.owncards.Count)
-                    //         return false;
-                    // }
+                  
                 }
-
-                // TODO 游戏内无法使用 声光干扰器
-                // if (this.enchs.Count > 0 && (this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e) || this.enchs.Contains(CardDB.cardIDEnum.EDR_526e) || this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1) || this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2)))
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.SW_052t4e))
-                // {
-                //     return false;
-                // }
-                // // TODO 雷弗拉尔，恶念巨蛛
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_526e))
-                // {
-                //     return false;
-                // }
-                // // TODO 严寒冰封
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.TTN_744e1))
-                // {
-                //     return false;
-                // }
-                // // TODO 翡翠厚赠
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.EDR_234e2))
-                // {
-                //     return false;
-                // }
-                // // TODO 公诉人梅尔特拉尼克斯
-                // if (this.enchs.Count > 0 && this.enchs.Contains(CardDB.cardIDEnum.MAW_014e2))
-                // {
-                //     if (this.position != 1 || this.position != p.owncards.Count)
-                //         return false;
-                // }
                 return this.card.canplayCard(p, this.manacost, own);
+
             }
         }
 

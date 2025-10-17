@@ -11,7 +11,23 @@ namespace HREngine.Bots
 	//<b>战吼：</b>从<b>嘲讽</b>，<b>剧毒</b>或+1/+1中选择一项并获得。
 	class Sim_TLC_242 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (choice == 1)
+			{
+				own.taunt = true;
+				if (own.own) p.anzOwnTaunt++;
+				else p.anzEnemyTaunt++;
+			}
+			if (choice == 2)
+			{
+				own.poisonous = true;
+			}
+			if (choice == 3)
+			{
+				p.minionGetBuffed(own, 1, 1);
+			}
+		}
+
 	}
 }

@@ -13,15 +13,15 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+
+            // 遍历己方所有随从并赋予突袭
+            foreach (Minion m in p.ownMinions)
             {
-                // 遍历己方所有随从并赋予突袭
-                foreach (Minion m in p.ownMinions)
-                {
-                    m.rush = 1; // 赋予突袭 (rush = 1)
-                }
+                // m.rush = 1; // 赋予突袭 (rush = 1)
+                p.minionGetRush(m);
             }
-            
+
+
         }
     }
 }

@@ -12,6 +12,13 @@ namespace HREngine.Bots
 	class Sim_RLK_035 : SimTemplate
 	{
 		
-		
+		public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+
+				new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_TOTAL_MINIONS,1),   // 最少需要1个随从
+				new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_CORPSES,1),   // 最少需要5份残骸
+            };
+        }
 	}
 }

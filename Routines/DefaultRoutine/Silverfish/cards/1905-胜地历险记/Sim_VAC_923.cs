@@ -12,13 +12,31 @@ namespace HREngine.Bots
 	class Sim_VAC_923 : SimTemplate
 	{
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.VAC_923t);
-		public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
-		{
-			if (attacker.Hp > 0)
+        public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
+        {
+           if (attacker.Hp > 0)
 			{
-				p.callKid(kid, attacker.zonepos, attacker.own);
-				p.RemoveMinionWithoutDeathrattle(attacker);
+				kid.Attack = attacker.Angr;
+				kid.Health = attacker.Hp;
+				kid.CooldownTurn = attacker.CooldownTurn;
+
+				p.callKid(kid, attacker.zonepos - 1, attacker.own);
+
 			}
-		}
+        }
+		// public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
+		// {
+		// 	if (attacker.Hp > 0)
+		// 	{
+		// 		int Angr = attacker.Angr;
+		// 		int Hp = attacker.Hp;
+		// 		Handmanager.Handcard hc = new Handmanager.Handcard(kid) { entity = p.getNextEntity() };
+		// 		Minion m = p.createNewMinion(hc, attacker.zonepos, attacker.own);
+		// 		attacker.setMinionToMinion(m);
+		// 		attacker.handcard.card.TAG_SCRIPT_DATA_NUM_1 = Angr;
+		// 		attacker.Hp = Hp;
+
+		// 	}
+		// }
 	}
 }

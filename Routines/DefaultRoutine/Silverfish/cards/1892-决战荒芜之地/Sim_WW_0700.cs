@@ -13,9 +13,15 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			if (own.own && p.prozis.noDuplicates)
+			// if (own.own && p.prozis.noDuplicates)
+			if (own.handcard.card.heroPower > 0)
 			{
-				p.enemyMinions.ForEach(p.RemoveMinionWithoutDeathrattle);
+				foreach (Minion m in own.own ? p.ownMinions :p.enemyMinions)
+				{
+					if (m.untouchable) continue;
+					p.RemoveMinionWithoutDeathrattle(m);
+				}
+				// p.enemyMinions.ForEach(p.RemoveMinionWithoutDeathrattle);
 			}
 		}
 
