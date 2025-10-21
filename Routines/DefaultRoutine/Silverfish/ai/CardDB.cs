@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace HREngine.Bots
 {
@@ -841,8 +843,8 @@ namespace HREngine.Bots
             REQ_SOURCE_MUST_HAVE_TAG = 158,
             REQ_CANNOT_USE_WHILE_REWIND_UI_DISPLAYED,
         }
-
-        public class Card : System.Object, ICloneable
+        // [Serializable]
+        public class Card
         {
             public string dbfId = "";
             public cardNameEN nameEN = cardNameEN.unknown;//名称
@@ -970,7 +972,11 @@ namespace HREngine.Bots
             public bool SilverHandRecruit = false; //白银之手新兵
             public bool SI_7 = false;//军情七处
             public bool HideCost = false;
-            public bool ShiftingSpell = true;
+            public bool ShiftingSpell = false;
+            public int InteractableObjectCost = 0;
+            public bool CanTargetCardsInHand = false;
+            public bool InteractableObject = false;
+            public int UsesCharges = 0;
 
             public List<Race> races = new List<Race>(); //TODO:种族集合
 
@@ -979,7 +985,10 @@ namespace HREngine.Bots
             {
                 return this.races.Count;
             }
-            //TODO:获取种族集合
+            /// <summary>
+            /// 获取种族集合
+            /// </summary>
+            /// <returns>种族集合</returns>
             public List<Race> GetRaces()
             {
 
@@ -1014,22 +1023,14 @@ namespace HREngine.Bots
             // private bool _spellburst = false;
             // private bool _frenzy = false;
 
-            /// <summary>
-            /// 荣誉击杀
-            /// </summary>
+            /// <summary> 荣誉击杀 </summary>
             public bool HonorableKill { get; set; }
-            /// <summary>
-            /// 超杀
-            /// </summary>
+            /// <summary> 超杀 </summary>
             public bool Overkill { get; set; }
-            /// <summary>
-            /// 法术迸发
-            /// </summary>
+            /// <summary>法术迸发 </summary>
             public bool Spellburst { get; set; }
 
-            /// <summary>
-            /// 暴怒
-            /// </summary>
+            /// <summary> 暴怒 </summary>
             public bool Frenzy { get; set; }
 
             public string OnlineCardImage
@@ -1084,6 +1085,16 @@ namespace HREngine.Bots
             {
                 return new Card() as object;
             }
+            /*             public CardDB.Card DeepClone()
+                        {
+                            using (MemoryStream memoryStream = new MemoryStream())
+                            {
+                                XmlSerializer xmlSerializer = new XmlSerializer(typeof(CardDB.Card));
+                                xmlSerializer.Serialize(memoryStream, this);
+                                memoryStream.Seek(0, SeekOrigin.Begin);
+                                return (CardDB.Card)xmlSerializer.Deserialize(memoryStream);
+                            }
+                        } */
 
             /// <summary>
             /// 存在错误类型
@@ -1121,7 +1132,6 @@ namespace HREngine.Bots
                 bool targetEnemyHero = false;
                 bool targetOwnHero = false;
                 bool targetOnlyMinion = false;
-                bool targetOnlyLocation = false;
                 bool extraParam = false;
                 bool wereTargets = false;
                 bool REQ_UNDAMAGED_TARGET = false;
@@ -1142,6 +1152,7 @@ namespace HREngine.Bots
                 bool REQ_TARGET_NO_NATURE = false;
                 bool REQ_TARGET_IS_NON_TITAN = false;
                 bool REQ_TARGET_SILVER_HAND_RECRUIT = false;
+                bool REQ_LOCATION_TARGET = false;
                 foreach (PlayReq pr in this.sim_card.GetPlayReqs())
                 {
                     switch (pr.errorType)
@@ -1154,7 +1165,8 @@ namespace HREngine.Bots
                             targetOnlyMinion = true;
                             continue;
                         case ErrorType2.REQ_LOCATION_TARGET:
-                            targetOnlyLocation = true;
+                            REQ_LOCATION_TARGET = true;
+                            extraParam = true;
                             continue;
                         case ErrorType2.REQ_TARGET_IF_AVAILABLE:
                             REQ_TARGET_IF_AVAILABLE = true;
@@ -1375,12 +1387,6 @@ namespace HREngine.Bots
                         if (targetAllFriendly) targetEnemyHero = false;
                     }
 
-                    if (targetOnlyLocation)
-                    {
-                        targetEnemyHero = false;
-                        targetOwnHero = false;
-                    }
-
 
                 }
 
@@ -1584,6 +1590,17 @@ namespace HREngine.Bots
                             if (!m.frozen) m.extraParam = true;
                         }
                     }
+                    if (REQ_LOCATION_TARGET)
+                    {
+
+                        foreach (Minion m in targets)
+                        {
+                            if (m.handcard.card.type != cardtype.LOCATION) m.extraParam = true;
+                            else retval.Add(m);
+                        }
+                        targetEnemyHero = false;
+                        targetOwnHero = false;
+                    }
                 }
 
                 if (targetEnemyHero && own && p.enemyHero.stealth) targetEnemyHero = false;
@@ -1679,7 +1696,7 @@ namespace HREngine.Bots
                         if (m.extraParam != true)
                         {
                             if (m.stealth && !m.own) continue;
-                            if (m.cantBeTargetedBySpellsOrHeroPowers && (this.type == cardtype.SPELL || this.type == cardtype.HEROPWR)) continue;
+                            if (m.Elusive && (this.type == cardtype.SPELL || this.type == cardtype.HEROPWR)) continue;
                             retval.Add(m);
                         }
                         m.extraParam = false;
@@ -1687,27 +1704,26 @@ namespace HREngine.Bots
                 }
 
                 //非地标目标指向，移除地标
-                if (!targetOnlyLocation)
+                if (!REQ_LOCATION_TARGET)
                 {
                     retval.RemoveAll(minion => minion != null &&
                           minion.handcard != null &&
                           minion.handcard.card != null &&
                           minion.handcard.card.type == CardDB.cardtype.LOCATION);
-
                 }
                 else
                 {
                     retval.RemoveAll(minion => minion != null &&
                              minion.handcard != null &&
                              minion.handcard.card != null &&
-                             minion.handcard.card.type != CardDB.cardtype.LOCATION);
+                             (minion.handcard.card.type == CardDB.cardtype.MOB || minion.handcard.card.type == CardDB.cardtype.HERO));
                 }
 
                 //移除不可接触的随从
-                // retval.RemoveAll(minion => minion != null &&
-                //                                         minion.handcard != null &&
-                //                                         minion.handcard.card != null &&
-                //                                         minion.handcard.card.untouchable);
+                retval.RemoveAll(minion => minion != null &&
+                                                        minion.handcard != null &&
+                                                        minion.handcard.card != null &&
+                                                        minion.handcard.card.untouchable);
 
                 //如果是法术，移除扰魔、地标
                 if (this.type == CardDB.cardtype.SPELL)
@@ -1812,10 +1828,10 @@ namespace HREngine.Bots
                                                         minion.handcard.card != null &&
                                                         minion.handcard.card.Elusive);
                 //移除地标
-                targetsForHeroPower.RemoveAll(minion => minion != null &&
-                                                        minion.handcard != null &&
-                                                        minion.handcard.card != null &&
-                                                        minion.handcard.card.type == CardDB.cardtype.LOCATION);
+                // targetsForHeroPower.RemoveAll(minion => minion != null &&
+                //                                         minion.handcard != null &&
+                //                                         minion.handcard.card != null &&
+                //                                         minion.handcard.card.type == CardDB.cardtype.LOCATION);
 
                 return targetsForHeroPower;
             }
@@ -3418,6 +3434,26 @@ namespace HREngine.Bots
                         case "2553":
                             {
                                 card.races.Add(Race.NAGA); // 添加第二种族龙
+                            }
+                            break;
+                        case "4090":
+                            {
+                                card.InteractableObjectCost = int.Parse(tag.GetAttribute("value"));
+                            }
+                            break;
+                        case "1508":
+                            {
+                                card.CanTargetCardsInHand = true;
+                            }
+                            break;
+                        case "4089":
+                            {
+                                card.InteractableObject = true;
+                            }
+                            break;
+                        case "4257":
+                            {
+                                card.UsesCharges = int.Parse(tag.GetAttribute("value")); ;
                             }
                             break;
 
