@@ -2,7 +2,7 @@
   <BattleNetPath>C:\Users\xiaohei\software\Battle.net\Battle.net Launcher.exe</BattleNetPath>
   <HearthstonePath>D:\Hearthstone</HearthstonePath>
   <HearthbuddyPath>D:\Hearthbuddy_backed\opcpitmhbx.exe</HearthbuddyPath>
-  <PushPlusToken>7c3ee6fa567f42c29e407117e165efbe</PushPlusToken>
+  <PushPlusToken></PushPlusToken>
   <BNHSInterval>10</BNHSInterval>
   <HSHBInterval>30</HSHBInterval>
   <CheckInterval>5</CheckInterval>
