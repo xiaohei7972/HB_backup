@@ -13,7 +13,7 @@
   <PushNormalInterval>4</PushNormalInterval>
   <NeedCloseBattle>True</NeedCloseBattle>
   <NeedMultStone>False</NeedMultStone>
-  <NeedPushMessage>True</NeedPushMessage>
+  <NeedPushMessage>False</NeedPushMessage>
   <NeedPushNormal>True</NeedPushNormal>
   <HsModPort>58744</HsModPort>
   <EnableGMMessageShow>False</EnableGMMessageShow>
