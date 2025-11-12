@@ -1,10 +1,11 @@
 <XmlConfig>
   <BattleNetPath>C:\Users\xiaohei\software\Battle.net\Battle.net Launcher.exe</BattleNetPath>
   <HearthstonePath>D:\Hearthstone</HearthstonePath>
-  <HearthbuddyPath>D:\Hearthbuddy_backed\Hearthbuddy.exe</HearthbuddyPath>
-  <PushPlusToken>7c3ee6fa567f42c29e407117e165efbe</PushPlusToken>
+  <HearthbuddyPath>C:\Users\xiaohei\Desktop\Hearthbuddy_backed\Hearthbuddy.exe</HearthbuddyPath>
+  <PushPlusToken>
+  </PushPlusToken>
   <BNHSInterval>10</BNHSInterval>
-  <HSHBInterval>30</HSHBInterval>
+  <HSHBInterval>20</HSHBInterval>
   <CheckInterval>5</CheckInterval>
   <RebootCntMax>30</RebootCntMax>
   <SystemVersion>0</SystemVersion>
@@ -13,7 +14,7 @@
   <PushNormalInterval>4</PushNormalInterval>
   <NeedCloseBattle>True</NeedCloseBattle>
   <NeedMultStone>False</NeedMultStone>
-  <NeedPushMessage>True</NeedPushMessage>
+  <NeedPushMessage>False</NeedPushMessage>
   <NeedPushNormal>True</NeedPushNormal>
   <EnableHsMod>False</EnableHsMod>
   <HsModPort>58744</HsModPort>
@@ -65,14 +66,14 @@
       </AccountItem1>
       <AccountItem2>
         <Mode>0</Mode>
-        <Enable>False</Enable>
-        <StartTimeHour>4</StartTimeHour>
+        <Enable>True</Enable>
+        <StartTimeHour>0</StartTimeHour>
         <StartTimeMin>0</StartTimeMin>
-        <EndTimeHour>11</EndTimeHour>
-        <EndTimeMin>0</EndTimeMin>
+        <EndTimeHour>23</EndTimeHour>
+        <EndTimeMin>59</EndTimeMin>
         <NormalRule>0</NormalRule>
-        <NormalBehavior>0</NormalBehavior>
-        <NormalDeck>嘲讽战</NormalDeck>
+        <NormalBehavior>1</NormalBehavior>
+        <NormalDeck>德</NormalDeck>
         <MercRule>0</MercRule>
         <MercBehavior>0</MercBehavior>
         <MercTeam>请配置队伍</MercTeam>
@@ -84,14 +85,14 @@
       </AccountItem2>
       <AccountItem3>
         <Mode>0</Mode>
-        <Enable>True</Enable>
-        <StartTimeHour>7</StartTimeHour>
+        <Enable>False</Enable>
+        <StartTimeHour>4</StartTimeHour>
         <StartTimeMin>0</StartTimeMin>
-        <EndTimeHour>23</EndTimeHour>
+        <EndTimeHour>11</EndTimeHour>
         <EndTimeMin>0</EndTimeMin>
         <NormalRule>0</NormalRule>
         <NormalBehavior>0</NormalBehavior>
-        <NormalDeck>骑</NormalDeck>
+        <NormalDeck>嘲讽战</NormalDeck>
         <MercRule>0</MercRule>
         <MercBehavior>0</MercBehavior>
         <MercTeam>请配置队伍</MercTeam>
@@ -121,84 +122,5 @@
         <MercUpdate>False</MercUpdate>
       </AccountItem4>
     </HASH-1082354204>
-    <HASH376327464>
-      <Selected>False</Selected>
-      <AccountItem0>
-        <Mode>0</Mode>
-        <Enable>False</Enable>
-        <StartTimeHour>0</StartTimeHour>
-        <StartTimeMin>0</StartTimeMin>
-        <EndTimeHour>4</EndTimeHour>
-        <EndTimeMin>0</EndTimeMin>
-        <NormalRule>0</NormalRule>
-        <NormalBehavior>6</NormalBehavior>
-        <NormalDeck>元素萨</NormalDeck>
-        <MercRule>0</MercRule>
-        <MercBehavior>0</MercBehavior>
-        <MercTeam>请配置队伍</MercTeam>
-        <MercMap>1-1</MercMap>
-        <MercInterval>22</MercInterval>
-        <MercConcede>False</MercConcede>
-        <MercCraft>True</MercCraft>
-        <MercUpdate>False</MercUpdate>
-      </AccountItem0>
-      <AccountItem1>
-        <Mode>0</Mode>
-        <Enable>True</Enable>
-        <StartTimeHour>7</StartTimeHour>
-        <StartTimeMin>0</StartTimeMin>
-        <EndTimeHour>13</EndTimeHour>
-        <EndTimeMin>10</EndTimeMin>
-        <NormalRule>0</NormalRule>
-        <NormalBehavior>0</NormalBehavior>
-        <NormalDeck>dk</NormalDeck>
-        <MercRule>0</MercRule>
-        <MercBehavior>0</MercBehavior>
-        <MercTeam>请配置队伍</MercTeam>
-        <MercMap>1-1</MercMap>
-        <MercInterval>22</MercInterval>
-        <MercConcede>False</MercConcede>
-        <MercCraft>True</MercCraft>
-        <MercUpdate>False</MercUpdate>
-      </AccountItem1>
-      <AccountItem2>
-        <Mode>0</Mode>
-        <Enable>True</Enable>
-        <StartTimeHour>13</StartTimeHour>
-        <StartTimeMin>30</StartTimeMin>
-        <EndTimeHour>23</EndTimeHour>
-        <EndTimeMin>27</EndTimeMin>
-        <NormalRule>0</NormalRule>
-        <NormalBehavior>0</NormalBehavior>
-        <NormalDeck>瞎</NormalDeck>
-        <MercRule>0</MercRule>
-        <MercBehavior>0</MercBehavior>
-        <MercTeam>请配置队伍</MercTeam>
-        <MercMap>1-1</MercMap>
-        <MercInterval>22</MercInterval>
-        <MercConcede>False</MercConcede>
-        <MercCraft>True</MercCraft>
-        <MercUpdate>False</MercUpdate>
-      </AccountItem2>
-      <AccountItem3>
-        <Mode>0</Mode>
-        <Enable>False</Enable>
-        <StartTimeHour>18</StartTimeHour>
-        <StartTimeMin>0</StartTimeMin>
-        <EndTimeHour>23</EndTimeHour>
-        <EndTimeMin>59</EndTimeMin>
-        <NormalRule>0</NormalRule>
-        <NormalBehavior>0</NormalBehavior>
-        <NormalDeck>瞎</NormalDeck>
-        <MercRule>0</MercRule>
-        <MercBehavior>0</MercBehavior>
-        <MercTeam>请配置队伍</MercTeam>
-        <MercMap>1-1</MercMap>
-        <MercInterval>22</MercInterval>
-        <MercConcede>False</MercConcede>
-        <MercCraft>True</MercCraft>
-        <MercUpdate>False</MercUpdate>
-      </AccountItem3>
-    </HASH376327464>
   </BattleNetAccount>
 </XmlConfig>

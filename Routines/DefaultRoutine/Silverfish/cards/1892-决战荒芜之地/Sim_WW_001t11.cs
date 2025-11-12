@@ -13,14 +13,12 @@ namespace HREngine.Bots
 	{
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
+			if (target != null)
 			{
-				if (target != null)
-				{
-					p.minionSetAngrToX(target, 6);
-					p.minionSetLifetoX(target, 7);
-				}
+				p.minionSetAngrToX(target, 6);
+				p.minionSetLifetoX(target, 7);
 			}
+
 
 		}
 

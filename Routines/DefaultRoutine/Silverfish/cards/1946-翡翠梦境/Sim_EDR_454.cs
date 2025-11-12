@@ -14,19 +14,17 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EDR_454t);
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
+			if (target != null && target.own && (CardDB.Race)target.handcard.card.race == CardDB.Race.DRAGON)
 			{
-				if (target != null && target.own && (CardDB.Race)target.handcard.card.race == CardDB.Race.DRAGON)
+				if (triggerMinion.own ? p.ownMinions.Count < 7 : p.enemyMinions.Count < 7)
 				{
-					if (triggerMinion.own ? p.ownMinions.Count < 7 : p.enemyMinions.Count < 7)
-					{
-						// int pos = triggerMinion.own ? p.ownMinions.Count : p.enemyMinions.Count;
-						p.callKid(kid, triggerMinion.zonepos, triggerMinion.own);
-						// Minion egg = new Minion { handcard = new Handmanager.Handcard { card = kid }, own = triggerMinion.own };
-						// kid.sim_card.onDeathrattle(p, egg);
-						p.ownMinions[triggerMinion.zonepos].deathrattle2 = target.handcard.card;
-					}
+					// int pos = triggerMinion.own ? p.ownMinions.Count : p.enemyMinions.Count;
+					p.callKid(kid, triggerMinion.zonepos, triggerMinion.own);
+					// Minion egg = new Minion { handcard = new Handmanager.Handcard { card = kid }, own = triggerMinion.own };
+					// kid.sim_card.onDeathrattle(p, egg);
+					p.ownMinions[triggerMinion.zonepos].deathrattle2 = target.handcard.card;
 				}
+
 			}
 		}
 

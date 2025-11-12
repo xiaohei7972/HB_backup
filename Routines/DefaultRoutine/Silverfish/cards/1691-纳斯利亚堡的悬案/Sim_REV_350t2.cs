@@ -15,21 +15,18 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			// kid = (CardDB.Card)kid.Clone();
 			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-			kid.Attack += 1;
-			kid.Health += 2;
-			p.callKid(kid, pos, ownplay);
-			p.callKid(kid, pos, ownplay);
+			p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
+			p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
 
 		}
 
 		public override PlayReq[] GetPlayReqs()
-        {
+		{
 			return new PlayReq[]{
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
 			};
-        }
-		
+		}
+
 	}
 }

@@ -13,17 +13,15 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            if (target != null)
             {
-                if (target != null)
-                {
-                    // 对目标随从造成1点伤害
-                    p.minionGetDamageOrHeal(target, 1);
+                // 对目标随从造成1点伤害
+                p.minionGetDamageOrHeal(target, 1);
 
-                    // 使目标随从获得+2攻击力（永久）
-                    p.minionGetBuffed(target, 2, 0); // 给予永久的攻击力加成    
-                }
+                // 使目标随从获得+2攻击力（永久）
+                p.minionGetBuffed(target, 2, 0); // 给予永久的攻击力加成    
             }
+
         }
 
         public override PlayReq[] GetUseAbilityReqs()
@@ -34,6 +32,6 @@ namespace HREngine.Bots
                 new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标必须是一个随从
             };
         }
-        
+
     }
 }

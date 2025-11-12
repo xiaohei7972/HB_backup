@@ -13,29 +13,16 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
-            {
-                // 检查目标是否为有效的受伤随从
-                if (triggerMinion.own ? p.ownMinions.Count < 7 : p.enemyMinions.Count < 7)
-                    if (target != null && target.wounded)
-                    {
-                        // 复制随从的卡牌信息
-                        // 召唤一个随从作为复制，且休眠一回合
-                        p.callKid(target.handcard.card, p.ownMinions.Count, target.own);
-
-                        // 获取刚刚召唤的随从
-                        Minion summonedCopy = p.ownMinions[p.ownMinions.Count - 1];
-
-                        // 设置其属性为与目标一致
-                        summonedCopy.setMinionToMinion(target);
-                        // summonedCopy.Angr = target.Angr;
-                        // summonedCopy.Hp = target.Hp;
-                        // summonedCopy.maxHp = target.maxHp;
-
-                        // 设置休眠一回合
-                        summonedCopy.dormant = 1;
-                    }
-            }
+            // 检查目标是否为有效的受伤随从
+            if (triggerMinion.own ? p.ownMinions.Count < 7 : p.enemyMinions.Count < 7)
+                if (target != null && target.wounded)
+                {
+                    // 复制随从的卡牌信息
+                    // 召唤一个随从作为复制，且休眠一回合
+                    Minion SummonMinion = p.callKidAndReturn(target.handcard.card, p.ownMinions.Count, target.own);
+                    SummonMinion.setMinionToMinion(target);
+                    SummonMinion.dormant = 1;
+                }
         }
 
         public override PlayReq[] GetUseAbilityReqs()

@@ -13,21 +13,18 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 遍历己方卡组，寻找具有战吼效果的随从牌
+            foreach (CardDB.Card battlecryCard in p.ownDeck)
             {
-                // 遍历己方卡组，寻找具有战吼效果的随从牌
-                foreach (CardDB.Card battlecryCard in p.ownDeck)
+                CardDB.Card card = CardDB.Instance.getCardDataFromID(battlecryCard.cardIDenum);
+                if (card.type == CardDB.cardtype.MOB && card.battlecry)
                 {
-                    CardDB.Card card = CardDB.Instance.getCardDataFromID(battlecryCard.cardIDenum);
-                    if (card.type == CardDB.cardtype.MOB && card.battlecry)
-                    {
-                        card.cost--;
-                        p.drawACard(battlecryCard.cardIDenum, true, true);
-                        break;
-                    }
+                    card.cost--;
+                    p.drawACard(battlecryCard.cardIDenum, true, true);
+                    break;
                 }
-                
             }
+
         }
 
     }

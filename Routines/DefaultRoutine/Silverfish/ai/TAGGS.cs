@@ -740,7 +740,7 @@ namespace HREngine.Bots
 
     public enum TAG_CARDTYPE
     {
-        NONE = 0,
+        /* NONE = 0,
         GAME = 1,
         PLAYER = 2,
         HERO = 3,//英雄
@@ -760,29 +760,29 @@ namespace HREngine.Bots
         BATTLEGROUND_QUEST_REWARD,//战旗奖励
         BATTLEGROUND_ANOMALY = 43,//战旗畸变
         BATTLEGROUND_SPELL = 42,//战旗法术
-        BATTLEGROUND_TRINKET = 44,//战旗饰品
-        // INVALID,
-        // GAME,
-        // PLAYER,
-        // HERO, //英雄
-        // MINION, //随从
-        // SPELL, //法术
-        // ENCHANTMENT, //附加效果（例如：变形术，救赎，力量的代价，自然之力的附加效果）
-        // WEAPON, //武器
-        // ITEM,
-        // TOKEN,
-        // HERO_POWER, //英雄技能
-        // BLANK,
-        // GAME_MODE_BUTTON, //游戏模式按钮
-        // MOVE_MINION_HOVER_TARGET = 22, //移动随从悬停目标
-        // LETTUCE_ABILITY,
-        // BATTLEGROUND_HERO_BUDDY, //战旗英雄伙伴
-        // LOCATION = 39, //地标
-        // BATTLEGROUND_QUEST_REWARD, //战旗奖励
-        // BATTLEGROUND_ANOMALY = 43, //战旗畸变
-        // BATTLEGROUND_SPELL = 42, //战旗法术
-        // BATTLEGROUND_TRINKET = 44, //战旗饰品
-        // PET //宠物
+        BATTLEGROUND_TRINKET = 44,//战旗饰品 */
+        INVALID=0,
+        GAME=1,
+        PLAYER=2,
+        HERO=3, //英雄
+        MINION=4, //随从
+        SPELL=5, //法术
+        ENCHANTMENT=6, //附加效果（例如：变形术，救赎，力量的代价，自然之力的附加效果）
+        WEAPON=7, //武器
+        ITEM=8,
+        TOKEN=9,
+        HERO_POWER=10, //英雄技能
+        BLANK=11,
+        GAME_MODE_BUTTON=12, //游戏模式按钮
+        MOVE_MINION_HOVER_TARGET = 22, //移动随从悬停目标
+        LETTUCE_ABILITY,
+        BATTLEGROUND_HERO_BUDDY, //战旗英雄伙伴
+        LOCATION = 39, //地标
+        BATTLEGROUND_QUEST_REWARD, //战旗奖励
+        BATTLEGROUND_ANOMALY = 43, //战旗畸变
+        BATTLEGROUND_SPELL = 42, //战旗法术
+        BATTLEGROUND_TRINKET = 44, //战旗饰品
+        PET //宠物
 
 
     }
@@ -890,7 +890,7 @@ namespace HREngine.Bots
         // ICECROWN = 1001
     }
 
-    public enum TAG_RARITY
+    /* public enum TAG_RARITY
     {
         INVALID = 0,
         COMMON = 1,
@@ -898,7 +898,7 @@ namespace HREngine.Bots
         RARE = 3,
         EPIC = 4,
         LEGENDARY = 5,
-    }
+    } */
 
     public enum TAG_SPELL_SCHOOL
     {
@@ -918,15 +918,15 @@ namespace HREngine.Bots
         UPGRADE = 13,
     }
 
-    public enum TARGET_RETICLE_TYPE
+    /* public enum TARGET_RETICLE_TYPE
     {
         DefaultArrow,
         HunterReticle,
         QuestionMark,
         GruntyReticle
-    }
+    } */
 
-    public enum TARGET_ARROW_TYPE
+    /* public enum TARGET_ARROW_TYPE
     {
         // Token: 0x04003F03 RID: 16131
         Friendly,
@@ -934,9 +934,9 @@ namespace HREngine.Bots
         Enemy,
         // Token: 0x04003F05 RID: 16133
         Static
-    }
+    } */
 
-    public enum TAG_STEP
+    /* public enum TAG_STEP
     {
         INVALID,
         BEGIN_FIRST,
@@ -959,9 +959,9 @@ namespace HREngine.Bots
         MAIN_SET_ACTION_STEP_TYPE,
         MAIN_PRE_ACTION,
         MAIN_POST_ACTION
-    }
+    } */
 
-    public enum PresenceStatus
+    /* public enum PresenceStatus
     {
         UNKNOWN = -1,
         LOGIN,
@@ -1082,5 +1082,5 @@ namespace HREngine.Bots
         SPECTATING_GAME_PLAY_RANKED_TWIST,
         SPECTATING_GAME_PLAY_CASUAL_TWIST,
         PLAY_BATTLEGROUNDS_DUOS
-    }
+    } */
 }

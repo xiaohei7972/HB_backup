@@ -21,7 +21,7 @@ namespace HREngine.Bots
 			
 			foreach (Minion minion in minions)
 			{
-				p.minionAttacksMinion(hero, minion);
+				p.minionAttacksMinion(hero, minion,true);
 			}
 
 		}

@@ -1071,7 +1071,7 @@ namespace HREngine.Bots
                         int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True";
-                        int CooldownTurn = Convert.ToInt32(s.Split(new string[] { " CooldownTurn:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        //int CooldownTurn = Convert.ToInt32(s.Split(new string[] { " cooldownTurn:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
                         if (s.Contains(" respawn:"))
                         {
                             string[] tmp = s.Split(new string[] { " respawn:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0].Split(':');
@@ -1215,7 +1215,7 @@ namespace HREngine.Bots
                         tempminion.infest = infest;
                         tempminion.deathrattle2 = deathrattle2;
                         tempminion.enchs = enchs;
-                        tempminion.CooldownTurn = CooldownTurn;
+                        //tempminion.CooldownTurn = CooldownTurn;
 
                         if (maxhp > hp) tempminion.wounded = true;
                         tempminion.updateReadyness();
@@ -1400,18 +1400,31 @@ namespace HREngine.Bots
                     string minionname = hc[2];
                     card.manacost = Convert.ToInt32(hc[3]);
                     card.entity = Convert.ToInt32(hc[5]);
-                    card.card = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(hc[6]));
+                    
+                    
+                    CardDB.cardIDEnum cardIDEnum = CardDB.Instance.cardIdstringToEnum(hc[6]);
+                    card.card = CardDB.Instance.getCardDataFromID(cardIDEnum);
+                    
                     if (hc.Length > 8) card.addattack = Convert.ToInt32(hc[7]);
                     if (hc.Length > 9) card.addHp = Convert.ToInt32(hc[8]);
                     if (hc.Length > 10) card.poweredUp = Convert.ToInt32(hc[9]);
-
-                    if(hc.Length > 11)
+                    if (hc.Length > 11) card.poweredUp = Convert.ToInt32(hc[9]);
+                    if (hc.Length > 13)
                     {
-                        for(int i = 10; i < hc.Length; i++)
-                        {
-                            card.enchs.Add(CardDB.Instance.cardIdstringToEnum(hc[i]));
-                        }
+                        card.card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                        card.card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                        card.card.updateDIYCard();
+                        if (card.card.MODULAR_ENTITY_PART_1 != 0 && card.card.MODULAR_ENTITY_PART_2 != 0)
+                            card.card.updateDIYCard();
                     }
+
+                    //if (hc.Length > 13)
+                    //{
+                    //    for(int i = 10; i < hc.Length; i++)
+                    //    {
+                    //        card.enchs.Add(CardDB.Instance.cardIdstringToEnum(hc[i]));
+                    //    }
+                    //}
                     handcards.Add(card);
                 }
 

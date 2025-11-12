@@ -4132,6 +4132,7 @@ namespace HREngine.Bots
                     break;
             }
 
+
             // 更新当前回合的操作计数
             if (this.isOwnTurn)
             {
@@ -4141,6 +4142,7 @@ namespace HREngine.Bots
             {
                 this.enemyOptionsDoneThisTurn++;
             }
+
         }
 
         /// <summary>
@@ -8476,12 +8478,14 @@ namespace HREngine.Bots
             if (m.own)
             {
                 this.tempTrigger.ownMinionsChanged = true;
-                if (m.handcard.card.race == CardDB.Race.PET || m.handcard.card.race == CardDB.Race.ALL)
+                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.PET))
+                // if (m.handcard.card.race == CardDB.Race.PET || m.handcard.card.race == CardDB.Race.ALL)
                 {
                     this.tempTrigger.ownBeastSummoned++;
                 }
 
-                if (m.handcard.card.race == CardDB.Race.DRAGON || m.handcard.card.race == CardDB.Race.ALL)
+                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.DRAGON))
+                // if (m.handcard.card.race == CardDB.Race.DRAGON || m.handcard.card.race == CardDB.Race.ALL)
                 {
                     this.tempTrigger.ownDragonSummoned++;
 
@@ -8650,6 +8654,50 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// 在战场上召唤一个随从，如果空间允许的话。
+        /// </summary>
+        /// <param name="c">要召唤的随从卡牌</param>
+        /// <param name="zonepos">召唤随从的位置</param>
+        /// <param name="own">是否为己方</param>
+        /// <param name="spawnKid">是否生成随从</param>
+        /// <param name="oneMoreIsAllowed">是否允许额外的随从</param>
+        /// <returns>召唤的随从,场面满了则返回null</returns>
+        public Minion callKidAndReturn(CardDB.Card c, int zonepos, bool own, bool spawnKid = false, bool oneMoreIsAllowed = false)
+        {
+            // 默认允许的最大随从数量为7，如果允许额外的随从，则加1
+            int allowed = 7 + (oneMoreIsAllowed ? 1 : 0);
+
+            // 检查己方随从数量是否已达上限
+            if (own)
+            {
+                if (this.ownMinions.Count >= allowed)
+                {
+                    // 如果随从数量已达上限，则不再召唤新的随从
+                    return null;
+                }
+            }
+            else
+            {
+                // 检查敌方随从数量是否已达上限
+                if (this.enemyMinions.Count >= allowed)
+                {
+                    // 如果随从数量已达上限，则不再召唤新的随从
+                    return null;
+                }
+            }
+
+            // 确定随从的位置（位置索引从1开始）
+            int mobplace = zonepos + 1;
+
+            // 创建随从并触发相关效果
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = this.getNextEntity() };
+            Minion m = createNewMinion(hc, mobplace, own);
+            // 将随从放置到战场上并触发相关效果
+            addMinionToBattlefield(m);
+            return m;
+        }
+
+        /// <summary>
         /// 冻结一个随从，如果场上有摩尔克，则抽取目标随从的复制牌。
         /// </summary>
         /// <param name="target">要冻结的目标随从</param>
@@ -8662,32 +8710,34 @@ namespace HREngine.Bots
             if (target.isHero) return;
 
             // 如果摩尔克的数量大于1，则为每个未被沉默的摩尔克触发抽牌效果
-            if (this.anzMoorabi > 1)
+            // if (this.anzMoorabi > 1)
+            // {
+            // 遍历己方随从
+            foreach (Minion m in this.ownMinions)
             {
-                // 遍历己方随从
-                foreach (Minion m in this.ownMinions)
-                {
-                    // // 检查随从是否是摩尔克且未被沉默
-                    // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
-                    // {
-                    //     // 抽取目标随从的复制牌
-                    //     this.drawACard(target.handcard.card.nameEN, m.own, true);
-                    // }
+                // // 检查随从是否是摩尔克且未被沉默
+                // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
+                // {
+                //     // 抽取目标随从的复制牌
+                //     this.drawACard(target.handcard.card.nameEN, m.own, true);
+                // }
+                if (!m.silenced)
                     m.handcard.card.sim_card.onMinionFrozen(this, m, target);
-                }
-
-                // 遍历敌方随从
-                foreach (Minion m in this.enemyMinions)
-                {
-                    // // 检查随从是否是摩尔克且未被沉默
-                    // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
-                    // {
-                    //     // 抽取目标随从的复制牌
-                    //     this.drawACard(target.handcard.card.nameEN, m.own, true);
-                    // }
-                    m.handcard.card.sim_card.onMinionFrozen(this, m, target);
-                }
             }
+
+            // 遍历敌方随从
+            foreach (Minion m in this.enemyMinions)
+            {
+                // // 检查随从是否是摩尔克且未被沉默
+                // if (m.name == CardDB.cardNameEN.moorabi && !m.silenced)
+                // {
+                //     // 抽取目标随从的复制牌
+                //     this.drawACard(target.handcard.card.nameEN, m.own, true);
+                // }
+                if (!m.silenced)
+                    m.handcard.card.sim_card.onMinionFrozen(this, m, target);
+            }
+            // }
         }
 
         /// <summary>
@@ -11545,7 +11595,7 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("我方手牌: ");
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum);
+                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.card.MODULAR_ENTITY_PART_1 != 0 && hc.card.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.card.MODULAR_ENTITY_PART_1 + " " +"MODULAR_ENTITY_PART_2: " + hc.card.MODULAR_ENTITY_PART_2) : ""));
             }
             Helpfunctions.Instance.logg("+++++++ printBoard end +++++++++");
 
@@ -12420,6 +12470,29 @@ namespace HREngine.Bots
                     }
                 }
             }
+        }
+
+        public int getPosition(bool ownplay)
+        {
+            return ownplay ? this.ownMinions.Count : this.enemyMinions.Count;
+        }
+        /// <summary>
+        /// 任意种族的卡牌在手牌
+        /// </summary>
+        /// <param name="race">种族类型</param>
+        /// <returns></returns>
+        public bool anyRaceCardInHand(CardDB.Race race)
+        {
+            bool raceCardInHand = false;
+            foreach (Handmanager.Handcard hc in this.owncards)
+            {
+                if(RaceUtils.MinionBelongsToRace(hc.card.GetRaces(),race))
+                {
+                    raceCardInHand = true;
+                    break;
+                }
+            }
+            return raceCardInHand;
         }
     }
 

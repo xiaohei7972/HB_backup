@@ -7,8 +7,8 @@ namespace HREngine.Bots
 	//随从 圣骑士 费用：0 攻击力：12 生命值：12
 	//Sub Scrubber
 	//潜水清扫机
-	//After you play a Mech,gain +4/+4.
-	//在你使用一张机械牌后，获得+4/+4。
+	//After you play a Mech,gain +6/+6.
+	//在你使用一张机械牌后，获得+6/+6。
 	class Sim_BG22_HERO_200_Buddy_G : SimTemplate
 	{
 		

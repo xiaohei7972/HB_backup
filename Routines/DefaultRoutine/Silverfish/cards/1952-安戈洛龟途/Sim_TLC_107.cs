@@ -11,13 +11,21 @@ namespace HREngine.Bots
 	//每当本随从攻击时，先对目标造成3点伤害。<b>延系：</b>获得<b>突袭</b>。
 	class Sim_TLC_107 : SimTemplate
 	{
-        public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+        public override void onCardPlay(Playfield p, Minion own, Minion target, int choice)
         {
+            if(own.handcard.poweredUp > 0)
+            {
+				p.minionGetRush(own);
+            }
+        }
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		{
 			if (target != null)
 			{
 				p.minionGetDamageOrHeal(target, 3);
 			}
-        }
+		}
+		
 		
 	}
 }

@@ -843,7 +843,6 @@ namespace HREngine.Bots
             REQ_SOURCE_MUST_HAVE_TAG = 158,
             REQ_CANNOT_USE_WHILE_REWIND_UI_DISPLAYED,
         }
-        // [Serializable]
         public class Card
         {
             public string dbfId = "";
@@ -852,21 +851,36 @@ namespace HREngine.Bots
             public Race race = Race.INVALID;//种族
             public int rarity = 0;//稀有度
             public int cost = 0;//费用
-            public int Class = 0;//职业
-            public cardtype type = CardDB.cardtype.NONE;//类别
             public int Attack = 0; //攻击力
             public int Health = 0;//血量
+            public int Class = 0;//职业
+            public cardtype type = CardDB.cardtype.NONE;//类别
             public int Durability = 0;//for weapons//耐久值
             public bool tank = false;//嘲讽
-            public bool Silence = false;//沉默
-            public bool choice = false;//抉择
+            public bool Shield = false;//圣盾
+            public bool Charge = false;//冲锋
+            public bool Rush = false;//突袭
+            public bool Stealth = false;//潜行
+            public bool Elusive = false;//扰魔
             public bool windfury = false;//风怒
             public bool poisonous = false;//剧毒
             public bool lifesteal = false;//吸血
             public int dormant = 0;//休眠 0表示非休眠生物或者已醒，还有多少回合醒来
             public bool reborn = false;//复生
-            public bool deathrattle = false;//亡语
+            /// <summary> 荣誉击杀 </summary>
+            public bool HonorableKill { get; set; }
+            /// <summary> 超杀 </summary>
+            public bool Overkill { get; set; }
+            /// <summary>法术迸发 </summary>
+            public bool Spellburst { get; set; }
+
+            /// <summary> 暴怒 </summary>
+            public bool Frenzy { get; set; }
             public bool battlecry = false;//战吼
+            public bool choice = false;//抉择
+            public bool deathrattle = false;//亡语
+            public bool Silence = false;//沉默
+
             public bool discover = false;//发现
             public bool oneTurnEffect = false;
             public bool Enrage = false;//愤怒 激怒
@@ -876,12 +890,9 @@ namespace HREngine.Bots
             public int overload = 0;//超载
             public bool immuneWhileAttacking = false;//攻击时免疫
             public bool untouchable = false;//不可被攻击
-            public bool Stealth = false;//潜行
             public bool Freeze = false;//冰冻
             public bool AdjacentBuff = false;//相邻buff 恐狼?
-            public bool Shield = false;//圣盾
-            public bool Charge = false;//冲锋
-            public bool Rush = false;//突袭
+
             public bool Secret = false;//奥秘
             public bool Nature = false;//自然
             public bool Quest = false;//任务
@@ -944,13 +955,12 @@ namespace HREngine.Bots
             public bool Forged = false;//已锻造
             public bool Quickdraw = false;//快枪
             public bool Excavate = false;//发掘
-            public bool Elusive = false;//扰魔
             public bool Echo = false; // 回响
             public bool nonKeywordEcho = false; // 非关键词回响，设计师左右脑互搏的结果。就是个在本回合可以重复使用
             public bool Twinspell = false; // 双生法术
             public bool Temporary = false; // 临时
-            public int armor = 0;
-            public cardIDEnum heroPower = cardIDEnum.None;
+            public int armor = 0; //英雄牌的护甲值
+            public cardIDEnum heroPower = cardIDEnum.None; //英雄牌的技能id
             public int Objective = 0; // 光环 如救生光环
             public int ObjectiveAura = 0; // 会影响场面的光环 如征战平原
             public int Sigil = 0; // 咒符
@@ -977,8 +987,35 @@ namespace HREngine.Bots
             public bool CanTargetCardsInHand = false;
             public bool InteractableObject = false;
             public int UsesCharges = 0;
-
             public List<Race> races = new List<Race>(); //TODO:种族集合
+            public int MODULAR_ENTITY_PART_1 = 0;
+            public int MODULAR_ENTITY_PART_2 = 0;
+            public void updateDIYCard()
+            {
+                if (this.MODULAR_ENTITY_PART_1 != 0 && this.MODULAR_ENTITY_PART_2 != 0)
+                {
+                    CardDB.Card part1 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_1.ToString());
+                    CardDB.Card part2 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_2.ToString());
+                    getDIYCard(part1, part2);
+                }
+            }
+            public void getDIYCard(Card part1, Card part2)
+            {
+                this.cost = part1.cost + part2.cost;
+                this.Attack = part1.Attack + part2.Attack;
+                this.Health = part1.Health + part2.Health;
+                this.textCN = part1.textCN + part2.textCN;
+                this.tank = (part1.tank || part2.tank);                                    //嘲讽
+                this.Shield = (part1.Shield || part2.Shield);                              //圣盾
+                this.Charge = (part1.Charge || part2.Charge);                              //冲锋
+                this.Rush = (part1.Rush || part2.Rush);                                    //突袭
+                this.Stealth = (part1.Stealth || part2.Stealth);                           //潜行
+                this.Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
+                this.windfury = (part1.windfury || part2.windfury);                        //风怒
+                this.poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
+                this.lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
+                this.reborn = (part1.reborn || part2.reborn);                              //复生
+            }
 
             //TODO:种族数
             public int GetRaceCount()
@@ -1022,17 +1059,6 @@ namespace HREngine.Bots
             // private bool _overkill = false;
             // private bool _spellburst = false;
             // private bool _frenzy = false;
-
-            /// <summary> 荣誉击杀 </summary>
-            public bool HonorableKill { get; set; }
-            /// <summary> 超杀 </summary>
-            public bool Overkill { get; set; }
-            /// <summary>法术迸发 </summary>
-            public bool Spellburst { get; set; }
-
-            /// <summary> 暴怒 </summary>
-            public bool Frenzy { get; set; }
-
             public string OnlineCardImage
             {
                 get { return "https://art.hearthstonejson.com/v1/render/latest/zhCN/256x/" + cardIDenum.ToString() + ".png"; }
@@ -1081,20 +1107,8 @@ namespace HREngine.Bots
             {
 
             }
-            public object Clone()
-            {
-                return new Card() as object;
-            }
-            /*             public CardDB.Card DeepClone()
-                        {
-                            using (MemoryStream memoryStream = new MemoryStream())
-                            {
-                                XmlSerializer xmlSerializer = new XmlSerializer(typeof(CardDB.Card));
-                                xmlSerializer.Serialize(memoryStream, this);
-                                memoryStream.Seek(0, SeekOrigin.Begin);
-                                return (CardDB.Card)xmlSerializer.Deserialize(memoryStream);
-                            }
-                        } */
+
+
 
             /// <summary>
             /// 存在错误类型
@@ -3459,7 +3473,7 @@ namespace HREngine.Bots
 
                     }
                 }
-
+                // card.updateDIYCard();
                 cardlist.Add(card);
                 if (card.dbfId != null && card.dbfId != "")
                     carddbfidToCardList[card.dbfId] = card;

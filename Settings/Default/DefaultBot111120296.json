@@ -1,16 +1,16 @@
 {
   "ConstructedGameRule": 1,
-  "ConstructedCustomDeck": "骑",
-  "LastDeckId": 0,
+  "ConstructedCustomDeck": "德",
+  "LastDeckId": 9201143840,
   "AutoGreet": false,
   "ReleaseLimitW": 192,
   "ReleaseLimitH": 108,
   "ReleaseLimit": true,
-  "AutoConcedeAfterConstructedWin": false,
+  "AutoConcedeAfterConstructedWin": true,
   "NormalConcede": false,
   "ForceConcedeAtMulligan": false,
-  "AutoConcedeMinDelayMs": 150,
-  "AutoConcedeMaxDelayMs": 300,
+  "AutoConcedeMinDelayMs": 300,
+  "AutoConcedeMaxDelayMs": 600,
   "SliderShopSpeedRatioText": "1.0",
   "SliderShopSpeedRatio": 1.0
 }

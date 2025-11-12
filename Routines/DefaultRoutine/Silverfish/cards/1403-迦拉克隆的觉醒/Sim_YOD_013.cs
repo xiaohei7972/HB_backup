@@ -14,16 +14,7 @@ namespace HREngine.Bots
         {
 			if(m.own)
 			{
-				bool dragonInHand = false;
-				foreach (Handmanager.Handcard hc in p.owncards)
-				{
-					if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON)
-					{
-						dragonInHand = true;
-						break;
-					}
-				}
-				if(dragonInHand) p.drawACard(CardDB.cardNameEN.shieldbearer, m.own, true);
+				if(p.anyRaceCardInHand(CardDB.Race.DRAGON)) p.drawACard(CardDB.cardNameEN.shieldbearer, m.own, true);
 			}
 			else
 			{

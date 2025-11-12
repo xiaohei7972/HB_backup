@@ -19,14 +19,20 @@ namespace HREngine.Bots
 			Minion hero = ownplay ? p.ownHero : p.enemyHero;
 			if (hero.Hp <= 20)
 			{
-				// kid = (CardDB.Card)kid.Clone();
-				kid.Attack += 1;
-				kid.Health += 1;
-			}
-			p.callKid(kid, pos, ownplay);
-			p.callKid(kid, pos, ownplay);
-			p.callKid(kid, pos, ownplay);
 
+				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
+				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
+				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
+
+
+			}
+			else
+			{
+
+				p.callKid(kid, pos, ownplay);
+				p.callKid(kid, pos, ownplay);
+				p.callKid(kid, pos, ownplay);
+			}
 
 		}
 
@@ -36,6 +42,6 @@ namespace HREngine.Bots
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
 			};
 		}
-		
+
 	}
 }

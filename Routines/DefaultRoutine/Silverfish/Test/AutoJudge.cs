@@ -9,10 +9,12 @@ namespace HREngine.Bots
 {
     public class AutoJudge : TestBase
     {
-        private static string mainPath = @"C:\Users\xiaohei\Desktop\Hearthbuddy_SimTemplate\Hearthbuddy_SimTemplate\Routines\DefaultRoutine\Silverfish\"; // 确保此路径正确
-        private static string testPath = @"Test\Data\对局记录\日期2025-07-14\00-59-24-DEMONHUNTER-DEMONHUNTER\"; // 需要测试的文件夹 
+        //C:\Users\xiaohei\Desktop\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\Test\Data
 
-        private static string testFile = null; // 如果只需要测试单个文件，设置该属性为对应文件名
+        private static string mainPath = @"C:\Users\xiaohei\Desktop\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\"; // 确保此路径正确
+        private static string testPath = @"Test\Data\"; // 需要测试的文件夹 
+
+        private static string testFile = "9法力水晶 第17回合 第1步操作.txt"; // 如果只需要测试单个文件，设置该属性为对应文件名
 
         private static Ai ai = null;
 
@@ -25,7 +27,7 @@ namespace HREngine.Bots
                 ai.botBase = new Behavior丨通用丨不设惩罚();  //根据卡组选择合适的策略
 
             }
-            ai.autoTester(true, data, 0);// 0：全做 1:只斩杀 2：正常
+            ai.autoTester(true, data, 2);// 0：全做 1:只斩杀 2：正常
         }
 
         public static void Main(string[] args)

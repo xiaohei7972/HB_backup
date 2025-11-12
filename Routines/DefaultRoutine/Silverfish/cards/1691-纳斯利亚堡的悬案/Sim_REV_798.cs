@@ -4,24 +4,22 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//地标 萨满祭司 费用：1
-	//Muck Pools
-	//淤泥之池
-	//[x]{0}{1}
-	//{0}{1}
-	class Sim_REV_798 : SimTemplate
-	{
+    //地标 萨满祭司 费用：1
+    //Muck Pools
+    //淤泥之池
+    //[x]{0}{1}
+    //{0}{1}
+    class Sim_REV_798 : SimTemplate
+    {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 检查 target 是否为 null
+            if (target != null && target.own && target.entitiyID != 0)
             {
-                // 检查 target 是否为 null
-                if (target != null && target.own && target.entitiyID != 0)
-                {
-                    int newCost = target.handcard.card.cost + 1; // 新随从的法力值消耗增加1点
-                    p.minionTransform(target, p.getRandomCardForManaMinion(newCost)); // 变形为一个新的随从
-                }
+                int newCost = target.handcard.card.cost + 1; // 新随从的法力值消耗增加1点
+                p.minionTransform(target, p.getRandomCardForManaMinion(newCost)); // 变形为一个新的随从
             }
+
         }
 
         public override PlayReq[] GetUseAbilityReqs()

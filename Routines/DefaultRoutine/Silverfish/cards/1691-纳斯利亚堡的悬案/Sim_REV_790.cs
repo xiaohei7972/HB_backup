@@ -13,21 +13,20 @@ namespace HREngine.Bots
 	{
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
-			{
-				// 检查目标是否为有效随从
-				if (target != null)
-				{
-					// 给目标随从增加 +2 攻击力
-					p.minionGetBuffed(target, 2, 0);
 
-					// 如果目标是野兽，则赋予其突袭
-					if (target.handcard.card.race == CardDB.Race.PET)
-					{
-						target.rush = 1;
-					}
+			// 检查目标是否为有效随从
+			if (target != null)
+			{
+				// 给目标随从增加 +2 攻击力
+				p.minionGetBuffed(target, 2, 0);
+
+				// 如果目标是野兽，则赋予其突袭
+				if (target.handcard.card.race == CardDB.Race.PET)
+				{
+					target.rush = 1;
 				}
 			}
+
 		}
 
 		public override PlayReq[] GetUseAbilityReqs()
@@ -39,6 +38,6 @@ namespace HREngine.Bots
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标必须是一个随从
 			};
 		}
-		
+
 	}
 }

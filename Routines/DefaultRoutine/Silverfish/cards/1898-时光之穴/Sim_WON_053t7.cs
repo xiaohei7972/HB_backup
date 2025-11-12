@@ -13,14 +13,16 @@ namespace HREngine.Bots
 	{
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
+			if (target != null)
 			{
-				if (target != null)
+				Minion m = p.callKidAndReturn(target.handcard.card, triggerMinion.zonepos, triggerMinion.own);
+				if (m != null)
 				{
-					p.callKid(target.handcard.card, target.zonepos, triggerMinion.own);
+					m.Hp += 3;
+					m.taunt = true;
+					m.cantAttack = true;
 				}
 			}
-
 		}
 
 		public override PlayReq[] GetUseAbilityReqs()
@@ -32,6 +34,6 @@ namespace HREngine.Bots
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标必须是一个随从
 			};
 		}
-		
+
 	}
 }

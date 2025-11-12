@@ -1352,21 +1352,23 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 			{
 				TAG_STEP tAG_STEP2 = tAG_STEP;
 				tAG_STEP = TAG_STEP.FINAL_GAMEOVER;
-				ilog_0.InfoFormat("[游戏战斗] 修正状态：{0}=>{1}.",tAG_STEP2, tAG_STEP);
+				ilog_0.InfoFormat("[战斗界面][游戏战斗] 修正状态：{0}=>{1}.",tAG_STEP2, tAG_STEP);
 			}
 			switch (tAG_STEP)
 			{
 				default:
-					ilog_0.InfoFormat("[游戏战斗] {0}.", tAG_STEP);
+					ilog_0.InfoFormat("[战斗界面][游戏战斗] {0} {1}.", tAG_STEP.GetType(),tAG_STEP);
 					break;
 				case TAG_STEP.BEGIN_MULLIGAN:
+					//开局留牌
 					await GameplaySceneBeginMulligan(pegasusScene_0);
 					break;
+					//
 				case TAG_STEP.MAIN_ACTION:
 					await GameplaySceneMainAction(pegasusScene_0);
 					break;
 				case TAG_STEP.MAIN_COMBAT:
-				case TAG_STEP.MAIN_START_TRIGGERS:
+				case TAG_STEP.MAIN_START_TRIGGERS://回合开始时发现
 					await GameplaySceneMainCombat(pegasusScene_0);
 					break;
 				case TAG_STEP.FINAL_WRAPUP:
@@ -1421,11 +1423,12 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 						case PresenceStatus.PRACTICE_GAME:
 						case PresenceStatus.TUTORIAL_GAME:
 						case PresenceStatus.FRIENDLY_GAME://友谊赛
+						case PresenceStatus.ADVENTURE_SCENARIO_SELECT://佣兵之书
 						case PresenceStatus.ADVENTURE_SCENARIO_PLAYING_GAME://冒险模式
 							await GamePlayAllProc(gameplay_0);
 							return;
 						default:
-							await ClientRandomClick(string.Format("[游戏战斗][{0}]", presenceStatus), 2500);
+							await ClientRandomClick(string.Format("[场景判断][游戏战斗][{0}]", presenceStatus), 2500);
 							return;
 					}
 				}

@@ -11,6 +11,28 @@ namespace HREngine.Bots
 	//<b>战吼：</b>如果你的手牌中有龙牌，则获得<b>嘲讽</b>和<b>圣盾</b>。
 	class Sim_GIL_635 : SimTemplate
 	{
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            if(own.own)
+			{
+				if(p.anyRaceCardInHand(CardDB.Race.DRAGON))
+				{
+					own.taunt = true;
+                    own.divineshild = true;
+					p.anzOwnTaunt++;
+
+                }
+			}
+			else
+			{
+				if (p.enemyAnzCards >= 2)
+				{
+					own.divineshild = true;
+					own.taunt = true;
+                    p.anzEnemyTaunt++;
+                }					
+			}
+        }
 		
 		
 	}

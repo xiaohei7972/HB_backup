@@ -4,16 +4,16 @@
   "ArenaPreferredClass3": 6,
   "ArenaPreferredClass4": 7,
   "ArenaPreferredClass5": 10,
-  "DefaultBehavior": "丨通用丨不设惩罚",
+  "DefaultBehavior": "丨通用丨暗牧",
   "DefaultEmote": "无",
-  "MaxWide": 3000,
-  "MaxDeep": 12,
-  "MaxCal": 60,
+  "MaxWide": 1500,
+  "MaxDeep": 6,
+  "MaxCal": 40,
   "UseSecretsPlayAround": false,
   "SetLog": false,
   "UsePrintNextMove": false,
   "UsePrintPenalties": false,
   "BerserkIfCanFinishNextTour": false,
   "Enfacehp": 27,
-  "EnfaceReward": -1000000
+  "EnfaceReward": 0
 }

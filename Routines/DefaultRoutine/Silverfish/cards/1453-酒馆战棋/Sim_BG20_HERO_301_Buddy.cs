@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：0 攻击力：4 生命值：3
+	//随从 中立 费用：0 攻击力：6 生命值：6
 	//Nightmare Ectoplasm
 	//噩梦软浆怪
 	//When you 'Devour' this, spit its stats onto 1 extra_minion.

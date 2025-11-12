@@ -30,7 +30,7 @@ namespace HREngine.Bots
             public int conditionalCount = 0;
             //条件卡牌，例如施放的法术牌
             public List<CardDB.cardIDEnum> conditionalList = new List<CardDB.cardIDEnum>();
-
+            
             public string Status
             {
                 get
@@ -116,11 +116,6 @@ namespace HREngine.Bots
             //读取卡牌法力值
             public int getManaCost(Playfield p)
             {
-                
-                if (this.card.HideCost)
-                {
-                    return 1000;
-                }
                 if (this.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum ench in this.enchs)
@@ -148,11 +143,6 @@ namespace HREngine.Bots
             //判定卡牌是否能够使用
             public bool canplayCard(Playfield p, bool own)
             {
-
-                if (this.card.HideCost)
-                {
-                    return false;
-                }
                 if (this.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum ench in this.enchs)

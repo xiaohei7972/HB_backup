@@ -12,10 +12,10 @@ namespace HREngine.Bots
 	class Sim_VAC_409 : SimTemplate
 	{
 
-        public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
-        {
-            // 激活法力值减少效果
-            if (triggerMinion.handcard.card.CooldownTurn == 0) p.parrotSanctuaryCount += 1;
-        }
-    }
+		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
+		{
+			// 激活法力值减少效果
+			p.parrotSanctuaryCount += 1;
+		}
+	}
 }

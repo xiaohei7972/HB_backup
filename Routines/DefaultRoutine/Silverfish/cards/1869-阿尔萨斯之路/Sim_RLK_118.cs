@@ -14,16 +14,18 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_118t3);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
+			
+			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+			Minion m1 = p.callKidAndReturn(kid, pos, ownplay);
+			Minion m2 = p.callKidAndReturn(kid, pos, ownplay);
+
 			if (ownplay && p.getCorpseCount() >= 4)
 			{
-				// kid = (CardDB.Card)kid.Clone();
 				p.corpseConsumption(4);
-				kid.reborn = true;
+				m1.reborn = true;
+				m2.reborn = true;
 			}
-			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-			p.callKid(kid, pos, ownplay);
-			p.callKid(kid, pos, ownplay);
-        }
+		}
 
         public override PlayReq[] GetPlayReqs()
         {

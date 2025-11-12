@@ -11,11 +11,11 @@ namespace HREngine.Bots
 	//抽一张牌。如果你在本回合中使用抽到的这张牌，重新开启本地标。
 	class Sim_VAC_334 : SimTemplate
 	{
-        public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
-        {
-            // 抽一张牌
-            if (triggerMinion.handcard.card.CooldownTurn == 0) p.drawACard(CardDB.cardIDEnum.None, true);
-        }
+		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
+		{
+			// 抽一张牌
+			p.drawACard(CardDB.cardIDEnum.None, true);
+		}
 
-    }
+	}
 }

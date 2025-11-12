@@ -12,7 +12,7 @@ namespace HREngine.Bots
 
         public override void getBattlecryEffect(Playfield p, Minion m, Minion target, int choice)
         {
-            if (target != null) p.minionGetDamageOrHeal(target, 3);
+            if (p.anyRaceCardInHand(CardDB.Race.DRAGON) && target != null) p.minionGetDamageOrHeal(target, 3);
         }
 
         public override PlayReq[] GetPlayReqs()

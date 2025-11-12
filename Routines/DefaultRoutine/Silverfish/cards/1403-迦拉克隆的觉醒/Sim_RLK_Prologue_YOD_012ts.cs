@@ -14,11 +14,15 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			// kid = (CardDB.Card)kid.Clone();
-			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-			kid.tank = true;
-			p.callKid(kid, pos, ownplay);
-			p.callKid(kid, pos, ownplay);
+			for (int i = 0; i < 2; i++)
+			{
+				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+				Minion m = p.callKidAndReturn(kid, pos, ownplay);
+				if (m != null)
+				{
+					m.taunt = true;
+				}
+			}
 		}
 
         public override PlayReq[] GetPlayReqs()

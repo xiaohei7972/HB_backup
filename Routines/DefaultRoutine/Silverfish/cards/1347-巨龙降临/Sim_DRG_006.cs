@@ -10,8 +10,10 @@ namespace HREngine.Bots
         //对一个随从造成$3点伤害。如果你的手牌中有龙牌，还会命中敌方英雄。
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
         {
-            int dmg = p.getSpellDamageDamage(3);
-            p.minionGetDamageOrHeal(target, dmg);
+            if(target!=null){
+                int dmg = p.getSpellDamageDamage(3);
+                p.minionGetDamageOrHeal(target, dmg);
+            }
         }
 
 

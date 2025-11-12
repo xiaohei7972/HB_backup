@@ -11,10 +11,10 @@ namespace HREngine.Bots
 	//在本回合中，你的下一张<b>抉择</b>牌同时拥有两种效果。
 	class Sim_WON_015 : SimTemplate
 	{
-        public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
-        {
-            // 激活效果，使得下一张抉择牌拥有两种效果
-            if (triggerMinion.handcard.card.CooldownTurn == 0) p.nextChooseOneHasBothEffects = true;
-        }
-    }
+		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
+		{
+			// 激活效果，使得下一张抉择牌拥有两种效果
+			p.nextChooseOneHasBothEffects = true;
+		}
+	}
 }

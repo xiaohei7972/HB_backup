@@ -14,18 +14,16 @@ namespace HREngine.Bots
 
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 检查目标是否为有效角色（随从或英雄）
+            if (target != null)
             {
-                // 检查目标是否为有效角色（随从或英雄）
-                if (target != null)
+                p.minionGetDamageOrHeal(target, 1);
+                // 随机施放 4 个法术
+                for (int i = 0; i < 4; i++)
                 {
-                    p.minionGetDamageOrHeal(target, 1);
-                    // 随机施放 4 个法术
-                    for (int i = 0; i < 4; i++)
-                    {
-                    }
                 }
             }
+
         }
 
         public override PlayReq[] GetUseAbilityReqs()
@@ -33,7 +31,7 @@ namespace HREngine.Bots
             return new PlayReq[]
             {
                 new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY), // 需要一个目标才能使用
-                new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET), // 需要一个目标才能使用
+                new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET), // 要求目标是敌方
             };
         }
     }

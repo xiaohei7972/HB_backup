@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 牧师 费用：0 攻击力：8 生命值：8
+	//随从 牧师 费用：0 攻击力：12 生命值：12
 	//Tuskarr Raider
 	//海象人海盗
 	//<b>Battlecry, Deathrattle, and Rally:</b> Get 2 random <b>Bounties</b>.

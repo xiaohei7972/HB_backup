@@ -44,7 +44,8 @@ namespace HREngine.Bots
 
                 foreach (Handmanager.Handcard hc in p.owncards)
                 {
-                    if (hc.card.nameEN == CardDB.cardNameEN.unknown) continue;
+                    //如果隐藏费用跳过此次循环
+                    if (hc.card.nameEN == CardDB.cardNameEN.unknown || hc.card.HideCost) continue;
 
                     int cardCost = hc.card.getManaCost(p, hc.manacost);
 
@@ -133,15 +134,15 @@ namespace HREngine.Bots
             if (!p.isLethalCheck) trgts = this.cutAttackList(trgts);
 
             // 处理随从攻击
-             List<Minion> attackingMinions = new List<Minion>();
+            List<Minion> attackingMinions = new List<Minion>();
             foreach (Minion m in p.ownMinions)
             {
-                m.updateReadyness();
-                // if (m.numAttacksThisTurn == 1 && !m.frozen && !m.cantAttack)
-                // {
-                //     m.Ready = m.windfury && !m.silenced ||
-                //               p.ownMinions.Exists(prev => prev.handcard.card.nameCN == CardDB.cardNameCN.战场军官 && !prev.silenced);
-                // }
+                // m.updateReadyness();
+                if (m.numAttacksThisTurn == 1 && !m.frozen && !m.cantAttack)
+                {
+                    m.Ready = m.windfury && !m.silenced ||
+                              p.ownMinions.Exists(prev => prev.handcard.card.nameCN == CardDB.cardNameCN.战场军官 && !prev.silenced);
+                }
 
                 if (m.Ready && m.Angr >= 1 && !m.frozen)
                 {
@@ -231,18 +232,19 @@ namespace HREngine.Bots
                 {
                     foreach (Minion trot in trgts)
                     {
-                        int useLocationPenalty = usePenalityManager ? pen.getUseLocationPenality(minion, trot, p) : 0;
+                        //有目标的地标
+                        int useLocationPenalty = usePenalityManager ? pen.getUseLocationPenality(minion, trot, p) : -100;
                         if (useLocationPenalty <= 499)
                         {
                             ret.Add(new Action(actionEnum.useLocation, null, minion, 0, trot, useLocationPenalty, 0));
                         }
                     }
                 }
-                ///无目标地标
+                ///无目标的地标
                 else if (minion.handcard.card.sim_card.GetUseAbilityReqs().Length == 0)
                 {
-
-                    ret.Add(new Action(actionEnum.useLocation, null, minion, 0, null, -50, 0));
+                    int useLocationPenalty = usePenalityManager ? pen.getUseLocationPenality(minion, null, p) : -100;
+                    ret.Add(new Action(actionEnum.useLocation, null, minion, 0, null, useLocationPenalty, 0));
                 }
             }
 
@@ -268,17 +270,19 @@ namespace HREngine.Bots
                     // 如果技能不需要目标，直接添加动作
                     if (trgts.Count == 0)
                     {
-                        ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, null, -100, 0, i + 1));
+                        int titanAbilityPenalty = usePenalityManager ? pen.getUseTitanAbilityPenality(titan, null, p) : -100;
+
+                        ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, null, titanAbilityPenalty, 0, i + 1));
                         continue;
                     }
 
                     // 如果技能需要一个目标，生成对应的动作
                     foreach (Minion trot in trgts)
                     {
-                        int titanAbilityPenalty = usePenalityManager ? pen.getUseTitanAbilityPenality(titan, trot, p) : 0;
+                        int titanAbilityPenalty = usePenalityManager ? pen.getUseTitanAbilityPenality(titan, trot, p) : -100;
                         if (titanAbilityPenalty <= 499)
                         {
-                            ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, trot, titanAbilityPenalty-100, 0, i + 1));
+                            ret.Add(new Action(actionEnum.useTitanAbility, null, titan, 0, trot, titanAbilityPenalty - 100, 0, i + 1));
                         }
                     }
                 }

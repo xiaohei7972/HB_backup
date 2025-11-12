@@ -14,17 +14,13 @@ namespace HREngine.Bots
         CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.REV_845);
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 冻结目标随从
+            if (target != null)
             {
-                // 冻结目标随从
-                if (target != null)
-                {
-                    int pos = triggerMinion.own ? p.ownMinions.Count : p.enemyMinions.Count;
-                    p.minionGetFrozen(target);
-                    // 召唤一个2/2的不稳定的骷髅
-                    p.callKid(kid, pos, triggerMinion.own);
-                }
-
+                int pos = triggerMinion.own ? p.ownMinions.Count : p.enemyMinions.Count;
+                p.minionGetFrozen(target);
+                // 召唤一个2/2的不稳定的骷髅
+                p.callKid(kid, pos, triggerMinion.own);
             }
         }
 
@@ -36,6 +32,6 @@ namespace HREngine.Bots
                 new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标必须是一个随从
             };
         }
-        
+
     }
 }

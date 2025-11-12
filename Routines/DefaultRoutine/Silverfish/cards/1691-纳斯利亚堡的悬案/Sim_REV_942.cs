@@ -13,18 +13,16 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 设置一个标志，表示本回合的下一个圣物将施放两次
+            if (triggerMinion.own)
             {
-                // 设置一个标志，表示本回合的下一个圣物将施放两次
-                if (triggerMinion.own)
-                {
-                    p.ownRelicDoubleCast = true;
-                }
-                else
-                {
-                    p.enemyRelicDoubleCast = true;
-                }
+                p.ownRelicDoubleCast = true;
             }
+            else
+            {
+                p.enemyRelicDoubleCast = true;
+            }
+
         }
     }
 }

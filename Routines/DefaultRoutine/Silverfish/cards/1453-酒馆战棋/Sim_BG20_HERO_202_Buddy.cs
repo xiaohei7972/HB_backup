@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：0 攻击力：4 生命值：7
+	//随从 中立 费用：0 攻击力：4 生命值：6
 	//Lei Flamepaw
 	//雷·火掌
 	//[x]At the start of your turn,get the <b>Buddy</b> of yourHero Power.

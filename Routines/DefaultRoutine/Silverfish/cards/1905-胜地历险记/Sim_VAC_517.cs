@@ -14,7 +14,7 @@ namespace HREngine.Bots
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
             // 发现一张嘲讽随从牌
-            if (triggerMinion.handcard.card.CooldownTurn == 0) p.drawACard(CardDB.cardIDEnum.None, true);
+             p.drawACard(CardDB.cardIDEnum.None, true);
         }
 
     }

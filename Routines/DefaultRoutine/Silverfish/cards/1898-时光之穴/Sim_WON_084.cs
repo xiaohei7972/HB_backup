@@ -11,7 +11,11 @@ namespace HREngine.Bots
 	//<b>战吼：</b>召唤一个{0}的<b>青玉魔像</b>，使其获得<b>嘲讽</b>。@<b>战吼：</b>召唤一个<b>青玉魔像</b>，使其获得<b>嘲讽</b>。
 	class Sim_WON_084 : SimTemplate
 	{
-		
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+			Minion summonMinio = p.callKidAndReturn(p.getNextJadeGolem(own.own), own.zonepos, own.own);
+			summonMinio.taunt = true;
+        }
 		
 	}
 }

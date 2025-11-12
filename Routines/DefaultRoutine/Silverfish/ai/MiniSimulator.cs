@@ -119,6 +119,7 @@ namespace HREngine.Bots
             this.calculated = 0;
             Playfield bestold = null;
             bestoldval = -20000000;  //最小的val，用于标记是否已经计算过场面val
+
             while (havedonesomething)
             {
                 // 每次循环是同一回合的一步，每多一步，deep加1

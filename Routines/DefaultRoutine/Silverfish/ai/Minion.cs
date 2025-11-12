@@ -28,8 +28,9 @@ namespace HREngine.Bots
         public int zonepos = 0;//随从放置位置
         public bool playedThisTurn = false;//在这回合使用
         public bool playedPrevTurn = false;//在上回合使用
+        public bool ShowSleepZZZOverride = false;
         public int numAttacksThisTurn = 0;//这回合攻击了几次
-        public int canAttcksNums = 1;//可攻击的次数
+        public int extraAttacksThisTurn = 0;//这回合额外攻击的次数
         public bool immuneWhileAttacking = false;//攻击时免疫
         public bool allreadyAttacked = false;//已经被攻击过
         public bool cantAttackHeroes = false;//无法攻击英雄
@@ -50,15 +51,15 @@ namespace HREngine.Bots
         public bool changeOwnerOnTurnStart = false; //己方回合开始时更改所有者
 
         public bool conceal = false;//隐藏（直到你的下个回合，使所有友方随从获得潜行）
-        // public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
-        // public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
-        // public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
-        // public int stegodon = 0;//剑龙骑术
-        // public int itsnecrolit = 0;//通灵之光
-        // public int greybud = 0;//灰枝幼芽
-        // public int infected = 0;//被感染
-        // public int finalsession = 0;//最后一团
-        // public int sheepmask = 0;//绵羊面具
+                                    // public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
+                                    // public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
+                                    // public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
+                                    // public int stegodon = 0;//剑龙骑术
+                                    // public int itsnecrolit = 0;//通灵之光
+                                    // public int greybud = 0;//灰枝幼芽
+                                    // public int infected = 0;//被感染
+                                    // public int finalsession = 0;//最后一团
+                                    // public int sheepmask = 0;//绵羊面具
 
         // public int livingspores = 0;//活性孢子 亡语：召唤两个1/1的植物。
         // public int explorershat = 0;//探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
@@ -69,7 +70,7 @@ namespace HREngine.Bots
         // public int enemyBlessingOfWisdom = 0;//敌方智慧祝福
         // public int ownPowerWordGlory = 0;//我方真言术：耀
         // public int enemyPowerWordGlory = 0;//敌方真言术：耀
-         /// <summary>
+        /// <summary>
         /// 我方智慧祝福
         /// </summary>
         public int ownBlessingOfWisdom = 0;
@@ -241,7 +242,7 @@ namespace HREngine.Bots
             get { return _elusive; }
             set { _elusive = value; }
         }
-        public bool Aura{ get; set; }
+        public bool Aura { get; set; }
         public int hChoice = 0;
         public bool cantLowerHPbelowONE = false;//血量无法低于1
 
@@ -297,7 +298,8 @@ namespace HREngine.Bots
             this.playedThisTurn = m.playedThisTurn;
             this.playedPrevTurn = m.playedPrevTurn;
             this.numAttacksThisTurn = m.numAttacksThisTurn;
-
+            this.extraAttacksThisTurn = m.extraAttacksThisTurn;
+            this.ShowSleepZZZOverride = m.ShowSleepZZZOverride;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
             this.cantAttackHeroes = m.cantAttackHeroes;
             this.cantAttack = m.cantAttack;
@@ -401,6 +403,8 @@ namespace HREngine.Bots
 
             this.allreadyAttacked = m.allreadyAttacked;
             this.numAttacksThisTurn = m.numAttacksThisTurn;
+            this.extraAttacksThisTurn = m.extraAttacksThisTurn;
+            this.ShowSleepZZZOverride = m.ShowSleepZZZOverride;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
             this.cantAttackHeroes = m.cantAttackHeroes;
             this.cantAttack = m.cantAttack;
@@ -913,7 +917,7 @@ namespace HREngine.Bots
                         case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; break;
                         case CardDB.Race.MECHANICAL: p.tempTrigger.ownMechanicDied++; break;
                         case CardDB.Race.MURLOC: p.tempTrigger.ownMurlocDied++; break;
-                                                case CardDB.Race.BLANK: break;
+                        case CardDB.Race.BLANK: break;
 
                     }
                 }
@@ -979,32 +983,27 @@ namespace HREngine.Bots
             Ready = false;
             if (cantAttack) return;
             if (this.handcard.card.dormant > 0 && !this.silenced && this.playedThisTurn) return;
-
             if (isHero)
             {
-                //旧
-                // if (!frozen && Angr != 0 && ((charge >= 1 && playedThisTurn) || !playedThisTurn) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
-                //新
-                if (!frozen && Angr != 0 && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))) Ready = true;
-                return;
-                // if (!frozen)
-                // {
-                //     if (Angr > 0)
-                //     {
-                //         if (canAttcksNums > numAttacksThisTurn)
-                //         {
-                //             Ready = true;
-                //         }
-                //     }
-                // }
+                if ( frozen || Angr == 0)
+                {
+                    Ready = false;
+                    return;
+                }
+                else
+                {
+                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
+                        Ready = true;
+                }
             }
 
 
-            if (!frozen)
+            if (!ShowSleepZZZOverride || !frozen || Angr != 0)
             {
                 if ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed)
                 {
-                    if (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury))
+
+                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
                     {
                         Ready = true;
                     }
@@ -1013,7 +1012,7 @@ namespace HREngine.Bots
                 {
                     if (charge == 0 && rush > 0 && playedThisTurn)
                     {
-                        if ((numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury)))
+                        if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
                         {
                             cantAttackHeroes = true;
                             Ready = true;

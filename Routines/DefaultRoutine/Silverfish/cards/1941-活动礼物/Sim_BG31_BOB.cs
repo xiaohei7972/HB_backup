@@ -21,7 +21,7 @@ namespace HREngine.Bots
 					p.minionGetFrozen(minion);
 				}
 			}
-			else if (choice == 2)
+			if (choice == 2)
 			{
 				if (target != null)
 				{
@@ -31,7 +31,7 @@ namespace HREngine.Bots
 					p.drawACard(CardDB.cardIDEnum.GAME_005, !own.own, true);
 				}
 			}
-			else if (choice == 3)
+			if (choice == 3)
 			{
 				p.drawACard(CardDB.cardIDEnum.None, own.own, true);
 				if (own.own)
@@ -44,7 +44,7 @@ namespace HREngine.Bots
 
 				}
 			}
-			else if (choice == 4)
+			if (choice == 4)
 			{
 				if (own.own)
 				{
@@ -66,7 +66,6 @@ namespace HREngine.Bots
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[] {
-				new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
 				new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET),
 				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),

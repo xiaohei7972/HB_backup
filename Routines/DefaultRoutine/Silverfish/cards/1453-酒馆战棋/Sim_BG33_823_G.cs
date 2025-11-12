@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 牧师 费用：0 攻击力：8 生命值：10
+	//随从 牧师 费用：0 攻击力：8 生命值：12
 	//Sky Admiral Rogers
 	//空军上将罗杰斯
 	//[x]After you spend{2} Gold, get two random<b>Bounties</b>. <i>({0} left!)</i>

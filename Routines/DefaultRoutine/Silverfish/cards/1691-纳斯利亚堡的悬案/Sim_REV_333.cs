@@ -13,14 +13,11 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 检查目标是否为有效随从，并且是否具有亡语效果
+            if (target != null && target.silenced == false && target.handcard.card.deathrattle)
             {
-                // 检查目标是否为有效随从，并且是否具有亡语效果
-                if (target != null && target.silenced == false && target.handcard.card.deathrattle)
-                {
-                    // 触发目标随从的亡语效果
-                    target.handcard.card.sim_card.onDeathrattle(p, target);
-                }
+                // 触发目标随从的亡语效果
+                target.handcard.card.sim_card.onDeathrattle(p, target);
             }
         }
 

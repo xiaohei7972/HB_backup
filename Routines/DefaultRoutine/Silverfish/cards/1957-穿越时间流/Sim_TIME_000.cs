@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//<b>回溯</b>。随机将一张随从牌置入你的手牌。该牌的法力值消耗减少（3）点。
 	class Sim_TIME_000 : SimTemplate
 	{
-		
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+			p.drawACard(CardDB.cardIDEnum.None, ownplay, true);
+        }
 		
 	}
 }

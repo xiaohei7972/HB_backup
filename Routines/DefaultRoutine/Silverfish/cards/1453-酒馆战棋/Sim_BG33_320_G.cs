@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：0 攻击力：10 生命值：10
+	//随从 中立 费用：0 攻击力：10 生命值：12
 	//Primeval Monstrosity
 	//原初畸怪
 	//[x]<b>Stealth</b>. Whenever a friendly<b>Rally</b> minion attacks, give a friendly minion of each type___+{0}/+{1} permanently.

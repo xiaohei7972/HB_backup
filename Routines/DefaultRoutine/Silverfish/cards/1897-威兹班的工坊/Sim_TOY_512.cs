@@ -14,9 +14,8 @@ namespace HREngine.Bots
 
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
-				// 激活效果，标记本回合中下一个召唤的随从将成为5/5
-				p.nextMinionBecomesFiveFive = true;
+			// 激活效果，标记本回合中下一个召唤的随从将成为5/5
+			p.nextMinionBecomesFiveFive = true;
 		}
 	}
 }

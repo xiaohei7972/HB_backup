@@ -15,11 +15,13 @@ namespace HREngine.Bots
         {
             if (own.own)
             {
-                p.minionGetArmor(p.ownHero, 5);
+				if(p.anyRaceCardInHand(CardDB.Race.DRAGON))
+                    p.minionGetArmor(p.ownHero, 5);
             }
             else
             {
-                p.minionGetArmor(p.enemyHero, 5);
+                if (p.enemyAnzCards >= 2)
+                    p.minionGetArmor(p.enemyHero, 5);
             }
         }
 

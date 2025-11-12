@@ -13,27 +13,11 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			bool dragonInHand = false;
-				foreach (Handmanager.Handcard hc in p.owncards)
-				{
-					if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON)
-					{
-						dragonInHand = true;
-						break;
-					}
-				}
-			if (dragonInHand)
+			if (p.anyRaceCardInHand(CardDB.Race.DRAGON))
 			{
 				p.ownMaxMana = Math.Max(10, p.ownMaxMana++);
 			}
 		}
-
-        public override PlayReq[] GetPlayReqs()
-        {
-			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_FRIENDLY_MINION_OF_RACE_IN_HAND,24), //手牌里有龙
-			};
-        }
 		
 	}
 }

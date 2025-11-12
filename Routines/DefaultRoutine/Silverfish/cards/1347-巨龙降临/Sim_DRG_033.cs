@@ -11,7 +11,12 @@ namespace HREngine.Bots
 	//抽三张牌。如果你的手牌中有龙牌，这张牌的法力值消耗减少（3）点。
 	class Sim_DRG_033 : SimTemplate
 	{
-		
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            p.drawACard(CardDB.cardIDEnum.None,ownplay);
+            p.drawACard(CardDB.cardIDEnum.None,ownplay);
+            p.drawACard(CardDB.cardIDEnum.None,ownplay);
+        }
 		
 	}
 }

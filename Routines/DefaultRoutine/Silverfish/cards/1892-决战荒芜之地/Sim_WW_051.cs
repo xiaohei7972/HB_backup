@@ -17,22 +17,18 @@ namespace HREngine.Bots
 
 			for (int i = 0; i < 3; i++)
 			{
-				int pos1 = ownplay ? p.enemyMinions.Count : p.ownMinions.Count;
-				p.callKid(kid, pos1, !ownplay);
+				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+				
+				p.minionGetRush(p.callKidAndReturn(kid, pos, ownplay));
+
 			}
 
-			// kid = (CardDB.Card)kid.Clone();
-			kid.Rush = true;
 			for (int i = 0; i < 3; i++)
 			{
-				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-				p.callKid(kid, pos, ownplay);
-				if (pos < 7)
-				{
-					p.ownMinions[0 > pos - 1 ? 0 : pos - 1].rush = 1;
-				}
-
+				int pos = ownplay ? p.enemyMinions.Count : p.ownMinions.Count;
+				p.callKid(kid, pos, !ownplay);
 			}
+
 		}
 
 

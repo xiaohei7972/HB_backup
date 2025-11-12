@@ -794,7 +794,7 @@ namespace HREngine.Bots
                 {
                     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
                 }
-
+                if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
                 if (m.enchs.Length > 0) mini += " 附魔:" + m.enchs;
 
                 help.logg(mini);
@@ -855,6 +855,7 @@ namespace HREngine.Bots
                 {
                     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
                 }
+                if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
 
                 if (m.enchs.Length > 0) mini += " 附魔:" + m.enchs;
 

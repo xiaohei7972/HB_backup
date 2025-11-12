@@ -63,7 +63,7 @@ namespace HREngine.Bots
                     penalty = -48;
                     break;
                 default:
-                    penalty = -400; // 如果卡牌名称不匹配，使用初始惩罚值
+                    penalty = 0; // 如果卡牌名称不匹配，使用初始惩罚值
                     break;
             }
             return penalty;
@@ -88,16 +88,16 @@ namespace HREngine.Bots
                 switch (a.actionType)
                 {
                     case actionEnum.trade:
-                        retval -= 20;
+                        a.penalty += 200;
                         continue;
                     case actionEnum.useLocation:
-                        retval -= (10 * a.own.handcard.getManaCost(p));
+                        a.penalty += 200;
                         continue;
                     case actionEnum.useTitanAbility:
-                        retval -= 20;
+                        a.penalty += 200;
                         continue;
                     case actionEnum.forge:
-                        retval -= 20;
+                        a.penalty += 200;
                         continue;
                     // 英雄攻击
                     case actionEnum.attackWithHero:
@@ -330,7 +330,7 @@ namespace HREngine.Bots
             if (m.stealth) retval += m.Angr / 2 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 2 + 1;
-            
+
             // 圣盾嘲讽
             if (m.divineshild && m.taunt) retval += 4;
             //扰魔
@@ -444,7 +444,7 @@ namespace HREngine.Bots
         /// <returns></returns>
         public override int getUseLocationPenality(Minion m, Minion target, Playfield p)
         {
-            int penalty = -100; // 初始惩罚值为 0
+            int penalty = 0; // 初始惩罚值为 0
 
             switch (m.handcard.card.nameCN.ToString())
             {
@@ -473,10 +473,10 @@ namespace HREngine.Bots
                     penalty = -48;
                     break;
                 default:
-                    penalty = -100; // 如果卡牌名称不匹配，使用初始惩罚值
+                    penalty = -200; // 如果卡牌名称不匹配，使用初始惩罚值
                     break;
             }
-            return (int)penalty;
+            return penalty;
         }
 
         /// <summary>

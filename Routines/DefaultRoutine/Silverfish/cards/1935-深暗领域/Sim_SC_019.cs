@@ -14,15 +14,14 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.SC_019);
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
-				p.allCharsOfASideGetDamage(!triggerMinion.own, 1);
+			p.allCharsOfASideGetDamage(!triggerMinion.own, 1);
 		}
 		public override void onDeathrattle(Playfield p, Minion m)
 		{
 			int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
 			p.callKid(kid, pos, m.own);
 		}
-		
+
 
 	}
 }

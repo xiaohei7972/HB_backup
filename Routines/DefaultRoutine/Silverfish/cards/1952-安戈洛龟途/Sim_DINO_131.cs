@@ -24,7 +24,7 @@ namespace HREngine.Bots
 					// deckMinion = (CardDB.Card)deckMinion.Clone();
 					int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
 					deckMinion.lifesteal = true;
-					p.callKid(deckMinion, pos, m.own);
+					p.callKidAndReturn(deckMinion, pos, m.own).lifesteal = true;
 					break;
 				}
 			}

@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	//Card Grader
 	//卡牌评级师
 	//<b>Battlecry:</b> If you've casta spell while holding this, <b>Discover</b> a card from your deck.
-	//<b>战吼：</b>如果你在此牌在你手中时施放过法术，从你的牌库中<b>发现</b>一张牌。
+	//<b>战吼：</b>如果你在本牌在你手中时施放过法术，从你的牌库中<b>发现</b>一张牌。
 	class Sim_TOY_054 : SimTemplate
 	{
 		

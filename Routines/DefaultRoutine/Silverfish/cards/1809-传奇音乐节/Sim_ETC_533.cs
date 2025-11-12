@@ -14,24 +14,21 @@ namespace HREngine.Bots
 
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
+            // 获取当前可用的尸体数量
+            int availableCorpses = p.getCorpseCount();
+            // 检查是否有足够的尸体
+            if (availableCorpses >= 3)
             {
-                // 获取当前可用的尸体数量
-                int availableCorpses = p.getCorpseCount();
+                // 消耗 3 具尸体
+                p.corpseConsumption(3);
 
-                // 检查是否有足够的尸体
-                if (availableCorpses >= 3)
+                // 检查目标是否为有效随从
+                if (target != null && target.own)
                 {
-                    // 消耗 3 具尸体
-                    p.corpseConsumption(3);
-
-                    // 检查目标是否为有效随从
-                    if (target != null && target.own)
-                    {
-                        // 赋予目标随从复生能力
-                        target.reborn = true;
-                    }
+                    // 赋予目标随从复生能力
+                    target.reborn = true;
                 }
+
             }
         }
 

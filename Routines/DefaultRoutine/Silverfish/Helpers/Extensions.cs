@@ -14,6 +14,16 @@ namespace HREngine.Bots
     static class Extensions
     {
         /// <summary>
+        /// 邪能地窖
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        internal static async Task UnderfelRift(this HSCard card, int timeout = 500)
+        {
+            await card.Pickup(timeout);
+        }
+        /// <summary>
         /// 扩展方法，用于异步执行卡片的卡组操作。
         /// </summary>
         /// <param name="card">需要卡组操作的HSCard对象。</param>

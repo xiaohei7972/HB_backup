@@ -13,18 +13,17 @@ namespace HREngine.Bots
     {
         public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
         {
-            if (triggerMinion.handcard.card.CooldownTurn == 0)
-            {
-                // 统计己方场上野兽的数量
-                int petCount = 0;
-                foreach (Minion m in p.ownMinions)
-                {
-                    if (m.handcard.card.race == CardDB.Race.PET)
-                    {
-                        petCount++;
-                    }
 
+            // 统计己方场上野兽的数量
+            int petCount = 0;
+            foreach (Minion m in p.ownMinions)
+            {
+                if (m.handcard.card.race == CardDB.Race.PET)
+                {
+                    petCount++;
                 }
+
+
 
                 // 每有一只野兽，随机对一个敌人造成1点伤害
                 for (int i = 0; i <= petCount; i++)

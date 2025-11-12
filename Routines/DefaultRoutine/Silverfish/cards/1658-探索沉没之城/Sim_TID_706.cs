@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	//Herald of Chaos
 	//混乱使徒
 	//[x]<b>Lifesteal</b><b>Battlecry:</b> If you've cast aFel spell while holding this,gain <b>Rush</b>.
-	//<b>吸血</b>，<b>战吼：</b>如果你在此牌在你手中时施放过邪能法术，获得<b>突袭</b>。
+	//<b>吸血</b>，<b>战吼：</b>如果你在本牌在你手中时施放过邪能法术，获得<b>突袭</b>。
 	class Sim_TID_706 : SimTemplate
 	{
 		

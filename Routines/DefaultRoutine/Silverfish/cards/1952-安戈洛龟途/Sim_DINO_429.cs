@@ -17,6 +17,7 @@ namespace HREngine.Bots
 			{
 				p.minionSetAngrToX(target, 1);
 				p.minionSetLifetoX(target, 1);
+				target.sheepmask++;
 			}
 		}
 		public override PlayReq[] GetPlayReqs()

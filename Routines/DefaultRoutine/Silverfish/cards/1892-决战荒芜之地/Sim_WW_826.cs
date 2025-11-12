@@ -13,16 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			bool dragonInHand = false;
-			foreach (Handmanager.Handcard hc in p.owncards)
-			{
-				if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON)
-				{
-					dragonInHand = true;
-					break;
-				}
-			}
-			if (dragonInHand)
+			if (p.anyRaceCardInHand(CardDB.Race.DRAGON))
 			{
 				p.mana = Math.Max(p.ownMaxMana, p.mana + 4);
 			}

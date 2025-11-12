@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：0 攻击力：9 生命值：7
+	//随从 中立 费用：0 攻击力：8 生命值：5
 	//Evergreen Botani
 	//常青绿植
 	//At the end of your turn,get a random minionof your Tier.

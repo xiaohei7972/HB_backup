@@ -33,7 +33,6 @@ namespace HREngine.Bots
                 {
                     // 给予复生效果
                     playedMinion.reborn = true;
-                    playedMinion.updateReadyness();
                 }
             }
         }

@@ -77,7 +77,6 @@ namespace HREngine.Bots
         private int anzOgOwnCThunHpBonus = 0;//克苏恩血量
         private int anzOgOwnCThunAngrBonus = 0;//克苏恩攻击
         private int anzOgOwnCThunTaunt = 0;//克苏恩嘲讽
-
         private static Silverfish instance;
 
         public static Silverfish Instance
@@ -528,7 +527,8 @@ namespace HREngine.Bots
 
                 ownWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(weapon.Id)));
                 ownWeapon.Angr = weapon.GetTag(GAME_TAG.ATK);
-                ownWeapon.Durability = weapon.GetTag(GAME_TAG.DURABILITY) - weapon.GetTag(GAME_TAG.DAMAGE);
+                ownWeapon.Durability = weapon.GetTag(GAME_TAG.HEALTH) - weapon.GetTag(GAME_TAG.DAMAGE);
+                // ownWeapon.Durability = weapon.GetTag(GAME_TAG.DURABILITY) - weapon.GetTag(GAME_TAG.DAMAGE);
                 ownWeapon.poisonous = (weapon.GetTag(GAME_TAG.POISONOUS) == 1) ? true : false;
                 ownWeapon.lifesteal = (weapon.GetTag(GAME_TAG.LIFESTEAL) == 1) ? true : false;
                 //武器法术迸发
@@ -547,7 +547,9 @@ namespace HREngine.Bots
 
                 enemyWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(weapon.Id)));
                 enemyWeapon.Angr = weapon.GetTag(GAME_TAG.ATK);
-                enemyWeapon.Durability = weapon.GetTag(GAME_TAG.DURABILITY) - weapon.GetTag(GAME_TAG.DAMAGE);
+                enemyWeapon.Durability = weapon.GetTag(GAME_TAG.HEALTH) - weapon.GetTag(GAME_TAG.DAMAGE);
+
+                // enemyWeapon.Durability = weapon.GetTag(GAME_TAG.DURABILITY) - weapon.GetTag(GAME_TAG.DAMAGE);
                 enemyWeapon.poisonous = (weapon.GetTag(GAME_TAG.POISONOUS) == 1) ? true : false;
                 enemyWeapon.lifesteal = (weapon.GetTag(GAME_TAG.LIFESTEAL) == 1) ? true : false;
                 enemyWeapon.Spellburst = (weapon.GetTag(GAME_TAG.SPELLBURST) == 1) ? true : false;
@@ -698,6 +700,7 @@ namespace HREngine.Bots
                 this.ownHero.frozen = card.GetTag(GAME_TAG.FROZEN) != 0;
                 this.ownHero.stealth = card.GetTag(GAME_TAG.STEALTH) != 0;
                 this.ownHero.numAttacksThisTurn = card.GetTag(GAME_TAG.NUM_ATTACKS_THIS_TURN);
+                this.ownHero.extraAttacksThisTurn = card.GetTag(GAME_TAG.EXTRA_ATTACKS_THIS_TURN);
                 this.ownHero.windfury = card.GetTag(GAME_TAG.WINDFURY) != 0;
                 this.ownHero.immune = card.GetTag(GAME_TAG.IMMUNE) != 0;
                 if (!ownHero.immune) this.ownHero.immuneWhileAttacking = card.GetTag(GAME_TAG.IMMUNE_WHILE_ATTACKING) != 0;
@@ -793,10 +796,10 @@ namespace HREngine.Bots
 
                 m.taunt = (card.GetTag(GAME_TAG.TAUNT) == 0) ? false : true;//嘲讽
 
-                m.numAttacksThisTurn = card.GetTag(GAME_TAG.NUM_ATTACKS_THIS_TURN);//数字攻击当回合
-
-                int temp = card.GetTag(GAME_TAG.NUM_TURNS_IN_PLAY);
-                m.playedThisTurn = (temp == 0) ? true : false;
+                m.numAttacksThisTurn = card.GetTag(GAME_TAG.NUM_ATTACKS_THIS_TURN);//本回合攻击次数
+                m.extraAttacksThisTurn = card.GetTag(GAME_TAG.EXTRA_ATTACKS_THIS_TURN);//本回合额外的攻击次数
+                // m.CooldownTurn = card.GetLocationCooldown();//获取地标冷却
+                m.playedThisTurn = (card.GetTag(GAME_TAG.NUM_TURNS_IN_PLAY) == 0) ? true : false;
 
                 m.Spellburst = card.GetTag(GAME_TAG.SPELLBURST) != 0;//法力迸发
 
@@ -858,13 +861,14 @@ namespace HREngine.Bots
                 m.untouchable = m.untouchable || m.dormant > 0;
 
                 m.Ready = card.CanBeUsed;
-                if (m.rush > 0 && !m.untouchable && m.charge == 0 && (m.numAttacksThisTurn == 0 || (m.numAttacksThisTurn == 1 && m.windfury)))
-                {
-                    m.Ready = true;
-                    if (m.playedThisTurn) m.cantAttackHeroes = true;
-                    else m.cantAttackHeroes = false;
+                m.updateReadyness();
+                // if (m.rush > 0 && !m.untouchable && m.charge == 0 && (m.numAttacksThisTurn == 0 || (m.numAttacksThisTurn == 1 && m.windfury)))
+                // {
+                //     m.Ready = true;
+                //     if (m.playedThisTurn) m.cantAttackHeroes = true;
+                //     else m.cantAttackHeroes = false;
 
-                }
+                // }
 
                 m.handcard.card.TAG_SCRIPT_DATA_NUM_1 = c.TAG_SCRIPT_DATA_NUM_1;//标签脚本数据编号1，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
                 m.handcard.card.TAG_SCRIPT_DATA_NUM_2 = c.TAG_SCRIPT_DATA_NUM_2;//标签脚本数据编号2，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
@@ -932,6 +936,12 @@ namespace HREngine.Bots
 
                     var scriptNum1 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
                     Handmanager.Handcard hc = new Handmanager.Handcard();
+                    //读取自定义卡牌的模块
+                    hc.card.MODULAR_ENTITY_PART_1 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_1);
+                    hc.card.MODULAR_ENTITY_PART_2 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_2);
+                    //自定义卡牌的模块1和模块2
+                    if (hc.card.MODULAR_ENTITY_PART_1 != 0 && hc.card.MODULAR_ENTITY_PART_2 != 0)
+                        hc.card.updateDIYCard();
                     hc.card = c;
                     hc.position = zp;
                     hc.entity = entityId;
@@ -941,6 +951,7 @@ namespace HREngine.Bots
                     hc.SCRIPT_DATA_NUM_1 = scriptNum1;
 
                     hc.addattack = card.Attack - card.DefATK;
+                    // hc.temporary = entity.GetTag(GAME_TAG.Temporary); //
                     if (card.IsWeapon) hc.addHp = card.Durability - card.DefDurability;
                     else hc.addHp = card.Health - card.DefHealth;
                     if (c.cardIDenum == CardDB.cardIDEnum.DAL_007 ||
@@ -963,7 +974,8 @@ namespace HREngine.Bots
                             hc.enchs.Add(CardDB.Instance.cardIdstringToEnum(cid));
                         }
                     }
-                    if (hc.card.nameCN == CardDB.cardNameCN.大型魔像 || hc.card.nameCN == CardDB.cardNameCN.小型魔像 || hc.card.nameCN == CardDB.cardNameCN.超级魔像)
+
+                    /* if (hc.card.nameCN == CardDB.cardNameCN.大型魔像 || hc.card.nameCN == CardDB.cardNameCN.小型魔像 || hc.card.nameCN == CardDB.cardNameCN.超级魔像)
                     {
                         int ench1 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_1);
                         int ench2 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_2);
@@ -971,7 +983,8 @@ namespace HREngine.Bots
                         CardDB.Card card2 = CardDB.Instance.getCardDataFromDbfID("" + ench2);
                         hc.enchs.Add(card1.cardIDenum);
                         hc.enchs.Add(card2.cardIDenum);
-                    }
+                    } */
+
                     handCards.Add(hc);
                     anzcards++;
                 }

@@ -17,25 +17,20 @@ namespace HREngine.Bots
             // 只在随从所有者的回合结束时触发
             if (turnEndOfOwner == m.own)
             {
-                // int pos = (m.own) ? p.ownMinions.Count : p.enemyMinions.Count;
-                if (m.own)
+                Minion kid1 = p.callKidAndReturn(kid, m.zonepos, m.own);
+                if (kid1 != null)
                 {
-                    if (m.own ? p.ownMinions.Count < 7 : p.enemyMinions.Count < 7)
-                    {
-                        // kid = (CardDB.Card)kid.Clone();
-                        kid.Attack = m.Angr;
-                        kid.Health = m.Hp;
-                        kid.cost = Math.Min(10, (m.Hp + m.Angr) / 2);
-                        p.callKid(kid, m.zonepos, m.own);
 
-                        // 获取刚召唤的随从，并设置其攻击力和生命值
-
-
-                    }
-
+                    kid1.Angr = m.Angr;
+                    kid1.Hp = m.Hp;
+                    kid1.maxHp = m.Hp;
+                    // kid1.cost = Math.Min(10, (m.Hp + m.Angr) / 2);
                 }
             }
-        }
 
+        }
     }
 }
+
+
+

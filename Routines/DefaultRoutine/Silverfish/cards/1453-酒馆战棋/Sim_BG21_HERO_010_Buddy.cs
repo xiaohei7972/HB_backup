@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：0 攻击力：2 生命值：4
+	//随从 中立 费用：0 攻击力：2 生命值：6
 	//Warden Thelwater
 	//典狱官塞尔沃特
 	//At the start of your turn,get your next opponent's Buddy.

@@ -13,8 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
-				p.drawACard(CardDB.cardIDEnum.SC_010, triggerMinion.own, true);
+			p.drawACard(CardDB.cardIDEnum.SC_010, triggerMinion.own, true);
 		}
 
 	}

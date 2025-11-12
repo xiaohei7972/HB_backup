@@ -13,21 +13,18 @@ namespace HREngine.Bots
 	{
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
+			if (target != null)
 			{
-				if (target != null)
+				List<Minion> minions = new List<Minion>();
+				minions.AddRange(p.ownMinions);
+				minions.AddRange(p.enemyMinions);
+				minions.Remove(target);
+				int angr = target.Angr;
+				minions.ForEach((m) =>
 				{
-					List<Minion> minions = new List<Minion>();
-					minions.AddRange(p.ownMinions);
-					minions.AddRange(p.enemyMinions);
-					minions.Remove(target);
-					int angr = target.Angr;
-					minions.ForEach((m) =>
-					{
-						if (m.Angr < angr)
-							p.minionGetDestroyed(m);
-					});
-				}
+					if (m.Angr < angr)
+						p.minionGetDestroyed(m);
+				});
 			}
 
 		}

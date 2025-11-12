@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 战士 费用：0 攻击力：14 生命值：14
+	//随从 战士 费用：0 攻击力：12 生命值：12
 	//Vaelastrasz
 	//瓦拉斯塔兹
 	//<b>Rally:</b> Get 2 random Dragons.

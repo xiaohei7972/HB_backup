@@ -19,23 +19,15 @@ namespace HREngine.Bots
 		// CardDB.Card kid4 = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.SC_403f);
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
-				p.callKid(kid, triggerMinion.zonepos, triggerMinion.own);
+			p.callKid(kid, triggerMinion.zonepos, triggerMinion.own);
 		}
 
-		// public override PlayReq[] GetPlayReqs()
-		// {
-		// 	return new PlayReq[]{
-		// 		new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1), // 需要一个空位
-		// 	};
-		// }
-		//兄弟现在地标使用条件只有几个能用,写了也是白写
-		// public override PlayReq[] GetUseAbilityReqs()
-		// {
-		// 	return new PlayReq[]{
-		// 		new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1), // 需要一个空位
-		// 	};
-		// }
+		public override PlayReq[] GetUseAbilityReqs()
+		{
+			return new PlayReq[]{
+				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1), // 需要一个空位
+			};
+		}
 
 
 	}

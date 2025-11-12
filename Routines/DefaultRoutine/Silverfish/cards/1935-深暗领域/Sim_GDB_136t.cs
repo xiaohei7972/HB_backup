@@ -16,13 +16,9 @@ namespace HREngine.Bots
 		PlayReq[] playReqs = new PlayReq[] { };
 		public override void useLocation(Playfield p, Minion triggerMinion, Minion target)
 		{
-			if (triggerMinion.handcard.card.CooldownTurn == 0)
+			if (triggerMinion.handcard.enchs.Count > 0)
 			{
-				if (triggerMinion.handcard.enchs.Count > 0)
-				{
-					card.sim_card.onCardPlay(p, triggerMinion.own, target, 1);
-
-				}
+				card.sim_card.onCardPlay(p, triggerMinion.own, target, 1);
 			}
 		}
 

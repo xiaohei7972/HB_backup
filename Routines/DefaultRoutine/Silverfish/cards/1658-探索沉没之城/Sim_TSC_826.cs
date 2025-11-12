@@ -8,7 +8,7 @@ namespace HREngine.Bots
 	//Crushclaw Enforcer
 	//重钳执行者
 	//<b>Battlecry:</b> If you've cast a spell while holding this, draw a Naga.
-	//<b>战吼：</b>如果你在此牌在你手中时施放过法术，抽一张纳迦牌。
+	//<b>战吼：</b>如果你在本牌在你手中时施放过法术，抽一张纳迦牌。
 	class Sim_TSC_826 : SimTemplate
 	{
 		

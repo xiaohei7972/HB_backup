@@ -10,15 +10,7 @@ namespace HREngine.Bots
         //<b>战吼：</b>如果你的手牌中有龙牌，随机召唤两个鱼人。
         public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
         {
-            bool foundDragon = false;
-            foreach(Handmanager.Handcard hc in p.owncards)
-            {
-                if(hc.card.race == CardDB.Race.DRAGON || hc.card.race == CardDB.Race.ALL)
-                {
-                    foundDragon = true;
-                }
-            }
-            if (foundDragon)
+            if (p.anyRaceCardInHand(CardDB.Race.DRAGON))
             {
                 p.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DRG_072), own.zonepos - 1, true);
                 p.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DRG_072), own.zonepos, true);

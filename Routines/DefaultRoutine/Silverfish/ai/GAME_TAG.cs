@@ -1060,6 +1060,8 @@ namespace Hearthbuddy_backed.Routines.DefaultRoutine.Silverfish.ai
         PET_TREATS_FED = 4280,
         PET_TREATS_GENERATED,
         BACON_RALLY = 4204,
-        BACON_BOUNTY = 4231
+        BACON_BOUNTY = 4231,
+        COPY_DEATHRATTLE = 9999,
+
     }
 }
