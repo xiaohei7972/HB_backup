@@ -14,8 +14,16 @@ namespace HREngine.Bots
 		{
             if(own.own)
 			{
-
-				if(p.anyRaceCardInHand(CardDB.Race.DRAGON) && if(target!=null))
+				bool dragonInHand = false;
+				foreach (Handmanager.Handcard hc in p.owncards)
+				{
+					if ((TAG_RACE)hc.card.race == TAG_RACE.DRAGON)
+					{
+						dragonInHand = true;
+						break;
+					}
+				}
+				if(dragonInHand)
 				{
 					p.minionGetDestroyed(target);
 				}
