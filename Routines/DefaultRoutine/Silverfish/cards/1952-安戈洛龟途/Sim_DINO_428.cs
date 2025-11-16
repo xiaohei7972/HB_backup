@@ -23,6 +23,7 @@ namespace HREngine.Bots
 					if (!minion.untouchable)
 					{
 						p.minionAttacksMinion(minion, target);
+						break;
 					}
 				}
 			}

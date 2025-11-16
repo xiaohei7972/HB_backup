@@ -11,7 +11,23 @@ namespace HREngine.Bots
 	//使一个随从获得+2/+6和<b>嘲讽</b>。当该随从死亡时，召唤一只剑龙。
 	class Sim_CORE_UNG_952 : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            if (target != null)
+            {
+
+                p.minionGetBuffed(target, 2, 6);
+                target.stegodon++;
+            }
+        }
+
+        public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
+                new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
+            };
+        }
 		
 	}
 }

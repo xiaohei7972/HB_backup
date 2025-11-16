@@ -3,9 +3,11 @@
 .vscode/
 .bin/
 obj/
-调试用/
 
-
+Routines/.vs
+Routines/.vscode
+Routines/.bin
+Routines/.obj
 
 # Routines/DefaultRoutine/Silverfish/Test/Data/对局记录/
 Routines/DefaultRoutine/Silverfish/UltimateLogs/
@@ -17,22 +19,13 @@ Logs/
 
 #  编译后dll
 # CompiledAssemblies/*
-# CompiledAssemblies/
-
-CompiledAssemblies/AutoStop.dll
-CompiledAssemblies/DefaultBot.dll
-CompiledAssemblies/DefaultRoutine.dll
-CompiledAssemblies/Monitor.dll
-CompiledAssemblies/Quest.dll
-CompiledAssemblies/Stats.dll
+CompiledAssemblies/*.dll
 # Hearthbuddy_backed.csproj.user
 myLog.txt
 
 
 Settings/
-Settings/Global/
-Settings/Default/
-Settings/Default/DefaultCustomDecks/
+
 
 # 教程文件夹
 dll/

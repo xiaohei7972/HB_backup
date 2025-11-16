@@ -448,12 +448,12 @@ namespace HREngine.Bots
         {//更新随从信息
             this.ownMinions.Clear();
             this.enemyMinions.Clear();
-            foreach (var item in om)
+            foreach (Minion item in om)
             {
                 this.ownMinions.Add(new Minion(item));
             }
             //this.ownMinions.AddRange(om);
-            foreach (var item in em)
+            foreach (Minion item in em)
             {
                 this.enemyMinions.Add(new Minion(item));
             }
@@ -485,8 +485,8 @@ namespace HREngine.Bots
         public void updateTurnDeck(Dictionary<CardDB.cardIDEnum, int> deck)
         {
             this.turnDeck.Clear();
-            var patchesidsk = false;
-            var noDupl = true;
+            bool patchesidsk = false;
+            bool noDupl = true;
             foreach (KeyValuePair<CardDB.cardIDEnum, int> c in deck)
             {
                 this.turnDeck.Add(c.Key, c.Value);

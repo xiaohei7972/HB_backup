@@ -11,7 +11,24 @@ namespace HREngine.Bots
 	//使你的白银之手新兵获得+2/+2和<b>嘲讽</b>。
 	class Sim_FB_Champs_LOOT_333 : SimTemplate
 	{
-		
+		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+        {
+            List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
+            foreach (Minion m in temp)
+            {
+                if (m.handcard.card.SilverHandRecruit)
+                {
+                    p.minionGetBuffed(m, 2, 2);
+                    if (!m.taunt)
+                    {
+                        m.taunt = true;
+                        if (m.own) p.anzOwnTaunt++;
+                        else p.anzEnemyTaunt++;
+                    }
+
+                }
+            }
+        }
 		
 	}
 }

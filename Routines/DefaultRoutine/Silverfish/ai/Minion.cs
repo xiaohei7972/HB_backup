@@ -51,15 +51,15 @@ namespace HREngine.Bots
         public bool changeOwnerOnTurnStart = false; //己方回合开始时更改所有者
 
         public bool conceal = false;//隐藏（直到你的下个回合，使所有友方随从获得潜行）
-                                    // public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
-                                    // public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
-                                    // public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
-                                    // public int stegodon = 0;//剑龙骑术
-                                    // public int itsnecrolit = 0;//通灵之光
-                                    // public int greybud = 0;//灰枝幼芽
-                                    // public int infected = 0;//被感染
-                                    // public int finalsession = 0;//最后一团
-                                    // public int sheepmask = 0;//绵羊面具
+        // public int ancestralspirit = 0; //先祖之魂，使一个随从获得“亡语：再次召唤该随从。
+        // public int desperatestand = 0;//殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
+        // public int souloftheforest = 0;//丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
+        // public int stegodon = 0;//剑龙骑术
+        // public int itsnecrolit = 0;//通灵之光
+        // public int greybud = 0;//灰枝幼芽
+        // public int infected = 0;//被感染
+        // public int finalsession = 0;//最后一团
+        // public int sheepmask = 0;//绵羊面具
 
         // public int livingspores = 0;//活性孢子 亡语：召唤两个1/1的植物。
         // public int explorershat = 0;//探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
@@ -151,20 +151,15 @@ namespace HREngine.Bots
         /// 探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
         /// </summary>
         public int explorershat = 0;
-        /// <summary>
-        /// 智慧圣契
-        /// </summary>
+        /// <summary>智慧圣契</summary>
         public int libramofwisdom = 0;
-        /// <summary>
-        /// 回到手牌
-        /// </summary>
+        /// <summary>回到手牌</summary>
         public int returnToHand = 0;
-        /// <summary>
-        /// 寄生感染 使你的所有随从获得 “亡语：随机将一张野兽牌置入你的手牌”。
-        /// </summary>
+        /// <summary>寄生感染 使你的所有随从获得 “亡语：随机将一张野兽牌置入你的手牌”。</summary>
         public int infest = 0;
         public int spellpower = 0;//法术强度
         public bool cantBeTargetedBySpellsOrHeroPowers = false;//无法成为法术或英雄技能的目标
+        public int cost = 0;
         public int Hp = 0;//当前血量
         public int maxHp = 0;//最大血量
         public int armor = 0;//护甲值（英雄）
@@ -201,36 +196,31 @@ namespace HREngine.Bots
         private bool _frenzy = false;//暴怒
         private bool _honorableKill = false;// 荣耀击杀
 
-
-        //激怒
+        /// <summary> 激怒</summary>
         public bool Enraged
         {
             get { return _enraged; }
             set { _enraged = value; }
         }
-        //法术迸发
+                /// <summary> 法术迸发</summary>
         public bool Spellburst
         {
             get { return _spellburst; }
             set { _spellburst = value; }
         }
-        //暴怒
+        /// <summary> 暴怒</summary>
         public bool Frenzy
         {
             get { return _frenzy; }
             set { _frenzy = value; }
         }
-        /// <summary>
-        /// 荣耀击杀
-        /// </summary>
+        /// <summary> 荣耀击杀</summary>
         public bool HonorableKill
         {
             get { return _honorableKill; }
             set { _honorableKill = value; }
         }
-        /// <summary>
-        /// 超杀
-        /// </summary>
+        /// <summary>超杀</summary>
         public bool Overkill
         {
             get { return _overkill; }
@@ -1340,21 +1330,22 @@ namespace HREngine.Bots
                     case CardDB.cardIDEnum.BT_737e: this.dormant = me.entity.GetTag(GAME_TAG.SCORE_VALUE_1) - me.entity.GetTag(GAME_TAG.SCORE_VALUE_2); continue;
                     case CardDB.cardIDEnum.UNG_067t1e: if (ownPlayerControler == Hrtprozis.Instance.getOwnController()) Hrtprozis.Instance.updateCrystalCore(5); continue;
                     case CardDB.cardIDEnum.UNG_116te: if (ownPlayerControler == Hrtprozis.Instance.getOwnController()) Hrtprozis.Instance.updateOwnMinionsInDeckCost0(true); continue;
+                    case CardDB.cardIDEnum.REV_310e:
                     case CardDB.cardIDEnum.LOE_019e://todo: 要改deathrattle2结构,可能存在多次复制(铜须)
                         {
                             this.extraParam2 = me.copyDeathrattle;
-                            var idEnum = CardDB.cardIDEnum.None;
-                            var ent = me.entity;
+                            CardDB.cardIDEnum idEnum = CardDB.cardIDEnum.None;
+                            Entity ent = me.entity;
                         Loop:
-                            var deathEntity = TritonHs.GameState.GetEntity(ent.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1));
-                            var cardId = deathEntity.GetCardId();
+                            Entity deathEntity = TritonHs.GameState.GetEntity(ent.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1));
+                            string cardId = deathEntity.GetCardId();
                             if (string.IsNullOrEmpty(cardId))
                                 cardId = deathEntity.GetEntityDef().GetCardId();
                             idEnum = CardDB.Instance.cardIdstringToEnum(cardId);
                             if (idEnum == CardDB.cardIDEnum.None ||
                                 idEnum == CardDB.cardIDEnum.LOE_019)//复制了另一个迅猛龙
                             {
-                                var atts = ent.GetAttachments();
+                                List<Entity> atts = ent.GetAttachments();
                                 if (atts.Count > 0)
                                 {
                                     ent = atts[0];//todo: 要改deathrattle2结构,可能存在多次复制(铜须)
@@ -1372,10 +1363,10 @@ namespace HREngine.Bots
                     // 过期货物
                     case CardDB.cardIDEnum.ULD_163e:
                         this.extraParam2 = me.copyDeathrattle;
-                        var idEnum_163 = CardDB.cardIDEnum.None;
-                        var ent_163 = me.entity;
-                        var deathEntity_163 = TritonHs.GameState.GetEntity(ent_163.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1));
-                        var cardId_163 = deathEntity_163.GetCardId();
+                        CardDB.cardIDEnum idEnum_163 = CardDB.cardIDEnum.None;
+                        Entity ent_163 = me.entity;
+                        Entity deathEntity_163 = TritonHs.GameState.GetEntity(ent_163.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1));
+                        String cardId_163 = deathEntity_163.GetCardId();
                         if (string.IsNullOrEmpty(cardId_163))
                             cardId_163 = deathEntity_163.GetEntityDef().GetCardId();
                         idEnum_163 = CardDB.Instance.cardIdstringToEnum(cardId_163);

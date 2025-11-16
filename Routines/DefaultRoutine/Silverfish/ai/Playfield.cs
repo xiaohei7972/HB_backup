@@ -10697,7 +10697,6 @@ namespace HREngine.Bots
         /// </summary>
         /// <param name="own">是否为己方随从</param>
         /// <param name="damages">伤害值</param>
-        /// <param name="frozen">是否同时冻结随从</param>
         public void allMinionOfASideGetDamage(bool own, int damages)
         {
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
@@ -10820,6 +10819,104 @@ namespace HREngine.Bots
                         this.minionGetDamageOrHeal(this.ownHero, dmg); // 一次性造成所有伤害
                     }
                 }
+            }
+        }
+        /// <summary>
+        /// 对一方的所有角色（英雄和随从）随机造成多次伤害。
+        /// </summary>
+        /// <param name="ownSide">是否为己方角色</param>
+        /// <param name="times">伤害次数</param>
+        public void allCharsOfASideMinionGetRandomDamage(bool ownSide, int times)
+        {
+            if ((!ownSide && this.enemyHero.Hp + this.enemyHero.armor <= times) || (ownSide && this.ownHero.Hp + this.ownHero.armor <= times))
+            {
+                /* if (!ownSide)
+                {
+                    int dmg = this.enemyHero.Hp + this.enemyHero.armor;  //假设情况下的伤害值
+                    if (this.enemyMinions.Count > 2) dmg--;
+                    times = times - dmg;
+                    if (this.anzEnemyAnimatedArmor > 0)
+                    {
+                        for (; dmg > 0; dmg--)
+                        {
+                            this.minionGetDamageOrHeal(this.enemyHero, 1); // 若敌方有动画护甲，则逐点伤害
+                        }
+                    }
+                    else
+                    {
+                        this.minionGetDamageOrHeal(this.enemyHero, dmg); // 一次性造成所有伤害
+                    }
+                }
+                else
+                {
+                    int dmg = this.ownHero.Hp + this.ownHero.armor - 1;
+                    times = times - dmg;
+                    if (this.anzOwnAnimatedArmor > 0)
+                    {
+                        for (; dmg > 0; dmg--)
+                        {
+                            this.minionGetDamageOrHeal(this.ownHero, 1); // 若己方有动画护甲，则逐点伤害
+                        }
+                    }
+                    else
+                    {
+                        this.minionGetDamageOrHeal(this.ownHero, dmg); // 一次性造成所有伤害
+                    }
+                } */
+            }
+
+            List<Minion> temp = (ownSide) ? new List<Minion>(this.ownMinions) : new List<Minion>(this.enemyMinions);
+            temp.Sort((a, b) => { int tmp = a.Hp.CompareTo(b.Hp); return tmp == 0 ? a.Angr - b.Angr : tmp; }); // 按生命值排序
+
+            int border = 1;
+            for (int pos = 0; pos < temp.Count; pos++)
+            {
+                Minion m = temp[pos];
+                if (m.divineshild)
+                {
+                    m.divineshild = false; // 移除圣盾
+                    times--;
+                    if (times < 1) break;
+                }
+                if (m.Hp > border)
+                {
+                    int dmg = Math.Min(m.Hp - border, times); // 计算随从承受的伤害
+                    times -= dmg;
+                    this.minionGetDamageOrHeal(m, dmg);
+                }
+                if (times < 1) break;
+            }
+            if (times > 0)
+            {
+                /* int dmg = times;
+                if (!ownSide)
+                {
+                    if (this.anzEnemyAnimatedArmor > 0)
+                    {
+                        for (; dmg > 0; dmg--)
+                        {
+                            this.minionGetDamageOrHeal(this.enemyHero, 1); // 若敌方有动画护甲，则逐点伤害
+                        }
+                    }
+                    else
+                    {
+                        this.minionGetDamageOrHeal(this.enemyHero, dmg); // 一次性造成所有伤害
+                    }
+                }
+                else
+                {
+                    if (this.anzOwnAnimatedArmor > 0)
+                    {
+                        for (; dmg > 0; dmg--)
+                        {
+                            this.minionGetDamageOrHeal(this.ownHero, 1); // 若己方有动画护甲，则逐点伤害
+                        }
+                    }
+                    else
+                    {
+                        this.minionGetDamageOrHeal(this.ownHero, dmg); // 一次性造成所有伤害
+                    }
+                } */
             }
         }
 
@@ -11597,7 +11694,7 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("我方手牌: ");
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.card.MODULAR_ENTITY_PART_1 != 0 && hc.card.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.card.MODULAR_ENTITY_PART_1 + " " +"MODULAR_ENTITY_PART_2: " + hc.card.MODULAR_ENTITY_PART_2) : ""));
+                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.MODULAR_ENTITY_PART_1 + " " +"MODULAR_ENTITY_PART_2: " + hc.MODULAR_ENTITY_PART_2) : ""));
             }
             Helpfunctions.Instance.logg("+++++++ printBoard end +++++++++");
 

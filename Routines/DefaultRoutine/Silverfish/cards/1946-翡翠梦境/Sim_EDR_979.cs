@@ -17,7 +17,7 @@ namespace HREngine.Bots
 			{
 				if (triggerEffectMinion.own == turnEndOfOwner)
 				{
-					p.minionGetArmor(p.ownHero, 5);
+					p.minionGetArmor(triggerEffectMinion.own ? p.ownHero : p.enemyHero, 3);
 					p.drawACard(CardDB.cardNameEN.unknown,triggerEffectMinion.own);
 				}
 			}

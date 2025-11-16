@@ -16,7 +16,18 @@ namespace HREngine.Bots
 			p.minionGetArmor(ownplay ? p.ownHero : p.enemyHero, 5);
 			int pos = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
 			Minion summonMinion = p.callKidAndReturn(p.getRandomCardForManaMinion(5), pos, ownplay);
-			summonMinion.taunt = true;
+			if (summonMinion != null)
+			{
+				summonMinion.taunt = true;
+				if (summonMinion.own)
+				{
+					p.anzOwnTaunt++;
+				}
+				else
+				{
+					p.anzEnemyTaunt++;
+				}
+			}
 		}
 
 	}

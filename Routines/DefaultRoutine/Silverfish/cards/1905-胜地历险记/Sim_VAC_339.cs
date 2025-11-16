@@ -17,14 +17,14 @@ namespace HREngine.Bots
             // 只在随从所有者的回合结束时触发
             if (turnEndOfOwner == m.own)
             {
-                Minion kid1 = p.callKidAndReturn(kid, m.zonepos, m.own);
-                if (kid1 != null)
+                Minion minion = p.callKidAndReturn(kid, m.zonepos, m.own);
+                if (minion != null)
                 {
 
-                    kid1.Angr = m.Angr;
-                    kid1.Hp = m.Hp;
-                    kid1.maxHp = m.Hp;
-                    // kid1.cost = Math.Min(10, (m.Hp + m.Angr) / 2);
+                    minion.Angr = m.Angr;
+                    minion.Hp = m.Hp;
+                    minion.maxHp = m.Hp;
+                    // minion.cost = Math.Min(10, (m.Hp + m.Angr) / 2);
                 }
             }
 

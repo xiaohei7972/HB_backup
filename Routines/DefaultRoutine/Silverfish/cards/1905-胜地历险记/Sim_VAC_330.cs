@@ -12,28 +12,31 @@ namespace HREngine.Bots
     //在你的英雄攻击并消灭一个随从后，获取一张幸运币。
     class Sim_VAC_330 : SimTemplate
     {
-        CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.VAC_330);
+        /*  CardDB.Card wcard = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.VAC_330);
 
-        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
+         {
+             // 装备武器
+             p.equipWeapon(wcard, ownplay);
+         } */
+
+        /*  public override void afterHeroattack(Playfield p, Minion own, Minion target)
+         {
+             // 检查己方英雄是否装备了“金属探测器”
+             if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.VAC_330)
+             {
+                 // 检查是否为目标随从并且是否被消灭
+                 if (!target.isHero && target.Hp <= 0)
+                 {
+                     // 获取一张幸运币
+                     p.drawACard(CardDB.cardIDEnum.VAC_COIN1, own.own);
+                 }
+
+             }
+         } */
+        public override void onDeathrattle(Playfield p, Minion m)
         {
-            // 装备武器
-            p.equipWeapon(wcard, ownplay);
+            p.drawACard(CardDB.cardIDEnum.VAC_COIN1, m.own);
         }
-
-        public override void afterHeroattack(Playfield p, Minion own, Minion target)
-        {
-            // 检查己方英雄是否装备了“金属探测器”
-            if (own.own && p.ownWeapon.card.cardIDenum == CardDB.cardIDEnum.VAC_330)
-            {
-                // 检查是否为目标随从并且是否被消灭
-                if (!target.isHero && target.Hp <= 0)
-                {
-                    // 获取一张幸运币
-                    p.drawACard(CardDB.cardIDEnum.VAC_COIN1, own.own);
-                }
-
-            }
-        }
-
     }
 }

@@ -14,25 +14,34 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.RLK_Prologue_RLK_118t3);
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			
-			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-			Minion m1 = p.callKidAndReturn(kid, pos, ownplay);
-			Minion m2 = p.callKidAndReturn(kid, pos, ownplay);
 
+			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 			if (ownplay && p.getCorpseCount() >= 4)
 			{
 				p.corpseConsumption(4);
-				m1.reborn = true;
-				m2.reborn = true;
+				for (int i = 0; i < 2; i++)
+				{
+					Minion m = p.callKidAndReturn(kid, pos, ownplay);
+					if (m != null)
+					{
+						m.reborn = true;
+					}
+				}
 			}
+			else
+			{
+				p.callKid(kid, pos, ownplay);
+				p.callKid(kid, pos, ownplay);
+			}
+
 		}
 
-        public override PlayReq[] GetPlayReqs()
-        {
+		public override PlayReq[] GetPlayReqs()
+		{
 			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1), //需要一个空位
+				new PlayReq(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS,1), //需要一个空位
 			};
-        }
-		
+		}
+
 	}
 }

@@ -16,10 +16,10 @@ namespace HREngine.Bots
 		{
 			if (target != null)
 			{
-				int heal = ownplay ? p.getSpellHeal(4) : p.getEnemySpellHeal(4);
+				int heal = ownplay ? p.getSpellHeal(-4) : p.getEnemySpellHeal(-4);
 				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
 				// 对目标恢复4点生命值
-				p.minionGetDamageOrHeal(target, -heal);
+				p.minionGetDamageOrHeal(target, heal);
 				//召唤3个白银之手骑兵
 				p.callKid(kid, pos, ownplay);
 				p.callKid(kid, pos, ownplay);

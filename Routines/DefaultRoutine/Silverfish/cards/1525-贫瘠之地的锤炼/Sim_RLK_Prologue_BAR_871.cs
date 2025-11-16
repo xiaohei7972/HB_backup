@@ -11,7 +11,16 @@ namespace HREngine.Bots
 	//在你的回合开始时，召唤两个1/1的白银之手新兵。
 	class Sim_RLK_Prologue_BAR_871 : SimTemplate
 	{
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_101t);
 		
+		public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
+		{
+			if (triggerEffectMinion.own ==turnStartOfOwner)
+			{
+            	p.callKid(kid, triggerEffectMinion.zonepos -1, triggerEffectMinion.own);
+            	p.callKid(kid, triggerEffectMinion.zonepos, triggerEffectMinion.own);
+			}
+		}
 		
 	}
 }

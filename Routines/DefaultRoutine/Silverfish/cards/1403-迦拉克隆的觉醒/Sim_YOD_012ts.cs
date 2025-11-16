@@ -28,7 +28,7 @@ namespace HREngine.Bots
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
+				new PlayReq(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS,1),
 			};
 		}
 

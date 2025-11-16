@@ -15,12 +15,18 @@ namespace HREngine.Bots
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
 			Minion m1 = p.callKidAndReturn(kid, own.zonepos - 1, own.own);
-			m1.Angr += 2;
-			m1.divineshild = true;
+			if (m1 != null)
+			{
+				m1.Angr += 2;
+				m1.divineshild = true;
+			}
 			Minion m2 = p.callKidAndReturn(kid, own.zonepos, own.own);
-			m2.Angr += 2;
-			m2.divineshild = true;
+			if (m2 != null)
+			{
+				m2.Angr += 2;
+				m2.divineshild = true;
+			}
 		}
-		
+
 	}
 }

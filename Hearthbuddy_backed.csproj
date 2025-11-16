@@ -25,7 +25,7 @@
     </Reference>
 
     <Reference Include="Hearthbuddy">
-      <HintPath>Hearthbuddy.exe</HintPath>
+      <HintPath>lib\Hearthbuddy.exe</HintPath>
     </Reference>
 
     <Reference Include="IronPython">

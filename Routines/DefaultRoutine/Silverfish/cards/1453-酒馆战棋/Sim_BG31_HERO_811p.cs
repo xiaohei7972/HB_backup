@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//英雄技能 中立 费用：6
+	//英雄技能 中立 费用：7
 	//Spawning Pool
 	//孵化池
 	//[x]Unlock Tier 2 Zerg.Costs (1) less each turn.<b>Passive:</b> Start the gamewith a 2/2 Larva.

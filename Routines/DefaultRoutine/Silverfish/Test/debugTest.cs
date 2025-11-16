@@ -29,7 +29,7 @@ public class RuntimeCode
         // Log.DebugFormat(card.ToString());
         debugTest ts = new debugTest();
         // ts.traverseEntity();
-        ts.ZILLIAXTest();
+        ts.traverseEntity();
         // ts.Toreth();
         // using (TritonHs.AcquireFrame())
         // {
@@ -69,20 +69,12 @@ public class RuntimeCode
         {
             Entity entity = GameState.Get().GetFriendlySidePlayer().GetHero();
             var creator = entity.GetTag(GAME_TAG.CREATOR);
-<<<<<<< HEAD
             // var cpyDeath = entity.GetTag(GAME_TAG.COPY_DEATHRATTLE);
-=======
-            var cpyDeath = entity.GetTag(GAME_TAG.COPY_DEATHRATTLE);
->>>>>>> 930ffa3ba97d5285c35986ef9fb2c7c90b1061d2
             var ctrlId = entity.GetTag(GAME_TAG.CONTROLLER);
 
             Log.DebugFormat(entity.ToString());
             Log.DebugFormat(creator.ToString());
-<<<<<<< HEAD
             // Log.DebugFormat(cpyDeath.ToString());
-=======
-            Log.DebugFormat(cpyDeath.ToString());
->>>>>>> 930ffa3ba97d5285c35986ef9fb2c7c90b1061d2
             Log.DebugFormat(ctrlId.ToString());
 
         }
@@ -98,17 +90,17 @@ public class RuntimeCode
                 // Log.DebugFormat(Board.Get().FindCollider("ShowingStarshipUI").ToString());
                 // Collider collider = Board.Get().FindCollider("ShowingStarshipUI");
                 GameState gameState = GameState.Get();
-<<<<<<< HEAD
-                var FriendlySidePlayer = gameState.GetFriendlySidePlayer().GetBattlefieldZone();
+                // var FriendlySidePlayer = gameState.GetFriendlySidePlayer().GetBattlefieldZone();
                 for (int i = 0; i < 150; i++)
                 {
                     Entity entity = gameState.GetEntity(i);
                     if (entity != null)
                     {
+                        TagMap tagMap = entity.GetTags();
                         String nameCN = entity.GetName();
                         String cardId = entity.GetCardId();
                         int entitiyID = entity.GetEntityId();
-                        Log.WarnFormat("{0} (cardIdID:{1})  entitiyID{2}", nameCN, cardId, entitiyID);
+                        Log.WarnFormat("{2}  {0} {1} 位置:{3} ", nameCN, cardId, entitiyID,entity.GetZone());
 
                         /* if (entity.GetZone() == TAG_ZONE.PLAY)
                         {
@@ -123,66 +115,10 @@ public class RuntimeCode
                             }
                         } */
                         // Log.WarnFormat("{0} (ID:{1})  实体id {2} ERROR_TYPE {3}", nameCN, cardId, entitiyID, gameState.GetErrorType(entity));
-=======
-                for (int i = 0; i < 150; i++)
-                {
-                    if (gameState.GetEntity(i) != null)
-                    {
-                        Entity entity = GameState.Get().GetEntity(i);
-                        Log.DebugFormat(entity.ToString());
-
-                        // if (entity.GetName() == "玛润")
-                        // {
-                        // Log.DebugFormat(entity.GetTag(GAME_TAG.TARGETING_ARROW_TYPE).ToString());
-                        // TritonHs.CancelTargetingMode();
-
-                        // TagMap tagMap = entity.GetTags();
-                        // tagMap.GetMap
-                        // Log.DebugFormat(tagMap.ToString());
-                        // Log.DebugFormat(tagMap.GetTag(986).ToString());
-                        // Log.DebugFormat(entity.GetTag(GAME_TAG.CARD_TARGET).ToString());
-                        // }
-
-                        // if (entity.GetName() == "血蓟幻术师")
-                        // {
-
-                        //     TagMap tagMap = entity.GetTags();
-                        //     Log.DebugFormat(tagMap.ToString());
-                        //     Log.DebugFormat(tagMap.GetTag(GAME_TAG.DARK_GIFT).ToString());
-
-
-                        // }
-
-                        // Log.DebugFormat(entity.ToString());
-                        // if (entity.GetZone() == TAG_ZONE.SECRET)
-                        // {
-                        //     Log.DebugFormat(entity.ToString());
-
-                        //     Log.DebugFormat((entity.GetZone() == TAG_ZONE.SECRET).ToString());
-                        // }
-
-                        // Log.DebugFormat(entity.GetCardTextInHand());
-                        // Log.DebugFormat(entity.GetEntityId().ToString());
-
-
->>>>>>> 930ffa3ba97d5285c35986ef9fb2c7c90b1061d2
                     }
 
                 }
             }
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> 930ffa3ba97d5285c35986ef9fb2c7c90b1061d2
             // Log.DebugFormat(GameState.Get().GetMaxSecretZoneSizePerPlayer().ToString());
             // Log.DebugFormat(GameState.Get().GetMaxSecretsPerPlayer().ToString());
 
@@ -216,10 +152,8 @@ public class RuntimeCode
         {
             using (TritonHs.AcquireFrame())
             {
-<<<<<<< HEAD
                 GameState gameState = GameState.Get();
-
-                for (int i = 0; i < 150; i++)
+                for (int i = 0; i < 200; i++)
                 {
                     Entity entity = gameState.GetEntity(i);
 
@@ -240,37 +174,12 @@ public class RuntimeCode
                                 if (tagValue != 0)
                                     Log.WarnFormat("{0} (ID:{1}) 标签 {2} = {3} 实体id {4}", nameCN, cardId, tag.ToString(), tagValue, entitiyID);
                             }
-=======
-                for (int i = 0; i < 300; i++)
-                {
-                    if (GameState.Get().GetEntity(i) != null)
-                    {
-                        Entity entity = GameState.Get().GetEntity(i);
-
-                        // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
-                        if (entity.GetName() == "奇利亚斯豪华版3000型")
-                        {
-                            Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
-                            Log.DebugFormat(entity.GetATK().ToString());
-                            Log.DebugFormat(entity.GetHealth().ToString());
-                            Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
-                            Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
-
-                            // Log.DebugFormat(entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_FUNCTIONALMODULE).ToString());
-                            Log.DebugFormat("ZILLIAX_CUSTOMIZABLE_COSMETICMODULE：" + entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_COSMETICMODULE).ToString());
-                            Log.DebugFormat("ZILLIAX_CUSTOMIZABLE_FUNCTIONALMODULE：" + entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_FUNCTIONALMODULE).ToString());
-                            Log.DebugFormat("ZILLIAX_CUSTOMIZABLE_LINKED_COSMETICMOUDLE：" + entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_LINKED_COSMETICMOUDLE).ToString());
-                            Log.DebugFormat("ZILLIAX_CUSTOMIZABLE_LINKED_FUNCTIONALMOUDLE：" + entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_LINKED_FUNCTIONALMOUDLE).ToString());
-                            Log.DebugFormat("ZILLIAX_CUSTOMIZABLE_SAVED_VERSION：" + entity.GetTag(GAME_TAG.ZILLIAX_CUSTOMIZABLE_SAVED_VERSION).ToString());
-
->>>>>>> 930ffa3ba97d5285c35986ef9fb2c7c90b1061d2
-
                         }
-
                     }
                 }
-            }
 
+
+            }
         }
         /// <summary>
         /// 星舰测试
@@ -295,268 +204,223 @@ public class RuntimeCode
             }
         }
 
+
+
         /// <summary>
-        /// 幻象测试
+        /// 泰坦测试
         /// </summary>
-        public void Toreth()
+        public void Titan()
         {
-            using (TritonHs.AcquireFrame())
-            {
-                GameState gameState = GameState.Get();
-                Log.DebugFormat("游戏回合 NUM_TURNS_IN_PLAY 271：" + gameState.GetEntity(1).GetTag(271).ToString());
-
-                Entity entity = gameState.GetEntity(95);
-
-                // Log.DebugFormat(tagmap.ToString());
-                Log.DebugFormat(entity.ToString());
-                Log.DebugFormat("无法使用 CANT_PLAY 231：" + entity.GetTag(GAME_TAG.CANT_PLAY).ToString());
-                Log.DebugFormat("隐藏费用 HIDE_COST 684：" + entity.GetTag(GAME_TAG.HIDE_COST).ToString());
-                int esy = entity.GetTag(GAME_TAG.AURA);
-                Log.DebugFormat("无法使用 CANT_PLAY 231：" + ((GAME_TAG)Enum.ToObject(typeof(GAME_TAG), 684)).ToString());
-                // foreach (Entity ench in entity.GetEnchantments())
-                // {
-                //     Log.DebugFormat(ench.ToString());
-                // }
-                // if (gameState.GetEntity(4) != null)
-                // {
-                // Entity entity = GameState.Get().GetEntity(i);
-
-                // Log.DebugFormat("不能使用 CANT_PLAY 231：" + entity.GetTag(GAME_TAG.CANT_PLAY).ToString());
-
-                // Log.DebugFormat(entity.ToString());
-
-                // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
-                // if (entity.GetName() == "幻象")
-                // {
-                //     Log.DebugFormat(entity.ToString());
-                //     Log.DebugFormat("幻象" + entity.GetCost().ToString());
-                //     Log.DebugFormat("幻象HIDE_COST" + entity.GetTag(GAME_TAG.COST).ToString());
-                // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
-                // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
-                // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
-                // foreach (Entity StarshipPiece in entity.GetEnchantments())
-                // {
-                //     Log.DebugFormat(StarshipPiece.ToString());
-                // }
-
-                // }
-
-
-            }
-        }
-    }
-    /// <summary>
-    /// 泰坦测试
-    /// </summary>
-    public void Titan()
-    {
-        GameState gameState = GameState.Get();
-        for (int i = 0; i < 200; i++)
-        {
-            if (gameState.GetEntity(i) != null)
-            {
-                Entity entity = GameState.Get().GetEntity(i);
-                string name = entity.GetCardId();
-                if (name == "TTN_903" || name == "YOG_516")
-                {
-                    Log.DebugFormat("\t"); Log.DebugFormat("\t");
-                    Log.DebugFormat(entity.ToString());
-                    Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
-
-                }
-            }
-        }
-    }
-
-    public void UnderfelRift()
-    {
-        using (TritonHs.AcquireFrame())
-        {
-            // CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TLC_446t1);
             GameState gameState = GameState.Get();
-            Entity a = gameState.GetEntity(2);
-
-            // foreach (var item in a.GetEnchantments())
-            // {
-            //     Log.DebugFormat(item.ToString());
-
-            // }
             for (int i = 0; i < 200; i++)
             {
                 if (gameState.GetEntity(i) != null)
                 {
                     Entity entity = GameState.Get().GetEntity(i);
-
-
-                    // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
-                    if (entity.GetCardId() == "TLC_446t1")
+                    string name = entity.GetCardId();
+                    if (name == "TTN_903" || name == "YOG_516")
                     {
-                        Log.DebugFormat("\t");
-                        Log.DebugFormat("\t");
-                        Log.DebugFormat("\t");
-
+                        Log.DebugFormat("\t"); Log.DebugFormat("\t");
                         Log.DebugFormat(entity.ToString());
                         Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
-                        Log.DebugFormat("tag2 TAG_SCRIPT_DATA_NUM_1 2：" + entity.GetTag(2).ToString());
-                        Log.DebugFormat("可交互对象消耗 INTERACTABLE_OBJECT_COST 4090：" + entity.GetTag(4090).ToString());
-                        Log.DebugFormat("可目标手牌 CAN_TARGET_CARDS_IN_HAND 1508：" + entity.GetTag(1508).ToString());
-                        Log.DebugFormat("可交互对象 INTERACTABLE_OBJECT 4089：" + entity.GetTag(4089).ToString());
-                        Log.DebugFormat("使用次数 USES_CHARGES 4257：" + entity.GetTag(4257).ToString());
-                        foreach (var item in entity.GetEnchantments())
-                        {
-                            Log.DebugFormat(item.ToString());
-
-                        }
-
 
                     }
-
-                    /* if (entity.GetCardId() == "TLC_446t2")
-                    {
-                            Log.DebugFormat(entity.ToString());
-                        Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
-                        foreach (var item in entity.GetEnchantments())
-                        {
-                            Log.DebugFormat(item.ToString());
-
-                        }
-
-                    } */
-
                 }
             }
         }
-    }
-
-    public void Lcoationa()
-    {
-        using (TritonHs.AcquireFrame())
+        /// <summary>
+        /// 邪能地窖
+        /// </summary>
+        public void UnderfelRift()
         {
-            for (int i = 0; i < 111; i++)
+            using (TritonHs.AcquireFrame())
             {
-                if (GameState.Get().GetEntity(i) != null)
+                // CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TLC_446t1);
+                GameState gameState = GameState.Get();
+                Entity a = gameState.GetEntity(2);
+
+                // foreach (var item in a.GetEnchantments())
+                // {
+                //     Log.DebugFormat(item.ToString());
+
+                // }
+                for (int i = 0; i < 200; i++)
                 {
-                    Entity entity = GameState.Get().GetEntity(i);
-                    // Log.DebugFormat(entity.ToString());
-
-                    // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
-                    if (entity.GetName() == "安戈洛丛林")
+                    if (gameState.GetEntity(i) != null)
                     {
-                        Log.DebugFormat("\t");
-                        Log.DebugFormat(entity.ToString());
-                        Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
-                        Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
+                        Entity entity = GameState.Get().GetEntity(i);
 
-                        foreach (var item in entity.GetEnchantments())
+
+                        // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
+                        if (entity.GetCardId() == "TLC_446t1")
                         {
-                            Log.DebugFormat(item.ToString());
+                            Log.DebugFormat("\t");
+                            Log.DebugFormat("\t");
+                            Log.DebugFormat("\t");
+
+                            Log.DebugFormat(entity.ToString());
+                            Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
+                            Log.DebugFormat("tag2 TAG_SCRIPT_DATA_NUM_1 2：" + entity.GetTag(2).ToString());
+                            Log.DebugFormat("可交互对象消耗 INTERACTABLE_OBJECT_COST 4090：" + entity.GetTag(4090).ToString());
+                            Log.DebugFormat("可目标手牌 CAN_TARGET_CARDS_IN_HAND 1508：" + entity.GetTag(1508).ToString());
+                            Log.DebugFormat("可交互对象 INTERACTABLE_OBJECT 4089：" + entity.GetTag(4089).ToString());
+                            Log.DebugFormat("使用次数 USES_CHARGES 4257：" + entity.GetTag(4257).ToString());
+                            foreach (var item in entity.GetEnchantments())
+                            {
+                                Log.DebugFormat(item.ToString());
+
+                            }
+
 
                         }
-                        // Log.DebugFormat(entity.GetTag(4161).ToString());
-                        // Log.DebugFormat(entity.GetTag(4162).ToString());
-                        // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
-                        // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
-                        // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
 
+                        /* if (entity.GetCardId() == "TLC_446t2")
+                        {
+                                Log.DebugFormat(entity.ToString());
+                            Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
+                            foreach (var item in entity.GetEnchantments())
+                            {
+                                Log.DebugFormat(item.ToString());
+
+                            }
+
+                        } */
 
                     }
-
                 }
             }
         }
 
-
-
-    }
-
-    public async Task use()
-    {
-
-        // ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
-        ZonePlay battlefieldZone1 = GameState.Get().GetOpposingSidePlayer().GetBattlefieldZone();
-
-        // int count = battlefieldZone.m_cards.Count;
-        // Log.DebugFormat(count.ToString());
-        // Log.DebugFormat(battlefieldZone1.m_controller.ToString());
-
-        ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
-        Vector3 cardPosition = battlefieldZone1.GetCardPosition(1);
-        int count1 = battlefieldZone1.m_cards.Count;
-        Client.MouseOver(cardPosition);
-        Log.DebugFormat(cardPosition.ToString());
-        Log.DebugFormat(count1.ToString());
-
-        await Client.MoveCursorHumanLike(cardPosition);
-        Client.LeftClickAt(cardPosition);
-        /* ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
-        int count = battlefieldZone.m_cards.Count;
-        if (count == 0)
+        public void Lcoationa()
         {
-            Vector3 cardPosition = battlefieldZone.GetCardPosition(0);
-            await Client.MoveCursorHumanLike(cardPosition);
-            Client.LeftClickAt(cardPosition);
+            using (TritonHs.AcquireFrame())
+            {
+                for (int i = 0; i < 111; i++)
+                {
+                    if (GameState.Get().GetEntity(i) != null)
+                    {
+                        Entity entity = GameState.Get().GetEntity(i);
+                        // Log.DebugFormat(entity.ToString());
+
+                        // Log.DebugFormat(GameState.Get().GetEntity(i).ToString());
+                        if (entity.GetName() == "安戈洛丛林")
+                        {
+                            Log.DebugFormat("\t");
+                            Log.DebugFormat(entity.ToString());
+                            Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
+                            Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
+
+                            foreach (var item in entity.GetEnchantments())
+                            {
+                                Log.DebugFormat(item.ToString());
+
+                            }
+                            // Log.DebugFormat(entity.GetTag(4161).ToString());
+                            // Log.DebugFormat(entity.GetTag(4162).ToString());
+                            // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
+                            // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
+                            // Log.DebugFormat(entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
+
+
+                        }
+
+                    }
+                }
+            }
+
+
+
         }
-        else if (slot > count)
-        {
-            Vector3 cardPosition = battlefieldZone.GetCardPosition(count - 1);
-            cardPosition.X += battlefieldZone.m_slotWidth / 2f;
-            await Client.MoveCursorHumanLike(cardPosition);
-            await Coroutine.Sleep(250);
-            Client.LeftClickAt(cardPosition);
-        }
-        else
-        {
-            Vector3 cardPosition = battlefieldZone.GetCardPosition(slot - 1);
-            cardPosition.X -= battlefieldZone.m_slotWidth / 2f;
-            await Client.MoveCursorHumanLike(cardPosition);
-            await Coroutine.Sleep(250);
-            Client.LeftClickAt(cardPosition);
-        } */
 
-        /*    using ns26;
-       using ns27;
-       using System;
-       using System.Collections.Generic;
-       using Triton.Game.Mono;
+        public async Task use()
+        {
 
-       namespace Triton.Game.Mapping
-       {
-           [Attribute38("StarshipHUDManager")]
-           public class StarshipHUDManager : MonoBehaviour
+            // ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
+            ZonePlay battlefieldZone1 = GameState.Get().GetOpposingSidePlayer().GetBattlefieldZone();
+
+            // int count = battlefieldZone.m_cards.Count;
+            // Log.DebugFormat(count.ToString());
+            // Log.DebugFormat(battlefieldZone1.m_controller.ToString());
+
+            ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
+            Vector3 cardPosition = battlefieldZone1.GetCardPosition(1);
+            int count1 = battlefieldZone1.m_cards.Count;
+            Client.MouseOver(cardPosition);
+            Log.DebugFormat(cardPosition.ToString());
+            Log.DebugFormat(count1.ToString());
+
+            await Client.MoveCursorHumanLike(cardPosition);
+            Client.LeftClickAt(cardPosition);
+            /* ZonePlay battlefieldZone = GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone();
+            int count = battlefieldZone.m_cards.Count;
+            if (count == 0)
+            {
+                Vector3 cardPosition = battlefieldZone.GetCardPosition(0);
+                await Client.MoveCursorHumanLike(cardPosition);
+                Client.LeftClickAt(cardPosition);
+            }
+            else if (slot > count)
+            {
+                Vector3 cardPosition = battlefieldZone.GetCardPosition(count - 1);
+                cardPosition.X += battlefieldZone.m_slotWidth / 2f;
+                await Client.MoveCursorHumanLike(cardPosition);
+                await Coroutine.Sleep(250);
+                Client.LeftClickAt(cardPosition);
+            }
+            else
+            {
+                Vector3 cardPosition = battlefieldZone.GetCardPosition(slot - 1);
+                cardPosition.X -= battlefieldZone.m_slotWidth / 2f;
+                await Client.MoveCursorHumanLike(cardPosition);
+                await Coroutine.Sleep(250);
+                Client.LeftClickAt(cardPosition);
+            } */
+
+            /*    using ns26;
+           using ns27;
+           using System;
+           using System.Collections.Generic;
+           using Triton.Game.Mono;
+
+           namespace Triton.Game.Mapping
            {
-               public StarshipHUDManager(IntPtr address, string className)
-           : base(address, className)
+               [Attribute38("StarshipHUDManager")]
+               public class StarshipHUDManager : MonoBehaviour
                {
-               }
-               public StarshipHUDManager(IntPtr address) : this(address, "StarshipHUDManager")
-               {
-               }
-               public static StarshipHUDManager Get()
-               {
-                   return MonoClass.smethod_15<StarshipHUDManager>(TritonHs.MainAssemblyPath, "", "StarshipHUDManager", "Get", Array.Empty<object>());
-               }
-               public PlayButton m_launchButton => method_3<PlayButton>("m_launchButton");
+                   public StarshipHUDManager(IntPtr address, string className)
+               : base(address, className)
+                   {
+                   }
+                   public StarshipHUDManager(IntPtr address) : this(address, "StarshipHUDManager")
+                   {
+                   }
+                   public static StarshipHUDManager Get()
+                   {
+                       return MonoClass.smethod_15<StarshipHUDManager>(TritonHs.MainAssemblyPath, "", "StarshipHUDManager", "Get", Array.Empty<object>());
+                   }
+                   public PlayButton m_launchButton => method_3<PlayButton>("m_launchButton");
 
-               public PlayButton m_abortLaunchButton => method_3<PlayButton>("m_abortLaunchButton");
-           }
-       } */
-
-        /* public static async Task LaunchStarship()
-               {
-                   Vector3 center = StarshipHUDManager.Get().m_launchButton.Transform.Position;
-                   await Client.MoveCursorHumanLike(center);
-                   Client.LeftClickAt(center);
+                   public PlayButton m_abortLaunchButton => method_3<PlayButton>("m_abortLaunchButton");
                }
-               public static async Task AbortLaunchStarship()
-               {
-                   Vector3 center = StarshipHUDManager.Get().m_abortLaunchButton.Transform.Position;
-                   await Client.MoveCursorHumanLike(center);
-                   Client.LeftClickAt(center);
-               } */
+           } */
+
+            /* public static async Task LaunchStarship()
+                   {
+                       Vector3 center = StarshipHUDManager.Get().m_launchButton.Transform.Position;
+                       await Client.MoveCursorHumanLike(center);
+                       Client.LeftClickAt(center);
+                   }
+                   public static async Task AbortLaunchStarship()
+                   {
+                       Vector3 center = StarshipHUDManager.Get().m_abortLaunchButton.Transform.Position;
+                       await Client.MoveCursorHumanLike(center);
+                       Client.LeftClickAt(center);
+                   } */
+        }
+
+
+
+
     }
-
-
-
 
 }
-

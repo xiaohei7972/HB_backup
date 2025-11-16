@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
 			if (target != null)
 			{
-				if (target.own == ownplay)
+				if (target.own)
 				{
 					p.minionGetBuffed(target, 0, 2);
 				}

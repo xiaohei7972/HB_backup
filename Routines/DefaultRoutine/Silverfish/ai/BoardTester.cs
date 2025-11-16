@@ -1411,11 +1411,10 @@ namespace HREngine.Bots
                     if (hc.Length > 11) card.poweredUp = Convert.ToInt32(hc[9]);
                     if (hc.Length > 13)
                     {
-                        card.card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
-                        card.card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
-                        card.card.updateDIYCard();
-                        if (card.card.MODULAR_ENTITY_PART_1 != 0 && card.card.MODULAR_ENTITY_PART_2 != 0)
-                            card.card.updateDIYCard();
+                        card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                        card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                        if (card.MODULAR_ENTITY_PART_1 != 0 && card.MODULAR_ENTITY_PART_2 != 0)
+                            card.updateDIYCard(card.MODULAR_ENTITY_PART_1,card.MODULAR_ENTITY_PART_1);
                     }
 
                     //if (hc.Length > 13)

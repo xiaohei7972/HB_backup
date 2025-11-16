@@ -17,21 +17,22 @@ namespace HREngine.Bots
 
 			if (hc.card.cost == 0)
 			{
+				List<Minion> minions = new List<Minion>();
 				for (int i = 0; i < 3; i++)
 				{
 					int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-					p.minionGetRush(p.callKidAndReturn(kid, pos, ownplay));
-
+					Minion summonMinion = p.callKidAndReturn(kid, pos, ownplay);
+					if (summonMinion != null)
+						p.minionGetRush(summonMinion);
 				}
+
 			}
 			else
 			{
 				for (int i = 0; i < 3; i++)
 				{
 					int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-
 					p.callKid(kid, pos, ownplay);
-
 				}
 			}
 

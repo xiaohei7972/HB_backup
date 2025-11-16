@@ -527,7 +527,7 @@ namespace HREngine.Bots
             /// </summary>
             REQ_MINION_CAP_IF_TARGET_AVAILABLE = 19,
             /// <summary>
-            /// <value> 要求随从空位,param为数量 </value>
+            /// <value> 要求随从数量,param为数量 </value>
             /// </summary>
             REQ_MINION_CAP = 20,
             /// <summary>
@@ -988,34 +988,7 @@ namespace HREngine.Bots
             public bool InteractableObject = false;
             public int UsesCharges = 0;
             public List<Race> races = new List<Race>(); //TODO:种族集合
-            public int MODULAR_ENTITY_PART_1 = 0;
-            public int MODULAR_ENTITY_PART_2 = 0;
-            public void updateDIYCard()
-            {
-                if (this.MODULAR_ENTITY_PART_1 != 0 && this.MODULAR_ENTITY_PART_2 != 0)
-                {
-                    CardDB.Card part1 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_1.ToString());
-                    CardDB.Card part2 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_2.ToString());
-                    getDIYCard(part1, part2);
-                }
-            }
-            public void getDIYCard(Card part1, Card part2)
-            {
-                this.cost = part1.cost + part2.cost;
-                this.Attack = part1.Attack + part2.Attack;
-                this.Health = part1.Health + part2.Health;
-                this.textCN = part1.textCN + part2.textCN;
-                this.tank = (part1.tank || part2.tank);                                    //嘲讽
-                this.Shield = (part1.Shield || part2.Shield);                              //圣盾
-                this.Charge = (part1.Charge || part2.Charge);                              //冲锋
-                this.Rush = (part1.Rush || part2.Rush);                                    //突袭
-                this.Stealth = (part1.Stealth || part2.Stealth);                           //潜行
-                this.Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
-                this.windfury = (part1.windfury || part2.windfury);                        //风怒
-                this.poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
-                this.lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
-                this.reborn = (part1.reborn || part2.reborn);                              //复生
-            }
+            
 
             //TODO:种族数
             public int GetRaceCount()

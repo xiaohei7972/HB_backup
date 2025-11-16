@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//英雄技能 中立 费用：8
+	//英雄技能 中立 费用：9
 	//Evolution Chamber
 	//进化腔
 	//[x]Unlock Tier 3 Zerg.Costs (1) less each turn.<b>Passive:</b> Your Zerg canmorph into Tier 2 Zerg.

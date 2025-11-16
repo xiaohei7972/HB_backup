@@ -55,9 +55,11 @@
                     <TextBox x:Name="ReleaseLimitWTextBox" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Margin="3" Width="50"/>
                     <TextBox x:Name="ReleaseLimitHTextBox" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Margin="3" Width="50" IsEnabled="False" />
 
-                    <Label Grid.Row="3" Grid.Column="0" Content="保持排名(赢1投1)" VerticalAlignment="Center" Margin="3" ToolTipService.ToolTip="赢了后，下局会在留牌阶段立即投降."/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="保持排名(赢n投n)" VerticalAlignment="Center" Margin="3" ToolTipService.ToolTip="赢了后，下局会在留牌阶段立即投降."/>
                     <CheckBox x:Name="AutoConcedeAfterConstructedWinCheckBox" Grid.Row="3" 
                       Grid.Column="1" VerticalAlignment="Center" Margin="3"/>
+                    <TextBox x:Name="AutoConcedeNumberOfWinsTextBox" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="4,0,4,0" Width="50"/>
+                    <TextBox x:Name="AutoConcedeNumberOfLossesTextBox" Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" Margin="3,0,3,0" Width="50"/>
 
                     <Label Grid.Row="4" Grid.Column="0" Content="普通互投拿千胜头像" VerticalAlignment="Center" Margin="3" ToolTipService.ToolTip="赢了后，下局会在留牌阶段立即投降；输了后，下局会等待一段自己设置的时间后再投降.（推荐经典到了传说后，先开启极速投降到互投区，再开启本功能互投，时间推荐1.5秒到3秒，即1500ms-3000ms）"/>
                     <CheckBox x:Name="NormalConcedeCheckBox" Grid.Row="4" Grid.Column="1" 

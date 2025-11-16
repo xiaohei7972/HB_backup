@@ -116,7 +116,7 @@ namespace HREngine.Bots
         private bool setBehavior()
         {
             Type[] types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Behavior)).ToArray();
-            foreach (var t in types)
+            foreach (Type t in types)
             {
                 string s = t.Name;
                 if (s == "BehaviorMana") continue;
@@ -134,8 +134,8 @@ namespace HREngine.Bots
             {
                 bCount++;
                 string bPath = Path.GetDirectoryName(file);//获取文件夹名字
-                var fullPath = Path.GetFullPath(file);//获取完整路径
-                var bNane = Path.GetFileNameWithoutExtension(file).Remove(0, 8);//获取除了Behavior之后的名字
+                String fullPath = Path.GetFullPath(file);//获取完整路径
+                String bNane = Path.GetFileNameWithoutExtension(file).Remove(0, 8);//获取除了Behavior之后的名字
                 if (BehaviorDB.ContainsKey(bNane))
                 {
                     if (!BehaviorPath.ContainsKey(bNane)) BehaviorPath.Add(bNane, bPath);//加入db
@@ -223,7 +223,7 @@ namespace HREngine.Bots
                 {
                     foreach (string s in deck.CardIds)
                     {
-                        var id = CardDB.Instance.cardIdstringToEnum(s);
+                        CardDB.cardIDEnum id = CardDB.Instance.cardIdstringToEnum(s);
                         if (startDeck.ContainsKey(id))
                         {
                             startDeck[id]++;
@@ -444,18 +444,18 @@ namespace HREngine.Bots
             foreach (HSCard card in allcards)
             {
                 //基础信息，不需要重复读取
-                var rawCard = card.Card;
+                Card rawCard = card.Card;
                 if (rawCard == null)
                     continue;
-                var entity = rawCard.GetEntity();
-                var eid = entity.GetEntityId();
+                Entity entity = rawCard.GetEntity();
+                int eid = entity.GetEntityId();
                 string cardId = entity.GetCardId();
                 if (string.IsNullOrEmpty(cardId))
                     cardId = entity.GetEntityDef().GetCardId();
-                var zone = (TAG_ZONE)card.GetTag(GAME_TAG.ZONE);
-                var controllerId = entity.GetControllerId();
-                var cardType = entity.GetCardType();
-                var rtCost = card.Cost;//real time cost
+                TAG_ZONE zone = (TAG_ZONE)card.GetTag(GAME_TAG.ZONE);
+                int controllerId = entity.GetControllerId();
+                Triton.Game.Mapping.TAG_CARDTYPE cardType = entity.GetCardType();
+                int rtCost = card.Cost;//real time cost
                 updateDeck(card, entity, controllerId, cardId, eid, rtCost);
                 //处理不同区域的entity
                 switch (zone)
@@ -534,7 +534,7 @@ namespace HREngine.Bots
                 //武器法术迸发
                 ownWeapon.Spellburst = (weapon.GetTag(GAME_TAG.SPELLBURST) == 1) ? true : false;
                 // 武器计数器
-                var scriptNum1 = weapon.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
+                int scriptNum1 = weapon.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
                 ownWeapon.scriptNum1 = scriptNum1;
                 Helpfunctions.Instance.ErrorLog("武器计数器" + scriptNum1);
                 if (!this.ownHero.windfury) this.ownHero.windfury = ownWeapon.windfury;
@@ -562,10 +562,10 @@ namespace HREngine.Bots
 
         private void updateGraveyard(HSCard card, Entity entity, int controller, string cardId, int eid)
         {
-            var cardType = entity.GetCardType();
+            Triton.Game.Mapping.TAG_CARDTYPE cardType = entity.GetCardType();
             if (cardType == Triton.Game.Mapping.TAG_CARDTYPE.ENCHANTMENT)//附魔牌不加入坟场数据库，是否合理？
                 return;
-            var idEnum = CardDB.Instance.cardIdstringToEnum(cardId);
+            CardDB.cardIDEnum idEnum = CardDB.Instance.cardIdstringToEnum(cardId);
             GraveYardItem gyi = new GraveYardItem(idEnum, eid, controller == ownController, GraveYardItem.EnumGraveyardStatus.Unknown);
             var prevZone = card.Card.GetPrevZone();
             if (prevZone != null)
@@ -728,20 +728,20 @@ namespace HREngine.Bots
                 this.enemyHero.nameCN = CardDB.Instance.cardNameCNstringToEnum(card.Name);
             }
 
-            var attaches = entity.GetAttachments();//附魔
+            List<Entity> attaches = entity.GetAttachments();//附魔
             if (attaches != null && attaches.Count > 0)
             {
-                var enchs = new List<miniEnch>();
-                foreach (var attEnt in attaches)
+                List<miniEnch> enchs = new List<miniEnch>();
+                foreach (Entity attEnt in attaches)
                 {
                     var cid = attEnt.GetCardId();
                     if (string.IsNullOrEmpty(cid))
                     {
                         cid = attEnt.GetEntityDef().GetCardId();
                     }
-                    var creator = attEnt.GetTag(GAME_TAG.CREATOR);
-                    var cpyDeath = attEnt.GetTag(GAME_TAG.COPY_DEATHRATTLE);
-                    var ctrlId = attEnt.GetTag(GAME_TAG.CONTROLLER);
+                    int creator = attEnt.GetTag(GAME_TAG.CREATOR);
+                    int cpyDeath = attEnt.GetTag(GAME_TAG.COPY_DEATHRATTLE);
+                    int ctrlId = attEnt.GetTag(GAME_TAG.CONTROLLER);
                     enchs.Add(new miniEnch(CardDB.Instance.cardIdstringToEnum(cid), creator, ctrlId, cpyDeath, attEnt));
                 }
                 if (controller == ownController)
@@ -798,7 +798,7 @@ namespace HREngine.Bots
 
                 m.numAttacksThisTurn = card.GetTag(GAME_TAG.NUM_ATTACKS_THIS_TURN);//本回合攻击次数
                 m.extraAttacksThisTurn = card.GetTag(GAME_TAG.EXTRA_ATTACKS_THIS_TURN);//本回合额外的攻击次数
-                // m.CooldownTurn = card.GetLocationCooldown();//获取地标冷却
+                m.CooldownTurn = card.GetLocationCooldown();//获取地标冷却
                 m.playedThisTurn = (card.GetTag(GAME_TAG.NUM_TURNS_IN_PLAY) == 0) ? true : false;
 
                 m.Spellburst = card.GetTag(GAME_TAG.SPELLBURST) != 0;//法力迸发
@@ -838,20 +838,20 @@ namespace HREngine.Bots
 
                 m.hChoice = card.GetTag(GAME_TAG.HIDDEN_CHOICE);
 
-                var attaches = entity.GetAttachments();//附魔
+                List<Entity> attaches = entity.GetAttachments();//附魔
                 if (attaches != null && attaches.Count > 0)
                 {
-                    var enchs = new List<miniEnch>();
+                    List<miniEnch> enchs = new List<miniEnch>();
                     foreach (var attEnt in attaches)
                     {
-                        var cid = attEnt.GetCardId();
+                        String cid = attEnt.GetCardId();
                         if (string.IsNullOrEmpty(cid))
                         {
                             cid = attEnt.GetEntityDef().GetCardId();
                         }
-                        var creator = attEnt.GetTag(GAME_TAG.CREATOR);
-                        var cpyDeath = attEnt.GetTag(GAME_TAG.COPY_DEATHRATTLE);
-                        var ctrlId = attEnt.GetTag(GAME_TAG.CONTROLLER);
+                        int creator = attEnt.GetTag(GAME_TAG.CREATOR);
+                        int cpyDeath = attEnt.GetTag(GAME_TAG.COPY_DEATHRATTLE);
+                        int ctrlId = attEnt.GetTag(GAME_TAG.CONTROLLER);
                         enchs.Add(new miniEnch(CardDB.Instance.cardIdstringToEnum(cid), creator, ctrlId, cpyDeath, attEnt));
                     }
                     m.loadEnchantments(enchs, m.own ? ownController : enemyController);
@@ -927,21 +927,15 @@ namespace HREngine.Bots
         /// <param name="entity"></param>
         private void updateHandcard(HSCard card, int controller, string cardId, int entityId, int cost, Entity entity)
         {
-            var zp = card.ZonePosition;
+            int zp = card.ZonePosition;
             if (zp >= 1)
             {
                 if (controller == ownController)
                 {
                     CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(cardId));
 
-                    var scriptNum1 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
+                    int scriptNum1 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
                     Handmanager.Handcard hc = new Handmanager.Handcard();
-                    //读取自定义卡牌的模块
-                    hc.card.MODULAR_ENTITY_PART_1 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_1);
-                    hc.card.MODULAR_ENTITY_PART_2 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_2);
-                    //自定义卡牌的模块1和模块2
-                    if (hc.card.MODULAR_ENTITY_PART_1 != 0 && hc.card.MODULAR_ENTITY_PART_2 != 0)
-                        hc.card.updateDIYCard();
                     hc.card = c;
                     hc.position = zp;
                     hc.entity = entityId;
@@ -949,9 +943,15 @@ namespace HREngine.Bots
                     hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);//手牌高亮
                     hc.darkmoon_num = scriptNum1; //得到暗月先知抽牌数
                     hc.SCRIPT_DATA_NUM_1 = scriptNum1;
-
-                    hc.addattack = card.Attack - card.DefATK;
                     // hc.temporary = entity.GetTag(GAME_TAG.Temporary); //
+
+                    //读取自定义卡牌的模块
+                    hc.MODULAR_ENTITY_PART_1 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_1);
+                    hc.MODULAR_ENTITY_PART_2 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_2);
+                    //自定义卡牌的模块1和模块2
+                    if (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0)
+                        hc.updateDIYCard(hc.MODULAR_ENTITY_PART_1,hc.MODULAR_ENTITY_PART_2);
+                    hc.addattack = card.Attack - card.DefATK;
                     if (card.IsWeapon) hc.addHp = card.Durability - card.DefDurability;
                     else hc.addHp = card.Health - card.DefHealth;
                     if (c.cardIDenum == CardDB.cardIDEnum.DAL_007 ||
@@ -960,13 +960,13 @@ namespace HREngine.Bots
                         c.cardIDenum == CardDB.cardIDEnum.DAL_010 ||
                         c.cardIDenum == CardDB.cardIDEnum.DAL_011)
                         hc.scheme = scriptNum1;
-                    var attaches = entity.GetAttachments();//附魔
+                    List<Entity> attaches = entity.GetAttachments();//附魔
                     if (attaches != null && attaches.Count > 0)
                     {
                         hc.enchs = new List<CardDB.cardIDEnum>();
-                        foreach (var attEnt in attaches)
+                        foreach (Entity attEnt in attaches)
                         {
-                            var cid = attEnt.GetCardId();
+                            String cid = attEnt.GetCardId();
                             if (string.IsNullOrEmpty(cid))
                             {
                                 cid = attEnt.GetEntityDef().GetCardId();

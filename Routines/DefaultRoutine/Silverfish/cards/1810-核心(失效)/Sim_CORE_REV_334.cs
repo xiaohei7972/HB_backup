@@ -19,12 +19,14 @@ namespace HREngine.Bots
 			Minion hero = ownplay ? p.ownHero : p.enemyHero;
 			if (hero.Hp <= 20)
 			{
-
-				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
-				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
-				p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
-
-
+				for (int i = 0; i < 3; i++)
+				{
+					Minion m = p.callKidAndReturn(kid, pos, ownplay);
+					if (m != null)
+					{
+						p.minionGetBuffed(m, 1, 2);
+					}
+				}
 			}
 			else
 			{
@@ -39,7 +41,7 @@ namespace HREngine.Bots
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
+				new PlayReq(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS,1),
 			};
 		}
 

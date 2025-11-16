@@ -18,7 +18,10 @@ namespace HREngine.Bots
             public int darkmoon_num = 0; //暗月先知抽牌数：战斗中已触发的奥秘数
             public int extraParam2 = 0; //扩展参数2，可以用来记录一些此卡需要的特殊数据
             public bool extraParam3 = false; //扩展参数3
-            public int SCRIPT_DATA_NUM_1 = 0;
+            public int SCRIPT_DATA_NUM_1 = 0;//标签脚本数据编号1，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
+            public int SCRIPT_DATA_NUM_2 = 0;//标签脚本数据编号2，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
+            public int MODULAR_ENTITY_PART_1 = 0;//自定义模块1
+            public int MODULAR_ENTITY_PART_2 = 0;//自定义模块2
             public int TAG_ONE_TURN_EFFECT = 0;
             public int LUNAHIGHLIGHTHINT = 0;
             public int scheme = 1;
@@ -31,6 +34,32 @@ namespace HREngine.Bots
             //条件卡牌，例如施放的法术牌
             public List<CardDB.cardIDEnum> conditionalList = new List<CardDB.cardIDEnum>();
             
+            public void updateDIYCard(int hc_part_1, int hc_part_2)
+            {
+                if (hc_part_1 != 0 && hc_part_2 != 0)
+                {
+                    CardDB.Card part1 = CardDB.Instance.getCardDataFromDbfID(hc_part_1.ToString());
+                    CardDB.Card part2 = CardDB.Instance.getCardDataFromDbfID(hc_part_2.ToString());
+                    getDIYCard(part1, part2);
+                }
+            }
+            public void getDIYCard(CardDB.Card part1, CardDB.Card part2)
+            {
+                this.card.cost = part1.cost + part2.cost;
+                this.card.Attack = part1.Attack + part2.Attack;
+                this.card.Health = part1.Health + part2.Health;
+                this.card.textCN = part1.textCN + part2.textCN;
+                this.card.tank = (part1.tank || part2.tank);                                    //嘲讽
+                this.card.Shield = (part1.Shield || part2.Shield);                              //圣盾
+                this.card.Charge = (part1.Charge || part2.Charge);                              //冲锋
+                this.card.Rush = (part1.Rush || part2.Rush);                                    //突袭
+                this.card.Stealth = (part1.Stealth || part2.Stealth);                           //潜行
+                this.card.Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
+                this.card.windfury = (part1.windfury || part2.windfury);                        //风怒
+                this.card.poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
+                this.card.lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
+                this.card.reborn = (part1.reborn || part2.reborn);                              //复生
+            }
             public string Status
             {
                 get
@@ -69,6 +98,7 @@ namespace HREngine.Bots
                 this.addHp = hc.addHp;
                 this.poweredUp = hc.poweredUp;
                 this.SCRIPT_DATA_NUM_1 = hc.SCRIPT_DATA_NUM_1;
+                this.SCRIPT_DATA_NUM_2 = hc.SCRIPT_DATA_NUM_2;
                 this.discovered = hc.discovered;
                 this.TAG_ONE_TURN_EFFECT = hc.TAG_ONE_TURN_EFFECT;
                 this.LUNAHIGHLIGHTHINT = hc.LUNAHIGHLIGHTHINT;
@@ -101,6 +131,7 @@ namespace HREngine.Bots
                 this.card = hc.card;
                 this.poweredUp = hc.poweredUp;
                 this.SCRIPT_DATA_NUM_1 = hc.SCRIPT_DATA_NUM_1;
+                this.SCRIPT_DATA_NUM_2 = hc.SCRIPT_DATA_NUM_2;
                 this.discovered = hc.discovered;
                 this.TAG_ONE_TURN_EFFECT = hc.TAG_ONE_TURN_EFFECT;
                 this.LUNAHIGHLIGHTHINT = hc.LUNAHIGHLIGHTHINT;
@@ -243,6 +274,7 @@ namespace HREngine.Bots
             }
             help.logg("Enemy cards: " + this.enemyAnzCards);
         }
+        
 
 
     }

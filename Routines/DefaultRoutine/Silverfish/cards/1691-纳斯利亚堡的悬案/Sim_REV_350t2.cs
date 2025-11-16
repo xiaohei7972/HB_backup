@@ -15,16 +15,22 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-			p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
-			p.minionGetBuffed(p.callKidAndReturn(kid, pos, ownplay), 1, 2);
+			for (int i = 0; i < 3; i++)
+			{
+				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
+				Minion m = p.callKidAndReturn(kid, pos, ownplay);
+				if (m != null)
+				{
+					p.minionGetBuffed(m, 1, 2);
+				}
+			}
 
 		}
 
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[]{
-				new PlayReq(CardDB.ErrorType2.REQ_MINION_CAP,1),
+				new PlayReq(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS,1),
 			};
 		}
 

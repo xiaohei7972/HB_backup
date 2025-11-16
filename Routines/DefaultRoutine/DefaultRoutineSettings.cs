@@ -171,6 +171,7 @@ namespace HREngine.Bots
             {
                 return _allClasses ?? (_allClasses = new ObservableCollection<TAG_CLASS>
                 {
+                    TAG_CLASS.DEATHKNIGHT,
                     TAG_CLASS.DRUID,
                     TAG_CLASS.HUNTER,
                     TAG_CLASS.MAGE,
@@ -180,6 +181,7 @@ namespace HREngine.Bots
                     TAG_CLASS.SHAMAN,
                     TAG_CLASS.WARLOCK,
                     TAG_CLASS.WARRIOR,
+                    TAG_CLASS.DEMONHUNTER,
                 });
             }
         }
