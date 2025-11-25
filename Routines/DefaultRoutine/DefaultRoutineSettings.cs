@@ -211,7 +211,9 @@ namespace HREngine.Bots
         private ObservableCollection<string> _allBehav;
 
         /// <summary>All enum values for this type.</summary>
-        [JsonIgnore]
+         [JsonIgnore]
+        // [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
         public ObservableCollection<string> AllBehav
         {
             get

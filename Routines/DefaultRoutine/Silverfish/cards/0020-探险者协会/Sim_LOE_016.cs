@@ -9,7 +9,7 @@ namespace HREngine.Bots
     //在你使用一张具有<b>战吼</b>的随从牌后，随机对一个敌人造成2点伤害。 
     class Sim_LOE_016 : SimTemplate
     {
-        public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

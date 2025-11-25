@@ -18,24 +18,12 @@ namespace HREngine.Bots
             {
                 // 召唤一个敌方随从的复制
                 int position = (ownplay) ? p.ownMinions.Count : p.enemyMinions.Count;
-                p.callKid(target.handcard.card, position, ownplay);
-
-                // 获取最后一个召唤的随从
-                Minion copy;
-                if (ownplay)
+                Minion summoned = p.callKidAndReturn(target.handcard.card, position, ownplay);
+                if (summoned != null)
                 {
-                    copy = p.ownMinions[p.ownMinions.Count - 1];
+                    p.minionAttacksMinion(summoned, target);
                 }
-                else
-                {
-                    copy = p.enemyMinions[p.enemyMinions.Count - 1];
-                }
-
-                // 复制攻击原随从
-                if (copy != null)
-                {
-                    p.minionAttacksMinion(copy, target);
-                }
+                
             }
         }
     }

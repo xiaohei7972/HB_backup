@@ -20,15 +20,16 @@ namespace HREngine.Bots
 				for (int i = 0; i < 4; i++)
 				{
 					int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-					if (pos < 7)
-					{
-						p.callKid(kid, pos, ownplay);
-						minions.Add(p.ownMinions[pos - 1]);
-					}
+					Minion summoned = p.callKidAndReturn(target.handcard.card, pos, ownplay);
+					if (summoned != null)
+						minions.Add(summoned);
+
 				}
 				foreach (Minion minion in minions)
 				{
 					p.minionAttacksMinion(minion, target);
+					if (target.Hp <= 0)
+						break;
 				}
 			}
 		}

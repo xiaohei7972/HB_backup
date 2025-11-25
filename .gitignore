@@ -18,13 +18,14 @@ Logs/
 
 
 #  编译后dll
-# CompiledAssemblies/*
-CompiledAssemblies/*.dll
+CompiledAssemblies/*
+# CompiledAssemblies/*.dll
 # Hearthbuddy_backed.csproj.user
 myLog.txt
 
 
 Settings/
+# Settings/CustomDecks/
 
 
 # 教程文件夹
@@ -32,3 +33,6 @@ dll/
 用户配置教程/
 开发配置教程/
 炉石中控.2.exe
+blizzard.bgsclient.dll
+Blizzard.T5.Core.dll
+炉石中控2.exe

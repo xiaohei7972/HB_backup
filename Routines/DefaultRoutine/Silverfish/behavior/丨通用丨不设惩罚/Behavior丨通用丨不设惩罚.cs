@@ -103,6 +103,7 @@ namespace HREngine.Bots
                     case actionEnum.attackWithHero:
                         continue;
                     case actionEnum.useHeroPower:
+                        a.penalty -=50;
                         useAb = true;
                         break;
                     case actionEnum.playcard:

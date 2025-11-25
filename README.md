@@ -25,3 +25,12 @@ Hearthbuddy_backed
 --MODULAR_ENTITY_PART_1 
 --MODULAR_ENTITY_PART_2
 --使用这两个tag记录使用的模块
+
+## 额外攻击次数
+
+## 法力水晶上限和手牌上限
+--MAXRESOURCES
+--MAXHANDSIZE
+--CORPSES 尸体数
+--NUM_CARDS_PLAYED_THIS_TURN 这回合使用的卡牌数
+--NUM_CARDS_DRAWN_THIS_TURN 这回合抽牌数

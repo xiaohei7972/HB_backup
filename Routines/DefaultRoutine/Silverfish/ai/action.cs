@@ -22,8 +22,9 @@ namespace HREngine.Bots
         useLocation, //使用地标
         useTitanAbility, //使用泰坦技能
         forge, //锻造
-        // launchStarship,//发射星舰
-        // useUnderfelRift,//使用邪能地窟裂隙
+        launchStarship,//发射星舰
+        useUnderfelRift,//使用邪能地窟裂隙
+        rewind,//回溯
     }
 
     public class Action

@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//<b>战吼：</b>召唤一个本随从的复制。
 	class Sim_TOY_330t97 : SimTemplate
 	{
-		
+        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+        {
+            p.callMinionCopy(own);
+        }
 		
 	}
 }

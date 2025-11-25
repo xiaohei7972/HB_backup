@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//在你使用一张<b>跟班</b>牌后，将一张<b>跟班</b>牌置入你的手牌。
 	class Sim_YOD_035 : SimTemplate
 	{
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

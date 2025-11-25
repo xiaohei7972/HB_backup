@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//每当你使用一张随从牌，使其获得+1/+1和“<b>亡语：</b>召唤一只1/1的陆行鸟。”
 	class Sim_RLK_970 : SimTemplate
 	{
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
 			if (triggerEffectMinion.own == wasOwnCard)
 			{

@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//在你使用一张野兽牌后，随机将一张野兽牌置入你的手牌。
 	class Sim_YOP_028 : SimTemplate
 	{
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
 			if (triggerEffectMinion.own == wasOwnCard)
 			{

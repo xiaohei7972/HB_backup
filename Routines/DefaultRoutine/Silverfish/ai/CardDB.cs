@@ -981,14 +981,60 @@ namespace HREngine.Bots
             public int CastsWhenDrawn = 0; // 抽到时触发效果
             public bool SilverHandRecruit = false; //白银之手新兵
             public bool SI_7 = false;//军情七处
-            public bool HideCost = false;
-            public bool ShiftingSpell = false;
+            public bool HideCost = false;//隐藏费用
+            public bool ShiftingSpell = false;//
             public int InteractableObjectCost = 0;
             public bool CanTargetCardsInHand = false;
             public bool InteractableObject = false;
             public int UsesCharges = 0;
+            public int TriggerVisual =0;
+            public int MODULAR_ENTITY_PART_1 = 0;//自定义模块1
+            public int MODULAR_ENTITY_PART_2 = 0;//自定义模块2
+            public void updateDIYCard()
+            {
+                if (MODULAR_ENTITY_PART_1 != 0 && MODULAR_ENTITY_PART_2 != 0)
+                {
+                    CardDB.Card part1 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_1.ToString());
+                    CardDB.Card part2 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_2.ToString());
+                    if (part1 != null && part2 != null)
+                    {
+                        //cost = part1.cost + part2.cost;
+                        cost = 0;
+                        Attack = part1.Attack + part2.Attack;
+                        Health = part1.Health + part2.Health;
+                        textCN = part1.textCN + part2.textCN;
+                        tank = (part1.tank || part2.tank);                                    //嘲讽
+                        Shield = (part1.Shield || part2.Shield);                              //圣盾
+                        Charge = (part1.Charge || part2.Charge);                              //冲锋
+                        Rush = (part1.Rush || part2.Rush);                                    //突袭
+                        Stealth = (part1.Stealth || part2.Stealth);                           //潜行
+                        Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
+                        windfury = (part1.windfury || part2.windfury);                        //风怒
+                        poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
+                        lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
+                        reborn = (part1.reborn || part2.reborn);                              //复生
+                    }
+                }
+            }
+/*             public void getDIYCard(CardDB.Card part1, CardDB.Card part2)
+            {
+                cost = part1.cost + part2.cost;
+                Attack = part1.Attack + part2.Attack;
+                Health = part1.Health + part2.Health;
+                textCN = part1.textCN + part2.textCN;
+                tank = (part1.tank || part2.tank);                                    //嘲讽
+                Shield = (part1.Shield || part2.Shield);                              //圣盾
+                Charge = (part1.Charge || part2.Charge);                              //冲锋
+                Rush = (part1.Rush || part2.Rush);                                    //突袭
+                Stealth = (part1.Stealth || part2.Stealth);                           //潜行
+                Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
+                windfury = (part1.windfury || part2.windfury);                        //风怒
+                poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
+                lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
+                reborn = (part1.reborn || part2.reborn);                              //复生
+            } */
             public List<Race> races = new List<Race>(); //TODO:种族集合
-            
+
 
             //TODO:种族数
             public int GetRaceCount()
@@ -2822,6 +2868,11 @@ namespace HREngine.Bots
 
                     switch (tag.GetAttribute("enumID"))
                     {
+                        case "32":
+                            {
+                                card.TriggerVisual = int.Parse(tag.GetAttribute("value"));
+                            }
+                            break;
                         case "643":
                             {
                                 card.Nature = true;

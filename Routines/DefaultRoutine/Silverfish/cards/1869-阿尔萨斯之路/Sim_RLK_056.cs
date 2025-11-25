@@ -22,9 +22,10 @@ namespace HREngine.Bots
 					{
 						if (minion.untouchable) continue;
 						p.minionAttacksMinion(minion, target);
-						if (minion.Hp <= target.Angr)
+						if (minion.Hp <= 0)
 							deathMinion.Add(minion);
-						
+						if (target.Hp <= 0)
+							break;
 					}
 
 					foreach (Minion minion in deathMinion)
@@ -42,7 +43,9 @@ namespace HREngine.Bots
 				new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY), // 需要选择一个目标
 				new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET), // 目标只能是随从
 				new PlayReq(CardDB.ErrorType2.REQ_ENEMY_TARGET), // 目标只能是敌方
-            };
+				new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_MINIONS,1)
+
+			};
 		}
 
 	}

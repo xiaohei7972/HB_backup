@@ -31,10 +31,15 @@ namespace HREngine.Bots
         public bool ShowSleepZZZOverride = false;
         public int numAttacksThisTurn = 0;//这回合攻击了几次
         public int extraAttacksThisTurn = 0;//这回合额外攻击的次数
-        public bool immuneWhileAttacking = false;//攻击时免疫
         public bool allreadyAttacked = false;//已经被攻击过
         public bool cantAttackHeroes = false;//无法攻击英雄
         public bool cantAttack = false;//无法攻击
+        public bool immuneWhileAttacking = false;//攻击时免疫
+        public bool NON_KEYWORD_CHARGE = false;//非关键词冲锋
+        public int TAG_SCRIPT_DATA_NUM_1 = 0;//标签脚本数据编号1，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
+        public int TAG_SCRIPT_DATA_NUM_2 = 0;//标签脚本数据编号2，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
+        public int MODULAR_ENTITY_PART_1 = 0;//自定义模块1
+        public int MODULAR_ENTITY_PART_2 = 0;//自定义模块2
         public CardDB.Card deathrattle2;//亡语2号，比如其他随从的亡语技能转移
 
         //暗影狂乱，直到回合结束，获得一个攻击力小于或等于3的敌方随从的控制权
@@ -70,86 +75,46 @@ namespace HREngine.Bots
         // public int enemyBlessingOfWisdom = 0;//敌方智慧祝福
         // public int ownPowerWordGlory = 0;//我方真言术：耀
         // public int enemyPowerWordGlory = 0;//敌方真言术：耀
-        /// <summary>
-        /// 我方智慧祝福
-        /// </summary>
+        /// <summary>我方智慧祝福</summary>
         public int ownBlessingOfWisdom = 0;
-        /// <summary>
-        /// 敌方智慧祝福
-        /// </summary>
+        /// <summary>敌方智慧祝福</summary>
         public int enemyBlessingOfWisdom = 0;
-        /// <summary>
-        /// 我方真言术：耀
-        /// </summary>
+        /// <summary>我方真言术：耀</summary>
         public int ownPowerWordGlory = 0;
-        /// <summary>
-        /// 敌方真言术：耀
-        /// </summary>
+        /// <summary>敌方真言术：耀</summary>
         public int enemyPowerWordGlory = 0;
-        /// <summary>
-        /// 先祖之魂，使一个随从获得“亡语：再次召唤该随从。
-        /// </summary>
+        /// <summary>先祖之魂，使一个随从获得“亡语：再次召唤该随从。 </summary>
         public int ancestralspirit = 0;
-        /// <summary>
-        /// 殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”
-        /// </summary>
+        /// <summary>殊死一搏，使一个随从获得“亡语：回到战场，并具有1点生命值。”</summary>
         public int desperatestand = 0;
-        /// <summary>
-        /// 丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。
-
-        /// </summary>
+        /// <summary>丛林之魂，使你的所有随从获得“亡语：召唤一个2/2的树人”。</summary>
         public int souloftheforest = 0;
-        /// <summary>
-        /// 剑龙骑术
-        /// </summary>
+        /// <summary>剑龙骑术</summary>
         public int stegodon = 0;
-        /// <summary>
-        /// 骑乘雷象,+4/+7并具有嘲讽。亡语：召唤一只雷象。
-        /// </summary>
+        /// <summary>骑乘雷象,+4/+7并具有嘲讽。亡语：召唤一只雷象。</summary>
         public int onanelekk = 0;
-        /// <summary>
-        /// 骑乘战马,+1/+1和圣盾。亡语：召唤一匹战马。
-        /// </summary>
+        /// <summary>骑乘战马,+1/+1和圣盾。亡语：召唤一匹战马。</summary>
         public int onahorse = 0;
-        /// <summary>
-        /// 骑乘山羊,+2/+2和攻击时免疫。亡语：召唤一只山羊。
-        /// </summary>
+        /// <summary>骑乘山羊,+2/+2和攻击时免疫。亡语：召唤一只山羊。</summary>
         public int onaram = 0;
-        /// <summary>
-        /// 骑乘科多兽,+4/+2和突袭，亡语：召唤一只科多兽。
-        /// </summary>
+        /// <summary>骑乘科多兽,+4/+2和突袭，亡语：召唤一只科多兽。</summary>
         public int onakodo = 0;
-        /// <summary>
-        /// 通灵之光，亡语：召唤一个2/2并具有<b>突袭</b>的僵尸。
-        /// </summary>
+        /// <summary>通灵之光，亡语：召唤一个2/2并具有<b>突袭</b>的僵尸。</summary>
         public int itsnecrolit = 0;
-        /// <summary>
-        /// 染疫，亡语：为你的对手召唤一个2/2并具有<b>嘲讽</b>的僵尸。
+        /// <summary>染疫，亡语：为你的对手召唤一个2/2并具有<b>嘲讽</b>的僵尸。
         /// </summary>
         public int plagued = 0;
-        /// <summary>
-        /// 灰枝幼芽，召唤格雷布
-        /// </summary>
+        /// <summary>灰枝幼芽，召唤格雷布</summary>
         public int greybud = 0;
-        /// <summary>
-        /// 被感染，亡语：召唤一个感染的食尸鬼。
-        /// </summary>
+        /// <summary>被感染，亡语：召唤一个感染的食尸鬼。</summary>
         public int infected = 0;
-        /// <summary>
-        /// 最后一团
-        /// </summary>
+        /// <summary>最后一团</summary>
         public int finalsession = 0;
-        /// <summary>
-        /// 绵羊面具
-        /// </summary>
+        /// <summary>绵羊面具</summary>
         public int sheepmask = 0;
-        /// <summary>
-        /// 活性孢子 亡语：召唤两个1/1的植物。
-        /// </summary>
+        /// <summary>活性孢子 亡语：召唤两个1/1的植物。</summary>
         public int livingspores = 0;
-        /// <summary>
-        /// 探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。
-        /// </summary>
+        /// <summary>探险帽 使一个随从获得 + 1/+1，亡语：将一个探险帽置入你的手牌。</summary>
         public int explorershat = 0;
         /// <summary>智慧圣契</summary>
         public int libramofwisdom = 0;
@@ -175,6 +140,7 @@ namespace HREngine.Bots
         public bool wounded = false;//受伤
         public bool divineshild = false;//圣盾
         public bool windfury = false; //风怒
+        public bool megaWindfury = false;//超级风怒
         public bool frozen = false;//冻结
         public bool stealth = false;//潜行
         public bool immune = false;//免疫
@@ -188,13 +154,20 @@ namespace HREngine.Bots
 
         public bool modular = false; //磁力
         public int charge = 0;//冲锋
+        public int nonKeywordCharge = 0;//非关键词冲锋
         public int rush = 0;//突袭
-        private bool _elusive = false; //扰魔
-        private bool _overkill = false;//超杀
-        private bool _enraged = false;//激怒
-        private bool _spellburst = false;//法术迸发
-        private bool _frenzy = false;//暴怒
-        private bool _honorableKill = false;// 荣耀击杀
+        /// <summary>扰魔</summary>
+        private bool _elusive = false;
+        /// <summary> 激怒</summary>
+        private bool _enraged = false;
+        /// <summary> 法术迸发</summary>
+        private bool _spellburst = false;
+        /// <summary> 暴怒</summary>
+        private bool _frenzy = false;
+        /// <summary>超杀</summary>
+        private bool _overkill = false;
+        /// <summary> 荣耀击杀</summary>
+        private bool _honorableKill = false;
 
         /// <summary> 激怒</summary>
         public bool Enraged
@@ -202,7 +175,7 @@ namespace HREngine.Bots
             get { return _enraged; }
             set { _enraged = value; }
         }
-                /// <summary> 法术迸发</summary>
+        /// <summary> 法术迸发</summary>
         public bool Spellburst
         {
             get { return _spellburst; }
@@ -226,7 +199,7 @@ namespace HREngine.Bots
             get { return _overkill; }
             set { _overkill = value; }
         }
-        //扰魔
+        /// <summary>扰魔</summary>
         public bool Elusive
         {
             get { return _elusive; }
@@ -291,6 +264,8 @@ namespace HREngine.Bots
             this.extraAttacksThisTurn = m.extraAttacksThisTurn;
             this.ShowSleepZZZOverride = m.ShowSleepZZZOverride;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
+            this.TAG_SCRIPT_DATA_NUM_1 = m.TAG_SCRIPT_DATA_NUM_1;
+            this.TAG_SCRIPT_DATA_NUM_2 = m.TAG_SCRIPT_DATA_NUM_2;
             this.cantAttackHeroes = m.cantAttackHeroes;
             this.cantAttack = m.cantAttack;
 
@@ -396,6 +371,8 @@ namespace HREngine.Bots
             this.extraAttacksThisTurn = m.extraAttacksThisTurn;
             this.ShowSleepZZZOverride = m.ShowSleepZZZOverride;
             this.immuneWhileAttacking = m.immuneWhileAttacking;
+            this.TAG_SCRIPT_DATA_NUM_1 = m.TAG_SCRIPT_DATA_NUM_1;
+            this.TAG_SCRIPT_DATA_NUM_2 = m.TAG_SCRIPT_DATA_NUM_2;
             this.cantAttackHeroes = m.cantAttackHeroes;
             this.cantAttack = m.cantAttack;
 
@@ -870,14 +847,21 @@ namespace HREngine.Bots
             // 复生
             if (this.reborn)
             {
-                CardDB.Card kid = handcard.card;
+                Minion rebornMinion = p.callKidAndReturn(handcard.card, zonepos - 1, own);
+                if (rebornMinion != null)
+                {
+                    rebornMinion.Hp = 1;
+                    if (rebornMinion.Hp < rebornMinion.maxHp) rebornMinion.wounded = true;
+                    rebornMinion.reborn = false;
+                }
+                /* CardDB.Card kid = handcard.card;
                 List<Minion> tmp = own ? p.ownMinions : p.enemyMinions;
                 int pos = zonepos - 1;
                 p.callKid(kid, pos, own);
                 tmp[pos].Hp = 1;
                 tmp[pos].wounded = false;
                 if (tmp[pos].Hp < tmp[pos].maxHp) tmp[pos].wounded = true;
-                tmp[pos].reborn = false;
+                tmp[pos].reborn = false; */
             }
             // if (this.name == CardDB.cardNameEN.stalagg)
             // {
@@ -907,22 +891,23 @@ namespace HREngine.Bots
                         case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; break;
                         case CardDB.Race.MECHANICAL: p.tempTrigger.ownMechanicDied++; break;
                         case CardDB.Race.MURLOC: p.tempTrigger.ownMurlocDied++; break;
+                        default:
                         case CardDB.Race.BLANK: break;
 
                     }
                 }
-                // if (this.handcard.card.race == CardDB.Race.PET)
-                // {
-                //     p.tempTrigger.ownBeastDied++;
-                // }
-                // else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
-                // {
-                //     p.tempTrigger.ownMechanicDied++;
-                // }
-                // else if (this.handcard.card.race == CardDB.Race.MURLOC)
-                // {
-                //     p.tempTrigger.ownMurlocDied++;
-                // }
+/*                 if (this.handcard.card.race == CardDB.Race.PET)
+                {
+                    p.tempTrigger.ownBeastDied++;
+                }
+                else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
+                {
+                    p.tempTrigger.ownMechanicDied++;
+                }
+                else if (this.handcard.card.race == CardDB.Race.MURLOC)
+                {
+                    p.tempTrigger.ownMurlocDied++;
+                } */
             }
             else
             {
@@ -940,22 +925,25 @@ namespace HREngine.Bots
                         case CardDB.Race.PET: p.tempTrigger.ownBeastDied++; break;
                         case CardDB.Race.MECHANICAL: p.tempTrigger.enemyMechanicDied++; break;
                         case CardDB.Race.MURLOC: p.tempTrigger.enemyMurlocDied++; break;
-                        case CardDB.Race.BLANK: break;
+
+                        case CardDB.Race.BLANK:
+                        default:
+                            break;
                     }
                 }
 
-                // if (this.handcard.card.race == CardDB.Race.PET)
-                // {
-                //     p.tempTrigger.enemyBeastDied++;
-                // }
-                // else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
-                // {
-                //     p.tempTrigger.enemyMechanicDied++;
-                // }
-                // else if (this.handcard.card.race == CardDB.Race.MURLOC)
-                // {
-                //     p.tempTrigger.enemyMurlocDied++;
-                // }
+/*                 if (this.handcard.card.race == CardDB.Race.PET)
+                {
+                    p.tempTrigger.enemyBeastDied++;
+                }
+                else if (this.handcard.card.race == CardDB.Race.MECHANICAL)
+                {
+                    p.tempTrigger.enemyMechanicDied++;
+                }
+                else if (this.handcard.card.race == CardDB.Race.MURLOC)
+                {
+                    p.tempTrigger.enemyMurlocDied++;
+                } */
             }
 
             if (p.diedMinions != null)
@@ -975,25 +963,29 @@ namespace HREngine.Bots
             if (this.handcard.card.dormant > 0 && !this.silenced && this.playedThisTurn) return;
             if (isHero)
             {
-                if ( frozen || Angr == 0)
+                if (frozen || Angr == 0)
                 {
                     Ready = false;
                     return;
                 }
                 else
                 {
-                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
+                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0))
                         Ready = true;
                 }
             }
 
-
-            if (!ShowSleepZZZOverride || !frozen || Angr != 0)
+            if (frozen || Angr == 0 || ShowSleepZZZOverride)
+            {
+                Ready = false;
+                return;
+            }
+            else
             {
                 if ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed)
                 {
 
-                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
+                    if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0))
                     {
                         Ready = true;
                     }
@@ -1002,7 +994,7 @@ namespace HREngine.Bots
                 {
                     if (charge == 0 && rush > 0 && playedThisTurn)
                     {
-                        if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (windfury ? 1 : 0))
+                        if (numAttacksThisTurn < 1 + extraAttacksThisTurn + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0))
                         {
                             cantAttackHeroes = true;
                             Ready = true;

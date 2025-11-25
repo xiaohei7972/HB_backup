@@ -358,6 +358,12 @@ namespace HREngine.Bots
                         }
                     }
                     break;
+                case actionEnum.launchStarship:
+                    break;
+                case actionEnum.useUnderfelRift:
+                    break;
+                case actionEnum.rewind:
+                    break;
             }
 
             // 如果在上面的检查中没有找到合适的操作，返回 false

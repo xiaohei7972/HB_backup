@@ -1401,29 +1401,39 @@ namespace HREngine.Bots
                     card.manacost = Convert.ToInt32(hc[3]);
                     card.entity = Convert.ToInt32(hc[5]);
                     
-                    
                     CardDB.cardIDEnum cardIDEnum = CardDB.Instance.cardIdstringToEnum(hc[6]);
-                    card.card = CardDB.Instance.getCardDataFromID(cardIDEnum);
-                    
+
+                    //CardDB.Card card1 = CardDB.Instance.getCardDataFromID(cardIDEnum);
+                    //card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                    //card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                    //card.card.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
+                    //card.card.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
+                    //if (card.MODULAR_ENTITY_PART_1 != 0 && card.MODULAR_ENTITY_PART_2 != 0)
+                    //    card.card.updateDIYCard();
+                    CardDB.Card card1 = CardDB.Instance.getCardDataFromID(cardIDEnum);
+                    card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                    card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                    card1.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
+                    card1.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
+                    if (card1.MODULAR_ENTITY_PART_1 != 0 && card1.MODULAR_ENTITY_PART_2 != 0)
+                        card1.updateDIYCard();
+                        
+                    card.card = card1;
+
+
                     if (hc.Length > 8) card.addattack = Convert.ToInt32(hc[7]);
                     if (hc.Length > 9) card.addHp = Convert.ToInt32(hc[8]);
                     if (hc.Length > 10) card.poweredUp = Convert.ToInt32(hc[9]);
                     if (hc.Length > 11) card.poweredUp = Convert.ToInt32(hc[9]);
-                    if (hc.Length > 13)
+                    
+                        
+                    if (hc.Length > 14)
                     {
-                        card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
-                        card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
-                        if (card.MODULAR_ENTITY_PART_1 != 0 && card.MODULAR_ENTITY_PART_2 != 0)
-                            card.updateDIYCard(card.MODULAR_ENTITY_PART_1,card.MODULAR_ENTITY_PART_1);
+                       for(int i = 10; i < hc.Length; i++)
+                       {
+                           card.enchs.Add(CardDB.Instance.cardIdstringToEnum(hc[i]));
+                       }
                     }
-
-                    //if (hc.Length > 13)
-                    //{
-                    //    for(int i = 10; i < hc.Length; i++)
-                    //    {
-                    //        card.enchs.Add(CardDB.Instance.cardIdstringToEnum(hc[i]));
-                    //    }
-                    //}
                     handcards.Add(card);
                 }
 

@@ -14,7 +14,7 @@ namespace HREngine.Bots
 		// 	if (m.own == ownplay && (TAG_RACE)hc.card.race == TAG_RACE.PIRATE) p.allMinionsGetDamage(1);
 		// }
 
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
 			if (triggerEffectMinion.own == wasOwnCard)
 			{

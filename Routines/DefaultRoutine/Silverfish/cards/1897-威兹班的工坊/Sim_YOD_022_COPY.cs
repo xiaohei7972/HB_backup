@@ -19,7 +19,7 @@ namespace HREngine.Bots
         // }
         
         //DIY的SIM方法,到时候我再发出来
-        public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

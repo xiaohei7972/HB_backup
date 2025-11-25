@@ -23,7 +23,7 @@ namespace HREngine.Bots
         //         p.callKid(CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.SCH_126t), triggerEffectMinion.zonepos, true);
         //     }
         // }
-        public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

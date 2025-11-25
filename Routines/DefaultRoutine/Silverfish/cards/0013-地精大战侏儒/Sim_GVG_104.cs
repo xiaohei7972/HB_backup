@@ -10,7 +10,7 @@ namespace HREngine.Bots
     class Sim_GVG_104 : SimTemplate
     {
 
-        public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard && playedMinion.Angr == 1)
             {

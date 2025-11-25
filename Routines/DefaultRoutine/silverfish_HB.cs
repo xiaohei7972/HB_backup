@@ -9,11 +9,13 @@ using Triton.Bot;
 using Triton.Common;
 using Triton.Game;
 using Triton.Game.Mapping;
-
+// using Logger = Triton.Common.LogUtilities.Logger;
+// using log4net;
 namespace HREngine.Bots
 {
     public class Silverfish
     {
+        // private static readonly ILog Log = Logger.GetLoggerInstanceForType();
         public string versionnumber = "2025.08.08";
         private bool singleLog = false;
         private string botbehave = "noname";
@@ -46,6 +48,8 @@ namespace HREngine.Bots
         private int cardsPlayedThisTurn = 0;
         private int ueberladung = 0;//过载
         private int lockedMana = 0;//锁上
+        private int maxResources = 10;//法力水晶上限
+        private int maxHandSize = 10;//手牌上限
 
         private int enemyMaxMana = 0;
 
@@ -559,7 +563,14 @@ namespace HREngine.Bots
 
 
         }
-
+        /// <summary>
+        /// 更新坟地
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="entity"></param>
+        /// <param name="controller"></param>
+        /// <param name="cardId"></param>
+        /// <param name="eid"></param>
         private void updateGraveyard(HSCard card, Entity entity, int controller, string cardId, int eid)
         {
             Triton.Game.Mapping.TAG_CARDTYPE cardType = entity.GetCardType();
@@ -932,34 +943,47 @@ namespace HREngine.Bots
             {
                 if (controller == ownController)
                 {
+                    // Log.WarnFormat(" entity{0}", entity.ToString());
                     CardDB.Card c = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(cardId));
+                    // Log.WarnFormat("更新前{0}({1}/{2})", hc.card.cost,hc.card.Attack,hc.card.Health);
 
-                    int scriptNum1 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
                     Handmanager.Handcard hc = new Handmanager.Handcard();
+
                     hc.card = c;
-                    hc.position = zp;
-                    hc.entity = entityId;
-                    hc.manacost = cost;
-                    hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);//手牌高亮
-                    hc.darkmoon_num = scriptNum1; //得到暗月先知抽牌数
-                    hc.SCRIPT_DATA_NUM_1 = scriptNum1;
-                    // hc.temporary = entity.GetTag(GAME_TAG.Temporary); //
 
                     //读取自定义卡牌的模块
                     hc.MODULAR_ENTITY_PART_1 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_1);
                     hc.MODULAR_ENTITY_PART_2 = entity.GetTag(GAME_TAG.MODULAR_ENTITY_PART_2);
                     //自定义卡牌的模块1和模块2
                     if (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0)
-                        hc.updateDIYCard(hc.MODULAR_ENTITY_PART_1,hc.MODULAR_ENTITY_PART_2);
+                    {
+                        hc.card.MODULAR_ENTITY_PART_1 = hc.MODULAR_ENTITY_PART_1;
+                        hc.card.MODULAR_ENTITY_PART_2 = hc.MODULAR_ENTITY_PART_2;
+                        if (hc.card.type == CardDB.cardtype.MOB)
+                            c.updateDIYCard();
+                    }
+                    // Log.WarnFormat("更新后{0}({1}/{2})", c.card.cost,c.card.Attack,c.card.Health);
+                    hc.position = zp;
+                    hc.entity = entityId;
+                    hc.manacost = cost;
+                    hc.poweredUp = card.GetTag(GAME_TAG.POWERED_UP);//手牌高亮
+                    // hc.darkmoon_num = scriptNum1; //得到暗月先知抽牌数
+                    hc.SCRIPT_DATA_NUM_1 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
+                    hc.SCRIPT_DATA_NUM_2 = card.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2);
+                    hc.temporary = entity.GetTag(3630) > 0 ? true : false;
+                    hc.valeeraShadow = entity.GetTag(779) > 0 ? true : false;
+                    card.GetTag(GAME_TAG.LITERALLY_UNPLAYABLE);
+                    card.GetTag(GAME_TAG.UNPLAYABLE_VISUALS);
+
                     hc.addattack = card.Attack - card.DefATK;
                     if (card.IsWeapon) hc.addHp = card.Durability - card.DefDurability;
                     else hc.addHp = card.Health - card.DefHealth;
-                    if (c.cardIDenum == CardDB.cardIDEnum.DAL_007 ||
+                    /* if (c.cardIDenum == CardDB.cardIDEnum.DAL_007 ||
                         c.cardIDenum == CardDB.cardIDEnum.DAL_008 ||
                         c.cardIDenum == CardDB.cardIDEnum.DAL_009 ||
                         c.cardIDenum == CardDB.cardIDEnum.DAL_010 ||
                         c.cardIDenum == CardDB.cardIDEnum.DAL_011)
-                        hc.scheme = scriptNum1;
+                        hc.scheme = scriptNum1; */
                     List<Entity> attaches = entity.GetAttachments();//附魔
                     if (attaches != null && attaches.Count > 0)
                     {

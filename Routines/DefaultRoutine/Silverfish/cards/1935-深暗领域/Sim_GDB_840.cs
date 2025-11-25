@@ -14,7 +14,15 @@ namespace HREngine.Bots
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.GDB_840t);
 		public override void onDeathrattle(Playfield p, Minion m)
 		{
-			p.callKid(kid, m.zonepos - 1, m.own);
+			Minion summoned = p.callKidAndReturn(kid, m.zonepos - 1, m.own);
+			List<Minion> minions = new List<Minion>(m.own ? p.enemyMinions : p.ownMinions);
+			if(m.own) minions.Add(p.enemyHero);
+			else minions.Add(p.ownHero);
+            if (summoned != null)
+            {
+                Minion lowestHpMinion = p.searchRandomMinion(minions, searchmode.searchLowestHP);
+				p.minionAttacksMinion(summoned,lowestHpMinion);
+            }
 		}
 		
 	}

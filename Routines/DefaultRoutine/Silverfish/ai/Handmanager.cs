@@ -27,13 +27,14 @@ namespace HREngine.Bots
             public int scheme = 1;
             public List<CardDB.cardIDEnum> enchs = new List<CardDB.cardIDEnum>();
             public bool discovered = false;
-            //临时卡牌
-            public bool temporary = false;
+
+            public bool temporary = false;//临时卡牌
+            public bool valeeraShadow = false;//瓦莉拉的阴影，这才是临时牌用的tag
             //条件计数，例如施放过几张法术，英雄技能造成多少伤害等
             public int conditionalCount = 0;
             //条件卡牌，例如施放的法术牌
             public List<CardDB.cardIDEnum> conditionalList = new List<CardDB.cardIDEnum>();
-            
+
             public void updateDIYCard(int hc_part_1, int hc_part_2)
             {
                 if (hc_part_1 != 0 && hc_part_2 != 0)
@@ -193,7 +194,7 @@ namespace HREngine.Bots
                                 continue;
                         }
                     }
-                  
+
                 }
                 return this.card.canplayCard(p, this.manacost, own);
 
@@ -262,7 +263,10 @@ namespace HREngine.Bots
             help.logg("Own Handcards: ");
             foreach (Handmanager.Handcard hc in this.handCards)
             {
+                // hc.card.updateDIYCard();
                 string s = "pos " + hc.position + " " + hc.card.nameCN + "(" + hc.card.Attack + "/" + hc.card.Health + ")" + " " + hc.manacost + " entity " + hc.entity + " " + hc.card.cardIDenum + " " + hc.addattack + " " + hc.addHp + " " + hc.poweredUp;
+                // if (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0)
+                s += " " + hc.MODULAR_ENTITY_PART_1 + " " + hc.MODULAR_ENTITY_PART_2;
                 if (hc.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum cardIDEnum in hc.enchs)
@@ -274,7 +278,7 @@ namespace HREngine.Bots
             }
             help.logg("Enemy cards: " + this.enemyAnzCards);
         }
-        
+
 
 
     }

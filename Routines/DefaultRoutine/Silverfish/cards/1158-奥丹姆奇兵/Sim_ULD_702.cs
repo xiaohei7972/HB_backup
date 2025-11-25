@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//在你的对手使用一张随从牌后，使其获得<b>复生</b>。
 	class Sim_ULD_702 : SimTemplate
 	{
-        public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if(triggerEffectMinion.own != wasOwnCard)
             {

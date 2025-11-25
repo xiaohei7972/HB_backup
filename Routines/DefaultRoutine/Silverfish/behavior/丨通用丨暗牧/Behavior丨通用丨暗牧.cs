@@ -286,6 +286,9 @@ namespace HREngine.Bots
                 ownActCount++;
                 switch (a.actionType)
                 {
+                    case actionEnum.useTitanAbility:
+                        retval += 100;
+                        continue;
                     case actionEnum.trade:
                         retval -= 20;
                         continue;

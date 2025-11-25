@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在你的回合开始时，本随从的攻击力翻倍。
 	class Sim_TOY_330t94 : SimTemplate
 	{
-		
+        public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
+        {
+            if (triggerEffectMinion.own == turnStartOfOwner)
+			{
+				p.minionGetBuffed(triggerEffectMinion,triggerEffectMinion.Angr,0);
+			}
+        }
 		
 	}
 }

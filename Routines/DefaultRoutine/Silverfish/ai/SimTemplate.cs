@@ -553,7 +553,7 @@ namespace HREngine.Bots
         //
         public virtual void afetrMinionSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            
+
         }
 
         /// <summary>
@@ -629,7 +629,7 @@ namespace HREngine.Bots
         /// <param name="playedMinion">打出后的随从。</param>
         /// <param name="wasOwnCard">是否是己方卡牌。</param>
         /// <param name="triggerEffectMinion">触发此效果的随从。</param>
-        public virtual void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        public virtual void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             // 默认实现为空。子类可以根据需求重写此方法。
             return;

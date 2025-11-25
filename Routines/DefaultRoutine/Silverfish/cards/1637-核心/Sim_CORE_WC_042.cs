@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//在你使用一张元素牌后，获得+1攻击力。
 	class Sim_CORE_WC_042 : SimTemplate
 	{
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
         {
             if (triggerEffectMinion.own == wasOwnCard)
             {

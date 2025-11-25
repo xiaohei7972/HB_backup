@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在你的回合结束时，对你的英雄造成3点伤害。
 	class Sim_TOY_330t93 : SimTemplate
 	{
-		
-		
+		public override void onTurnEndsTrigger(Playfield p, Minion triggerEffectMinion, bool turnEndOfOwner)
+		{
+			if (triggerEffectMinion.own == turnEndOfOwner)
+			{
+				p.minionGetDamageOrHeal(triggerEffectMinion.own ? p.ownHero : p.enemyHero, 3);
+			}
+		}
+
 	}
 }

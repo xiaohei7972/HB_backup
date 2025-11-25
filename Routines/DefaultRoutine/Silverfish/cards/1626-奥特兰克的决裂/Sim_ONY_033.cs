@@ -15,16 +15,26 @@ namespace HREngine.Bots
 
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
 		{
-			foreach (Minion minion in ownplay ? p.ownMinions : p.enemyMinions)
+			Dictionary<Minion, Minion> keyValues = new Dictionary<Minion, Minion>();
+			foreach (Minion minion in ownplay ? p.ownMinions.ToArray() : p.enemyMinions.ToArray())
 			{
 				int pos = ownplay ? p.ownMinions.Count : p.enemyMinions.Count;
-				p.callKid(kid, pos, ownplay);
+				Minion summoned = p.callKidAndReturn(kid, pos, ownplay);
+				if (summoned != null)
+				{
+					keyValues.Add(summoned, minion);
+				}
 			}
+			foreach(KeyValuePair<Minion,Minion> item in keyValues)
+            {
+                p.minionAttacksMinion(item.Key,item.Value);
+            }
 		}
 
 		public override PlayReq[] GetPlayReqs()
 		{
 			return new PlayReq[]{
+				new PlayReq(CardDB.ErrorType2.REQ_MINIMUM_ENEMY_MINIONS,1), //对手场上最少需要一个随从
 				new PlayReq(CardDB.ErrorType2.REQ_NUM_MINION_SLOTS,1), // 需要一个空位
 			};
 		}

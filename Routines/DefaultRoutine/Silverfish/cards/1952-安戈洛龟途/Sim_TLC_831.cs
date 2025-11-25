@@ -13,18 +13,27 @@ namespace HREngine.Bots
 	{
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TLC_831t);
 		public override void onDeathrattle(Playfield p, Minion m)
-		{	
-			List<Minion> minions = new List<Minion>();
-			minions.AddRange(p.ownMinions);
-			minions.AddRange(p.enemyMinions);
+		{
 			int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
-			p.callKid(kid, m.zonepos - 1, m.own);
-			minions.ForEach((minion) =>
+			Minion juvenilePterrordax = p.callKidAndReturn(kid, m.zonepos - 1, m.own);
+			if (juvenilePterrordax != null)
 			{
-				p.minionGetBuffed(minion, 0, -1);
-				p.minionGetBuffed(p.ownMinions[m.zonepos - 1], 0, 1);
-			});
+				foreach (Minion minion in p.enemyMinions.ToArray())
+				{
+					if (minion.entitiyID == juvenilePterrordax.entitiyID) continue;
+					p.minionGetBuffed(minion, 0, -1);
+					p.minionGetBuffed(juvenilePterrordax, 0, 1);
+				}
+				foreach (Minion minion in p.ownMinions.ToArray())
+				{
+					if (minion.entitiyID == juvenilePterrordax.entitiyID) continue;
+
+					p.minionGetBuffed(minion, 0, -1);
+					p.minionGetBuffed(juvenilePterrordax, 0, 1);
+
+				}
+			}
 		}
-		
+
 	}
 }

@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//在你使用一张<b>突袭</b>随从牌后，召唤一个剩余生命值为1的复制。
 	class Sim_SCH_317 : SimTemplate
 	{
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
 			if (triggerEffectMinion.own == wasOwnCard)
 			{

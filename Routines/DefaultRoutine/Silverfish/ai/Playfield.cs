@@ -1896,6 +1896,13 @@ namespace HREngine.Bots
                             }
                             retval += a.druidchoice;
                             continue;
+                        case actionEnum.trade:
+                        case actionEnum.forge:
+                        case actionEnum.useTitanAbility:
+                        case actionEnum.useLocation:
+                        case actionEnum.useUnderfelRift:
+                        case actionEnum.rewind:
+                            continue;
                     }
                 }
                 if (this.playactions[this.playactions.Count - 1].card != null && this.playactions[this.playactions.Count - 1].card.card.type == CardDB.cardtype.MOB) retval++;
@@ -4130,6 +4137,9 @@ namespace HREngine.Bots
                 case actionEnum.forge:
                     HandleForge(a); // 处理锻造操作
                     break;
+                case actionEnum.launchStarship:
+                case actionEnum.useUnderfelRift:
+                case actionEnum.rewind: break;
             }
             // UpdateHash((int)aa.actionType, o.entitiyID, 12, aa.penalty, evaluatePenality);
 
@@ -5402,20 +5412,25 @@ namespace HREngine.Bots
             hc.card.sim_card.onCardPlay(this, this.ownHero, hc.target, choice);
             this.setNewHeroPower(hc.card.heroPower, true);
             this.minionGetArmor(this.ownHero, hc.card.armor);
-            // Minion m = new Minion
-            // {
-            //     handcard = new Handmanager.Handcard(hc),
-            //     own = true,
-            //     isHero = true,
-            //     entitiyID = hc.entity,
-            //     playedThisTurn = true,
-            //     numAttacksThisTurn = 0,
-            //     divineshild = ownHero.divineshild,
-            //     lifesteal = ownHero.lifesteal,
-            //     stealth = ownHero.stealth,
-            //     name = hc.card.nameEN,
-            //     nameCN = hc.card.nameCN,
-            // };
+            Minion hero = new Minion
+            {
+                Hp = ownHero.Hp,
+                maxHp = ownHero.maxHp,
+                Angr = ownHero.Angr,
+                handcard = new Handmanager.Handcard(hc),
+                cardClass = (TAG_CLASS)hc.card.Class,
+                own = true,
+                isHero = true,
+                entitiyID = hc.entity,
+                // playedThisTurn = true,
+                // numAttacksThisTurn = 0,
+                divineshild = ownHero.divineshild,
+                lifesteal = ownHero.lifesteal,
+                // stealth = ownHero.stealth,
+                name = hc.card.nameEN,
+                nameCN = hc.card.nameCN,
+            };
+            ownHero = hero;
 
         }
 
@@ -8242,6 +8257,7 @@ namespace HREngine.Bots
                 entitiyID = hc.entity,  //实体id
                 playedThisTurn = true,  //从手牌打出
                 numAttacksThisTurn = 0, //这回合攻击过几次
+                // extraAttacksThisTurn = 0;//这回合额外攻击次数
                 zonepos = zonepos,  //位置
                 name = hc.card.nameEN,  //英文名
                 nameCN = hc.card.nameCN,    //中文名
@@ -8260,6 +8276,11 @@ namespace HREngine.Bots
                 dormant = hc.card.dormant,  //休眠
                 untouchable = hc.card.dormant > 0 || hc.card.untouchable,   //不可接触
             };
+
+            if (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0)
+            {
+
+            }
 
             // 如果己方所有元素随从具有吸血效果
             if (this.prozis.ownElementalsHaveLifesteal > 0 && (TAG_RACE)m.handcard.card.race == TAG_RACE.ELEMENTAL)
@@ -8293,9 +8314,9 @@ namespace HREngine.Bots
             m.updateReadyness();
 
             // 计算种族优先级，影响评分
-            m.synergy = own ?
-                prozis.penman.getClassRacePriorityPenality(this.ownHeroStartClass, (TAG_RACE)m.handcard.card.race) :
-                prozis.penman.getClassRacePriorityPenality(this.enemyHeroStartClass, (TAG_RACE)m.handcard.card.race);
+            // m.synergy = own ?
+            //     prozis.penman.getClassRacePriorityPenality(this.ownHeroStartClass, (TAG_RACE)m.handcard.card.race) :
+            //     prozis.penman.getClassRacePriorityPenality(this.enemyHeroStartClass, (TAG_RACE)m.handcard.card.race);
 
             if (m.synergy > 0 && hc.card.Stealth)
             {
@@ -8390,23 +8411,23 @@ namespace HREngine.Bots
             secretTrigger_MinionIsPlayed(m);
 
             //TODO:随从卡牌打出后触发的效果,给术士游客用的
-            foreach (Minion triggerEffectMinion in this.ownMinions)
+            foreach (Minion triggerEffectMinion in this.ownMinions.ToArray())
             {
                 // 如果随从没被沉默,则触发打出随从后的方法
                 if (!triggerEffectMinion.silenced)
                 {
                     // 调用随从卡牌的打出随从后触发方法
-                    triggerEffectMinion.handcard.card.sim_card.onCardIsAfterToBePlayed(this, m, m.own, triggerEffectMinion);
+                    triggerEffectMinion.handcard.card.sim_card.AfterMinionPlayed(this, m, m.own, triggerEffectMinion);
                 }
             }
 
-            foreach (Minion triggerEffectMinion in this.enemyMinions)
+            foreach (Minion triggerEffectMinion in this.enemyMinions.ToArray())
             {
                 // 如果随从没被沉默,则触发打出随从后的方法
                 if (!triggerEffectMinion.silenced)
                 {
                     // 调用随从卡牌的打出随从后触发方法
-                    triggerEffectMinion.handcard.card.sim_card.onCardIsAfterToBePlayed(this, m, m.own, triggerEffectMinion);
+                    triggerEffectMinion.handcard.card.sim_card.AfterMinionPlayed(this, m, m.own, triggerEffectMinion);
                 }
             }
             // 处理任务进度
@@ -11662,7 +11683,7 @@ namespace HREngine.Bots
             if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
             foreach (Action a in this.playactions)
             {
-                a.print();
+                // a.print();
             }
             Helpfunctions.Instance.logg("我方随从################");
 
@@ -11694,7 +11715,7 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("我方手牌: ");
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.MODULAR_ENTITY_PART_1 + " " +"MODULAR_ENTITY_PART_2: " + hc.MODULAR_ENTITY_PART_2) : ""));
+                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.MODULAR_ENTITY_PART_1 + " " + "MODULAR_ENTITY_PART_2: " + hc.MODULAR_ENTITY_PART_2) : ""));
             }
             Helpfunctions.Instance.logg("+++++++ printBoard end +++++++++");
 
@@ -12585,13 +12606,21 @@ namespace HREngine.Bots
             bool raceCardInHand = false;
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                if(RaceUtils.MinionBelongsToRace(hc.card.GetRaces(),race))
+                if (RaceUtils.MinionBelongsToRace(hc.card.GetRaces(), race))
                 {
                     raceCardInHand = true;
                     break;
                 }
             }
             return raceCardInHand;
+        }
+        public void callMinionCopy(Minion own)
+        {
+            Minion m = this.callKidAndReturn(own.handcard.card, own.zonepos, own.own);
+            if (m != null)
+            {
+                m.setMinionToMinion(own);
+            }
         }
     }
 

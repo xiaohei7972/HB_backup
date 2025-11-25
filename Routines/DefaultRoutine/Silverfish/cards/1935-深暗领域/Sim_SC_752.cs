@@ -20,7 +20,7 @@ namespace HREngine.Bots
 			}
 		}
 
-		public override void onCardIsAfterToBePlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
 		{
 			if (triggerEffectMinion.own == wasOwnCard && (playedMinion.handcard.card.cardIDenum == CardDB.cardIDEnum.SC_752 || playedMinion.handcard.card.cardIDenum == CardDB.cardIDEnum.SC_765))
 			{

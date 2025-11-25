@@ -10,10 +10,14 @@ namespace HREngine.Bots
         // 在这里可以定义卡牌的属性，如法力值消耗、卡牌类型、效果等等
 
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice)
-		{
-			int dmg = p.getSpellDamageDamage(20);
-			p.minionGetDamageOrHeal(target, dmg);
-		}
+        {
+            if (target != null)
+            {
+
+                int dmg = p.getSpellDamageDamage(20);
+                p.minionGetDamageOrHeal(target, dmg);
+            }
+        }
 
         public override PlayReq[] GetPlayReqs()
         {

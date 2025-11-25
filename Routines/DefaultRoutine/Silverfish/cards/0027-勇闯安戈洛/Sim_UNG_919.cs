@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在你的对手使用一张随从牌后，攻击该随从。
 	class Sim_UNG_919 : SimTemplate
 	{
-		
+		public override void AfterMinionPlayed(Playfield p, Minion playedMinion, bool wasOwnCard, Minion triggerEffectMinion)
+        {
+            if(triggerEffectMinion.own != wasOwnCard)
+            {
+                p.minionAttacksMinion(triggerEffectMinion,playedMinion);
+            }
+        }
 		
 	}
 }

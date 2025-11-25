@@ -857,7 +857,10 @@ def Execute():
             Log.Info("[对手回合]");
         }
 
-
+        /// <summary>
+        /// 选择模式
+        /// </summary>
+        /// <param name="dirty"></param>
         public void ChooseOneClick(int dirty)
         {
             if (dirty >= 0)
