@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//每当本随从攻击时，双方玩家抽若干数量的牌，直到拥有三张手牌。
 	class Sim_CFM_808 : SimTemplate
 	{
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target,ref bool terminatedAttack)
 		{
 			while (p.owncards.Count < 3 && p.ownDeckSize > 0)
 			{

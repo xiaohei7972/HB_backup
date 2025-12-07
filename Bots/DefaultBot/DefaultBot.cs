@@ -266,9 +266,11 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
 
                     DefaultBotSettings.Instance.NowWinGameCount++;
-                    if (DefaultBotSettings.Instance.NowWinGameCount == DefaultBotSettings.Instance.AutoConcedeNumberOfWins)
+                    if (DefaultBotSettings.Instance.NowWinGameCount >= DefaultBotSettings.Instance.AutoConcedeNumberOfWins)
                     {
                         DefaultBotSettings.Instance.NowWinGameCount = 0;
+                        ilog_0.InfoFormat("[游戏结束后]，重置胜场{0}.", DefaultBotSettings.Instance.NowWinGameCount);
+
                         DefaultBotSettings.Instance.NeedNowConcede = true;
                         ilog_0.InfoFormat("[游戏结束后] 已设置下局立即投降，因为我们本局赢了，并且设置了保持排名(赢{0}投{1}).", DefaultBotSettings.Instance.AutoConcedeNumberOfWins, DefaultBotSettings.Instance.AutoConcedeNumberOfLosses);
 
@@ -296,9 +298,11 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 if (DefaultBotSettings.Instance.AutoConcedeAfterConstructedWin)
                 {
                     DefaultBotSettings.Instance.NowLoseGameCount++;
-                    if (DefaultBotSettings.Instance.NowLoseGameCount == DefaultBotSettings.Instance.AutoConcedeNumberOfLosses)
+                    if (DefaultBotSettings.Instance.NowLoseGameCount >= DefaultBotSettings.Instance.AutoConcedeNumberOfLosses)
                     {
                         DefaultBotSettings.Instance.NowLoseGameCount = 0;
+                        ilog_0.InfoFormat("[游戏结束后]，重置败场{0}.", DefaultBotSettings.Instance.NowLoseGameCount);
+
                         DefaultBotSettings.Instance.NeedNowConcede = false;
                         ilog_0.InfoFormat("[游戏结束后] 已取消下局立即投降，因为我们本局输了，并且设置了保持排名(赢{0}投{1}).", DefaultBotSettings.Instance.AutoConcedeNumberOfWins, DefaultBotSettings.Instance.AutoConcedeNumberOfLosses);
 

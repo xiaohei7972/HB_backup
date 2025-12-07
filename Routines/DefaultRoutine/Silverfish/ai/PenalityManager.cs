@@ -2818,7 +2818,6 @@ namespace HREngine.Bots
         /// <returns>惩罚值</returns>
         public int getUseLocationPenality(Minion locationMinion, Minion target, Playfield p)
         {
-            Helpfunctions.Instance.logg("开始使用地标的惩罚值");
             int enfaceReward = 0;
             if (target != null)
             {
@@ -2854,7 +2853,6 @@ namespace HREngine.Bots
         /// <returns>惩罚值</returns>
         public int getUseTitanAbilityPenality(Minion titanMinion, Minion target, Playfield p)
         {
-            Helpfunctions.Instance.logg("开始泰坦技能的惩罚值");
 
             // 如果泰坦随从本身有特殊条件，例如冷却中或无技能可用
             // !技能1冷却 || !技能2冷却 || !技能3冷却

@@ -21,7 +21,7 @@ namespace HREngine.Bots
         //     }
         // }
 
-        public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+        public override void onMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
         {
             p.minionGetTempBuff(attacker.own ? p.ownHero : p.enemyHero, 5, 0);
         }

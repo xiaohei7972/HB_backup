@@ -2,6 +2,7 @@ namespace HREngine.Bots
 {
     using System;
     using System.IO;
+    using System.Text;
     public class printUtils
     {
         public static bool printResult = false;
@@ -26,35 +27,41 @@ namespace HREngine.Bots
         public static string emoteMode = "无";
 
         // type 取值 0 （打印下一步）， 1（打印自定义惩罚）
-        public static void printDebuggerInfo(CardDB.Card card, string content, int pen, int type){
-            if(pen == 0) return;
-            if( printPentity && type == 1 ){
-                Helpfunctions.Instance.ErrorLog(card.nameCN + content + pen+"");
+        public static void printDebuggerInfo(CardDB.Card card, string content, int pen, int type)
+        {
+            if (pen == 0) return;
+            if (printPentity && type == 1)
+            {
+                Helpfunctions.Instance.ErrorLog(card.nameCN + content + pen + "");
             }
         }
 
-        public static void printNowVal(){
-            if(!printNextMove){
+        public static void printNowVal()
+        {
+            if (!printNextMove)
+            {
                 return;
             }
-            Playfield p = new Playfield(); 
+            Playfield p = new Playfield();
             // 输出当前场面价值判定
-            String enemyVal = "[敌方场面] ";
-            String myVal    = "[我方场面] ";
+            StringBuilder enemyVal = new StringBuilder("[敌方场面] ", 60);
+            StringBuilder myVal = new StringBuilder("[我方场面] ", 60);
             foreach (Minion m in p.enemyMinions)
             {
-                enemyVal += m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ") 威胁: " + Ai.Instance.botBase.getEnemyMinionValue(m, p) + "; ";
+                enemyVal.AppendFormat("{0}({1}/{2}) 威胁: ; ", m.handcard.card.nameCN, m.Angr, m.Hp, Ai.Instance.botBase.getEnemyMinionValue(m, p));
+                // enemyVal += m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ") 威胁: " + Ai.Instance.botBase.getEnemyMinionValue(m, p) + "; ";
                 //hasTank = hasTank || m.taunt;
             }
             foreach (Minion m in p.ownMinions)
             {
-                myVal += m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp +  ") 价值: " + Ai.Instance.botBase.getMyMinionValue(m, p) + "; ";
+                myVal.AppendFormat("{0}({1}/{2}) 价值: ; ", m.handcard.card.nameCN, m.Angr, m.Hp, Ai.Instance.botBase.getEnemyMinionValue(m, p));
+                // myVal += m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ") 价值: " + Ai.Instance.botBase.getMyMinionValue(m, p) + "; ";
                 //hasTank = hasTank || m.taunt;
             }
             Helpfunctions.Instance.logg("(猜测对手构筑为:" + p.enemyGuessDeck + " 套牌代码：" + Hrtprozis.Instance.enemyDeckCode + " 预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + "， 加上场攻一共 " + (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr()) + " )");
 
-            Helpfunctions.Instance.ErrorLog(enemyVal);
-            Helpfunctions.Instance.ErrorLog(myVal);
+            Helpfunctions.Instance.ErrorLog(enemyVal.ToString());
+            Helpfunctions.Instance.ErrorLog(myVal.ToString());
         }
 
         public static void Emote(string hello)

@@ -11,7 +11,17 @@ namespace HREngine.Bots
 	//<b>潜行</b>每当本随从攻击，便获得一个仅限本回合可用的法力水晶。
 	class Sim_CORE_YOD_006 : SimTemplate
 	{
-		
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
+		{
+			if (attacker.own)
+			{
+				p.mana++;
+			}
+			else
+			{
+
+			}
+		}
 		
 	}
 }

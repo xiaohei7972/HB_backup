@@ -23,7 +23,7 @@ namespace HREngine.Bots
 			foreach (Minion minion in m.own ? p.ownMinions : p.enemyMinions)
 			{
 				if (minion.handcard.card.cardIDenum == CardDB.cardIDEnum.EDR_810t)
-					minion.handcard.card.TAG_SCRIPT_DATA_NUM_1++;
+					minion.TAG_SCRIPT_DATA_NUM_1++;
 			}
 		}
 
@@ -32,7 +32,7 @@ namespace HREngine.Bots
 			foreach (Minion minion in m.own ? p.ownMinions : p.enemyMinions)
 			{
 				if (minion.handcard.card.cardIDenum == CardDB.cardIDEnum.EDR_810t)
-					minion.handcard.card.TAG_SCRIPT_DATA_NUM_1--;
+					minion.TAG_SCRIPT_DATA_NUM_1--;
 			}
 		}
 

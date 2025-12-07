@@ -13,7 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
 		{
-			List<Minion> temp = attacker.own ? p.ownMinions : p.enemyMinions;
+			List<Minion> temp = new List<Minion>(attacker.own ? p.ownMinions : p.enemyMinions);
 			temp.Remove(attacker);
 			foreach (Minion m in temp)
 			{

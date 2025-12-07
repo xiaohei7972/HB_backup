@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在相邻的随从攻击后，随机对一个敌人造成1点伤害。
 	class Sim_VAC_532 : SimTemplate
 	{
-		
-		
+
+		public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+		{
+			if (attacker.zonepos == triggerEffectMinion.zonepos - 1 || attacker.zonepos == triggerEffectMinion.zonepos + 1)
+			{
+				p.DealDamageToRandomCharacter(triggerEffectMinion.own, 1);
+			}
+		}
 	}
 }

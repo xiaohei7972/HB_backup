@@ -363,6 +363,7 @@ namespace HREngine.Bots
             m.playedThisTurn = true;
             m.numAttacksThisTurn = 0;
             m.windfury = hc.card.windfury;
+            m.megaWindfury = hc.card.megaWindfury;
             m.taunt = hc.card.tank;
             m.charge = (hc.card.Charge) ? 1 : 0;
             m.divineshild = hc.card.Shield;
@@ -401,6 +402,7 @@ namespace HREngine.Bots
                 case "mage": return TAG_CLASS.MAGE;
                 case "法师": return TAG_CLASS.MAGE;
                 case "Illidanstormrage": return TAG_CLASS.DEMONHUNTER;
+                case "deathknight": return TAG_CLASS.DEATHKNIGHT;
                 default:
                     if (s.EndsWith("吉安娜"))
                         return TAG_CLASS.MAGE;
@@ -1091,6 +1093,7 @@ namespace HREngine.Bots
                         bool divshield = s.Contains(" divshield");
                         bool ptt = s.Contains(" ptt");
                         bool wndfry = s.Contains(" wndfr");
+                        bool megaWindfury = s.Contains(" megaWindfury");
                         bool stl = s.Contains(" stlth");
                         bool pois = s.Contains(" poi");
                         bool lfst = s.Contains(" lfst");
@@ -1181,6 +1184,7 @@ namespace HREngine.Bots
                         tempminion.divineshild = divshield;
                         tempminion.playedThisTurn = ptt;
                         tempminion.windfury = wndfry;
+                        tempminion.megaWindfury = megaWindfury;
                         tempminion.stealth = stl;
                         tempminion.poisonous = pois;
                         tempminion.lifesteal = lfst;
@@ -1256,6 +1260,7 @@ namespace HREngine.Bots
                         bool divshield = s.Contains(" divshield");
                         bool ptt = s.Contains(" ptt");
                         bool wndfry = s.Contains(" wndfr");
+                        bool megaWindfury = s.Contains(" megaWindfury");
                         bool stl = s.Contains(" stlth");
                         bool pois = s.Contains(" poi");
                         bool lfst = s.Contains(" lfst");
@@ -1344,6 +1349,7 @@ namespace HREngine.Bots
                         tempminion.divineshild = divshield;
                         tempminion.playedThisTurn = ptt;
                         tempminion.windfury = wndfry;
+                        tempminion.megaWindfury = megaWindfury;
                         tempminion.stealth = stl;
                         tempminion.poisonous = pois;
                         tempminion.lifesteal = lfst;
@@ -1400,32 +1406,25 @@ namespace HREngine.Bots
                     string minionname = hc[2];
                     card.manacost = Convert.ToInt32(hc[3]);
                     card.entity = Convert.ToInt32(hc[5]);
-                    
+                    //获取cardIDEnum
                     CardDB.cardIDEnum cardIDEnum = CardDB.Instance.cardIdstringToEnum(hc[6]);
-
-                    //CardDB.Card card1 = CardDB.Instance.getCardDataFromID(cardIDEnum);
-                    //card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
-                    //card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
-                    //card.card.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
-                    //card.card.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
-                    //if (card.MODULAR_ENTITY_PART_1 != 0 && card.MODULAR_ENTITY_PART_2 != 0)
-                    //    card.card.updateDIYCard();
-                    CardDB.Card card1 = CardDB.Instance.getCardDataFromID(cardIDEnum);
-                    card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
-                    card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
-                    card1.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
-                    card1.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
-                    if (card1.MODULAR_ENTITY_PART_1 != 0 && card1.MODULAR_ENTITY_PART_2 != 0)
-                        card1.updateDIYCard();
-                        
-                    card.card = card1;
-
-
+                    card.card = CardDB.Instance.getCardDataFromID(cardIDEnum);
+                    //获取增加的攻击力
                     if (hc.Length > 8) card.addattack = Convert.ToInt32(hc[7]);
+                    //获取增加的血量
                     if (hc.Length > 9) card.addHp = Convert.ToInt32(hc[8]);
+                    //获取是否高亮
                     if (hc.Length > 10) card.poweredUp = Convert.ToInt32(hc[9]);
                     if (hc.Length > 11) card.poweredUp = Convert.ToInt32(hc[9]);
-                    
+                    //获取模块1Dbfid
+                    card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                    //获取模块2Dbfid
+                    card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                    //将手牌里的模块1和模块2传如CardDB.card
+                    card.card.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
+                    card.card.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
+                    if (card.card.MODULAR_ENTITY_PART_1 != 0 && card.card.MODULAR_ENTITY_PART_2 != 0)
+                        card.card.updateDIYCard();
                         
                     if (hc.Length > 14)
                     {

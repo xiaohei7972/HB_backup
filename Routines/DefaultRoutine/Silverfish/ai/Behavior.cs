@@ -1,6 +1,8 @@
 
-using System;
 using System.Collections.Generic;
+using System;
+using System.Linq;
+
 
 namespace HREngine.Bots
 {
@@ -577,6 +579,18 @@ namespace HREngine.Bots
 
         public virtual int getDiscoverVal(CardDB.Card card, Playfield p)
         {
+            //初始化Hsreplay数据
+            Hsreplay hs = Hsreplay.Instance;
+            // 从对应职业的数据列表中找到匹配的卡牌数据
+            var cardStats = Hsreplay.AllCardStats.FirstOrDefault(c => c.DbfId == card.dbfId);
+            if (cardStats != null)
+            {
+                 Helpfunctions.Instance.logg("getDiscoverVal - 使用Hsreplay数据比对" + card.nameCN.ToString() + " => " + cardStats.WinrateWhenDrawn);
+                // 返回 WinrateWhenDrawn 的整数部分
+                return (int)cardStats.WinrateWhenDrawn;
+            }
+
+            // 如果找不到对应的卡牌数据，或者职业数据不存在，则返回默认值
             return 0;
         }
 

@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//<b>嘲讽</b>每当本随从受到攻击时，抽一张牌。
 	class Sim_TTN_711 : SimTemplate
 	{
-		
+        public override void OnAttacked(Playfield p, Minion defenderm, Minion attacker)
+        {
+            p.drawACard(CardDB.cardIDEnum.None,defenderm.own);
+        }
 		
 	}
 }

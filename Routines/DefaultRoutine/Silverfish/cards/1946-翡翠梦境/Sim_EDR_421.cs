@@ -14,12 +14,12 @@ namespace HREngine.Bots
 		public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
 		{
 			//增加tag2数据
-			attacker.handcard.card.TAG_SCRIPT_DATA_NUM_1++;
+			attacker.TAG_SCRIPT_DATA_NUM_1++;
 		}
 		public override void onDeathrattle(Playfield p, Minion m)
 		{
 			//根据tag2数据造成aoe伤害
-			p.allCharsOfASideGetDamage(!m.own, m.handcard.card.TAG_SCRIPT_DATA_NUM_1);
+			p.allCharsOfASideGetDamage(!m.own, m.TAG_SCRIPT_DATA_NUM_1);
 		}
 	}
 }

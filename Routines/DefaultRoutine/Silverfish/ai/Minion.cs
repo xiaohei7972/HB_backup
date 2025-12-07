@@ -4,6 +4,7 @@ namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using Triton.Game;
 
     public class Minion
@@ -220,8 +221,15 @@ namespace HREngine.Bots
         {
             get
             {
+                // StringBuilder status = new StringBuilder("", 100);
+                // status.AppendFormat("{{0}} ({1} / {2}) \n", zonepos.ToString(), Angr, Hp, handcard.card.nameCN);
+                // status.Append(frozen ? "[冻结]" : "");
+                // status.Append((!Ready || cantAttack ? "[无法攻击]" : "[可攻击]"));
+                // status.AppendFormat(extraAttacksThisTurn > 0 ? "[额外攻击次数: {0}]" : "",extraAttacksThisTurn);
+
+
                 return "{" + zonepos.ToString() + "} " + " (" + Angr + "/" + Hp + ") " + handcard.card.nameCN + "\n " +
-                    (frozen ? "[冻结]" : "") + (!Ready || cantAttack ? "[无法攻击]" : "[可攻击]") + (windfury ? "[风怒]" : "") + (taunt ? "[嘲讽]" : "")
+                    (frozen ? "[冻结]" : "") + (!Ready || cantAttack ? "[无法攻击]" : "[可攻击]") + (extraAttacksThisTurn > 0 ? "[额外攻击次数:" + extraAttacksThisTurn + "]" : "") + (windfury ? "[风怒]" : "") + (megaWindfury ? "[超级风怒]" : "") + (taunt ? "[嘲讽]" : "")
                     + (divineshild ? "[圣盾]" : "") + (stealth ? "[隐身]" : "") + (immune ? "[免疫]" : "") + (untouchable ? "[不可触碰]" : "") + (lifesteal ? "[吸血]" : "")
                      + (dormant != 0 ? "[休眠(" + dormant.ToString() + ")]" : "") + (reborn ? "[复生]" : "") + (poisonous ? "[剧毒]" : "")
                       + (Spellburst ? "[法术迸发]" : "") + (HonorableKill ? "[荣誉击杀]" : "") + (Overkill ? "[超杀]" : "") + (Elusive ? "[扰魔]" : "" + (Aura ? "[光环]" : ""));
@@ -349,6 +357,7 @@ namespace HREngine.Bots
         {
 
             //dont silence----------------------------
+            this.playedThisTurn = m.playedThisTurn;
             this.anzGotDmg = m.anzGotDmg;
             this.GotDmgValue = m.GotDmgValue;
             this.anzGotHealed = m.anzGotHealed;
@@ -959,59 +968,73 @@ namespace HREngine.Bots
         public void updateReadyness()
         {
             Ready = false;
-            if (cantAttack) return;
-            if (this.handcard.card.dormant > 0 && !this.silenced && this.playedThisTurn) return;
-            if (isHero)
-            {
-                if (frozen || Angr == 0)
-                {
-                    Ready = false;
-                    return;
-                }
-                else
-                {
-                    if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
-                        Ready = true;
-                }
-            }
 
-            if (frozen || Angr == 0 || ShowSleepZZZOverride)
+            switch (this.handcard.card.type)
             {
-                Ready = false;
-                return;
-            }
-            else
-            {
-                if ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed)
-                {
-                    if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
+                case CardDB.cardtype.MOB:
                     {
-                        Ready = true;
-                    }
-                }
-                else
-                {
-                    if (charge == 0 && rush > 0 && playedThisTurn)
-                    {
-                        if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
+                        if (cantAttack) return;
+                        if (this.dormant > 0 || this.untouchable) return;
+
+                        if (frozen || Angr == 0 || ShowSleepZZZOverride)
                         {
-                            cantAttackHeroes = true;
-                            Ready = true;
+                            Ready = false;
+                            return;
+                        }
+                        else
+                        {
+                            if ((charge >= 1 && playedThisTurn) || !playedThisTurn || shadowmadnessed)
+                            {
+                                if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
+                                {
+                                    Ready = true;
+                                }
+                            }
+                            else
+                            {
+                                if (charge == 0 && rush > 0 && playedThisTurn)
+                                {
+                                    if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
+                                    {
+                                        cantAttackHeroes = true;
+                                        Ready = true;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            }
+                    break;
+                case CardDB.cardtype.HERO:
+                    {
+                        if (cantAttack) return;
 
+                        if (frozen || Angr == 0)
+                        {
+                            Ready = false;
+                            return;
+                        }
+                        else
+                        {
+                            if (numAttacksThisTurn < 1 + (!megaWindfury && windfury ? 1 : 0) + (megaWindfury ? 3 : 0) + extraAttacksThisTurn)
+                                Ready = true;
+                        }
+
+                    }
+                    break;
+                case CardDB.cardtype.LOCATION:
+                    {
+                        if (this.CooldownTurn == 0)
+                            Ready = true;
+                        else if (this.CooldownTurn > 0)
+                            Ready = false;
+
+                    }
+                    break;
+            }
 
             // if (!frozen && (((charge >= 1 && playedThisTurn)) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardNameEN.v07tr0n && numAttacksThisTurn <= 3))) Ready = true;
             // if (!frozen && (((charge == 0 && rush >= 1 && playedThisTurn)) || !playedThisTurn || shadowmadnessed) && (numAttacksThisTurn == 0 || (numAttacksThisTurn == 1 && windfury) || (!silenced && this.name == CardDB.cardNameEN.v07tr0n && numAttacksThisTurn <= 3))) { Ready = true; cantAttackHeroes = true; }
-            if (this.handcard.card.type == CardDB.cardtype.LOCATION)
-            {
-                if (this.CooldownTurn == 0)
-                    Ready = true;
-                else if (this.CooldownTurn > 0)
-                    Ready = false;
-            }
+
 
         }
         //被沉默

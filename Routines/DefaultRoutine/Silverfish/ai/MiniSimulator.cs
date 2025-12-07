@@ -160,9 +160,9 @@ namespace HREngine.Bots
 
                     if (Settings.Instance.test)  // 重点调试，打印每一个step里面 每一个action带来的牌面，以及得分
                     {
-                        Helpfunctions.Instance.logg(string.Format("树层:{0}，牌面{0}-{1}: actions {2}, 得分:{3}", deep, idx, p.playactions.Count, pVal));
+                        // Helpfunctions.Instance.logg(string.Format("树层:{0}，牌面{0}-{1}: actions {2}, 得分:{3}", deep, idx, p.playactions.Count, pVal));
                         p.printActions();
-                        Helpfunctions.Instance.logg("");
+                        // Helpfunctions.Instance.logg("");
 
 #if APPLICATION_MODE
                         (Application.Current.MainWindow as MainWindow).UpdateActionViewTree(deep, idx, pVal, p.playactions, p);
@@ -172,7 +172,8 @@ namespace HREngine.Bots
                 }
                 // TODO 仅考虑得分最高的 60 种情况，将其他情况直接剪枝
                 temp.Sort((a, b) => -a.value.CompareTo(b.value));
-                if (this.calculated > Ai.Instance.maxwide)
+                temp = temp.Take(Ai.Instance.maxCal).ToList();
+                /* if (this.calculated > Ai.Instance.maxwide)
                 {
                     // 加快计算
                     temp = temp.Take(Ai.Instance.maxCal / 6).ToList();
@@ -185,12 +186,12 @@ namespace HREngine.Bots
                 else
                 {
                     temp = temp.Take(Ai.Instance.maxCal).ToList();
-                }
+                } */
                 temp.ForEach(p =>
                 {
                     if (this.calculated > this.totalboards)
                     {
-                        Helpfunctions.Instance.logg(string.Format("触发剪枝,deep={0},已计算={1}>阈值{2},牌面{3}的所有子孙牌面被抛弃", deep + 1, calculated, totalboards, idx));
+                        // Helpfunctions.Instance.logg(string.Format("触发剪枝,deep={0},已计算={1}>阈值{2},牌面{3}的所有子孙牌面被抛弃", deep + 1, calculated, totalboards, idx));
                     }
                     else
                     {
@@ -203,8 +204,8 @@ namespace HREngine.Bots
 
                 if (best_idx > 0 && Settings.Instance.test)
                 {
-                    Helpfunctions.Instance.logg(string.Format("树第{0}层全局最优牌面下标:{1},得分:{2}", deep, best_idx, bestoldval));
-                    Helpfunctions.Instance.logg("");
+                    // Helpfunctions.Instance.logg(string.Format("树第{0}层全局最优牌面下标:{1},得分:{2}", deep, best_idx, bestoldval));
+                    // Helpfunctions.Instance.logg("");
                 }
 
                 if (bestoldval >= 10000 && (Hrtprozis.Instance.enemySecretCount == 0 || Hrtprozis.Instance.enemyHeroStartClass != TAG_CLASS.MAGE)) this.posmoves.Clear();
@@ -215,7 +216,7 @@ namespace HREngine.Bots
 
                 int num_before_cut = posmoves.Count;
                 cuttingposibilities(isLethalCheck); //去除重复的PlayField  这里面有排序，以及对posmoves的赋值
-                Helpfunctions.Instance.logg("cut to len 去重从" + num_before_cut + " 到 " + this.posmoves.Count);
+                // Helpfunctions.Instance.logg("cut to len 去重从" + num_before_cut + " 到 " + this.posmoves.Count);
                 deep++;
                 temp.Clear();
 
@@ -445,7 +446,7 @@ namespace HREngine.Bots
             }
             catch (Exception ex) // Todo:待fix，不应该有这个异常，是处理了奥数、疯狂科学家牌序后才有的
             {
-                Helpfunctions.Instance.logg("cuttingposibilities异常:" + ex.Message);
+                // Helpfunctions.Instance.logg("cuttingposibilities异常:" + ex.Message);
             }
             //useComparison = false;// 暂时调试用，打出所有重复的牌面，重点调试，用于寻找为啥不是相同牌面里的最佳牌序
             if (this.useComparison)

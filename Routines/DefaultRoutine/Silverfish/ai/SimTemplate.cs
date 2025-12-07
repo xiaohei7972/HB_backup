@@ -221,6 +221,15 @@ namespace HREngine.Bots
         {
 
         }
+        /// <summary>
+        /// 当被弃时触发
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="hc"></param>
+        /// <param name="own"></param>
+        /// <param name="num"></param>
+        /// <param name="checkBonus"></param>
+        /// <returns></returns>b
         public virtual bool onCardDicscard(Playfield p, Handmanager.Handcard hc, Minion own, int num, bool checkBonus = false)
         {
             return false;
@@ -421,7 +430,24 @@ namespace HREngine.Bots
             // 默认实现为空。子类可以根据需求重写此方法。
             return;
         }
-
+        /// <summary>
+        /// 当随从受到攻击时
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="defender"></param>
+        public virtual void OnAttacked(Playfield p, Minion defenderm, Minion attacker)
+        {
+            return;
+        }
+        /// <summary>
+        /// 当随从受到攻击后
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="defender"></param>
+        public virtual void AfterAttacked(Playfield p, Minion defender, Minion attacker)
+        {
+            return; 
+        }
         /// <summary>
         /// 当本随从攻击时触发此方法。
         /// 子类可以重写此方法来实现特定的攻击行为逻辑。
@@ -429,7 +455,7 @@ namespace HREngine.Bots
         /// <param name="p">游戏场地对象，包含游戏状态信息。</param>
         /// <param name="attacker">进行攻击的随从。</param>
         /// <param name="target">攻击目标随从。</param>
-        public virtual void onMinionAttack(Playfield p, Minion attacker, Minion target)
+        public virtual void onMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
         {
             // 默认实现为空。子类可以根据需求重写此方法。
             return;

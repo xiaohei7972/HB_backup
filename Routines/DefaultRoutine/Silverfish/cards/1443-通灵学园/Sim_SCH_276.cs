@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//<b>突袭</b>每当本随从攻击一个随从时，将其<b>沉默</b>。
 	class Sim_SCH_276 : SimTemplate
 	{
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target,ref bool terminatedAttack)
 		{
 			if (target != null)
 			{

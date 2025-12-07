@@ -12,7 +12,7 @@ namespace HREngine.Bots
 	class Sim_TTN_727 : SimTemplate
 	{
 		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TTN_727t);
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
 		{
 			Minion whelps1 = p.callKidAndReturn(kid, attacker.zonepos - 1, attacker.own);
 			Minion whelps2 = p.callKidAndReturn(kid, attacker.zonepos, attacker.own);

@@ -268,35 +268,45 @@ namespace HREngine.Bots
                     str.Append("回合结束");
                     break;
                 case actionEnum.playcard:
-                    str.Append("打出 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无"));
+                    str.AppendFormat("打出 {0} 目标 {1} 惩罚值： ", (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无"), (this.target != null ? this.target.info() : "空"), this.penalty);
+                    /*str.Append("打出 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无"));
                     str.Append(" 目标 " + (this.target != null ? this.target.info() : "空"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.attackWithHero:
-                    str.Append("让英雄攻击 " + (this.target != null ? this.target.info() : "空"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.AppendFormat("让英雄攻击 {0} 惩罚值： ", (this.target != null ? this.target.info() : "空"), this.penalty);
+                    /*str.Append("让英雄攻击 " + (this.target != null ? this.target.info() : "空"));
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.useHeroPower:
-                    str.Append("使用英雄技能");
+                    str.AppendFormat("使用英雄技能 目标 {0} 惩罚值： ", (this.target != null ? this.target.info() : "空"), this.penalty);
+
+                    /*str.Append("使用英雄技能");
                     str.Append(" 目标 " + (this.target != null ? this.target.info() : "空"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.attackWithMinion:
-                    str.Append("使用随从 " + this.own.info());
+                    str.AppendFormat("使用随从 {0} 攻击 {1} 惩罚值： ", this.own.info(), (this.target != null ? this.target.info() : "空"), this.penalty);
+
+                    /*str.Append("使用随从 " + this.own.info());
                     str.Append(" 攻击 " + (this.target != null ? this.target.info() : "空"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.trade:
-                    str.Append("使用随从 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无") + " 交易");
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.AppendFormat("使用随从 {0} 交易 惩罚值： ", (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无"), this.penalty);
+
+                    /*str.Append("使用随从 " + (this.card != null && this.card.card != null ? this.card.card.chnInfo() : "无") + " 交易");
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.useLocation:
-                    str.Append("使用地标 " + this.own.info());
+                    str.AppendFormat("使用地标 {0} 目标 {1} 惩罚值： ", this.own.info(), (this.target != null ? this.target.info() : "空"), this.penalty);
+
+                    /*str.Append("使用地标 " + this.own.info());
                     str.Append(" 目标 " + (this.target != null ? this.target.info() : "空"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.useTitanAbility:
-                    str.Append("使用泰坦技能 ");
+                    //str.Append("使用泰坦技能 ");
 
                     string suffix = "";
                     switch (this.own.handcard.card.cardIDenum.ToString())
@@ -372,13 +382,16 @@ namespace HREngine.Bots
                             break;
                     }
                     CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(this.own.handcard.card.cardIDenum.ToString() + suffix));
-                    str.Append(card.nameCN.ToString());
+                    str.AppendFormat("使用泰坦技能 {0} 目标{1} 惩罚值： ", card.nameCN.ToString(), (this.target != null && this.target.handcard != null ? this.target.handcard.card.nameCN.ToString() : "无"), this.penalty);
+
+                    /*str.Append(card.nameCN.ToString());
                     str.Append(" 目标 " + (this.target != null && this.target.handcard != null ? this.target.handcard.card.nameCN.ToString() : "无"));
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
                 case actionEnum.forge:
-                    str.Append("使用随从 " + this.own.info() + " 锻造");
-                    str.Append(" 惩罚值： " + this.penalty);
+                    str.AppendFormat("使用随从 {0} 锻造 惩罚值： {1}", this.own.info(), this.penalty);
+                    /*str.Append("使用随从 " + this.own.info() + " 锻造");
+                    str.Append(" 惩罚值： " + this.penalty);*/
                     break;
             }
             return str.ToString();

@@ -294,7 +294,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     if (Numberofwins < 0) Numberofwins = 1;
                     NotifyPropertyChanged(() => AutoConcedeNumberOfWins);
                 }
-                ilog_0.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = {2}.", Numberofwins, Numberoflosses, Numberofwins);
+                ilog_0.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 赢{2}.", Numberofwins, Numberoflosses, Numberofwins);
             }
 
         }
@@ -323,7 +323,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 
                     NotifyPropertyChanged(() => AutoConcedeNumberOfLosses);
                 }
-                ilog_0.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = {2}.", Numberofwins, Numberoflosses, Numberoflosses);
+                ilog_0.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 投{2}.", Numberofwins, Numberoflosses, Numberoflosses);
             }
         }
 

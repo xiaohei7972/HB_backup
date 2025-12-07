@@ -16,7 +16,6 @@ namespace HREngine.Bots
 			if (m.deathrattle2 != null)
 			{
 				CardDB.Card kid = CardDB.Instance.getCardDataFromID(m.deathrattle2.cardIDenum);
-				Helpfunctions.Instance.logg("龙蛋亡语是：" + m.deathrattle2.nameCN);
 				int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
 				p.callKid(kid, pos, m.own);
 			}

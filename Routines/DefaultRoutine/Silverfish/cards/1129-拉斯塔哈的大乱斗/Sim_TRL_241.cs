@@ -19,7 +19,7 @@ namespace HREngine.Bots
 				{
 					if (target.Hp < 1)
 					{
-						hero.numAttacksThisTurn = 0;
+						hero.extraAttacksThisTurn++;
 						hero.updateReadyness();
 					}
 				}

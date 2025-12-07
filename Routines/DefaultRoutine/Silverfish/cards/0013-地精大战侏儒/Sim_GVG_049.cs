@@ -4,12 +4,11 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-    class Sim_GVG_049 : SimTemplate //* 加兹瑞拉 Gahz'rilla
-//Whenever this minion takes damage, double its Attack.
-//每当该随从受到伤害，便使其攻击力翻倍。 
+    //* 加兹瑞拉 Gahz'rilla
+    //Whenever this minion takes damage, double its Attack.
+    //每当该随从受到伤害，便使其攻击力翻倍。 
+    class Sim_GVG_049 : SimTemplate
     {
-        
-
         public override void onMinionGotDmgTrigger(Playfield p, Minion m, int anzOwnMinionsGotDmg, int anzEnemyMinionsGotDmg, int anzOwnHeroGotDmg, int anzEnemyHeroGotDmg)
         {
             if (m.anzGotDmg > 0)

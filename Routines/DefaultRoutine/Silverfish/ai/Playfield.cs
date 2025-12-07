@@ -265,6 +265,12 @@ namespace HREngine.Bots
         public int ueberladung = 0;
         public int lockedMana = 0;
         public int enemyOptionsDoneThisTurn = 0;
+        /// <summary>法力水晶上限</summary>
+
+        private int maxResources = 10;
+        /// <summary>手牌上限</summary>
+        private int maxHandSize = 10;
+        /// <summary>我方最大随机</summary>
         public int ownMaxMana = 0;
         public int enemyMaxMana = 0;
         public int lostDamage = 0;
@@ -4314,11 +4320,12 @@ namespace HREngine.Bots
                 return;
             }
 
+            attacker.stealth = false;
+
             // 处理随从的攻击次数和状态
             if (!dontcount)
             {
                 attacker.numAttacksThisTurn++;
-                attacker.stealth = false;
                 attacker.updateReadyness();
                 // if ((attacker.windfury && attacker.numAttacksThisTurn == 2) || !attacker.windfury)
                 // {
@@ -4712,6 +4719,10 @@ namespace HREngine.Bots
             {
                 //调用随从攻击后的sim方法
                 attacker.handcard.card.sim_card.afterMinionAttack(this, attacker, defender, dontcount);
+            }
+            if (!defender.silenced)
+            {
+                defender.handcard.card.sim_card.AfterAttacked(this, defender, attacker);
             }
             // switch (attacker.name)
             // {
@@ -5431,7 +5442,7 @@ namespace HREngine.Bots
                 maxHp = ownHero.maxHp,
                 Angr = ownHero.Angr,
                 handcard = new Handmanager.Handcard(hc),
-                cardClass = (TAG_CLASS)hc.card.Class,
+                cardClass = hc.card.KeepHeroClass == 1 ? this.ownHeroStartClass : (TAG_CLASS)hc.card.Class,
                 own = true,
                 isHero = true,
                 entitiyID = hc.entity,
@@ -5444,6 +5455,7 @@ namespace HREngine.Bots
                 nameCN = hc.card.nameCN,
             };
             ownHero = hero;
+            ownHeroStartClass = hero.cardClass;
 
         }
 
@@ -5472,7 +5484,7 @@ namespace HREngine.Bots
             // 处理流放效果
             // HandleOutcastEffect(hc, hc.card.Outcast);
         }
-
+        
         /// <summary>
         /// 处理法术卡牌的效果。
         /// </summary>
@@ -6342,10 +6354,14 @@ namespace HREngine.Bots
             if (!attacker.silenced)
             {
                 //调用随从攻击时的sim方法
-                attacker.handcard.card.sim_card.onMinionAttack(this, attacker, defender);
+                attacker.handcard.card.sim_card.onMinionAttack(this, attacker, defender, ref flag);
                 //当随从死亡时flag为true,表示随从死亡
                 if (defender.Hp <= 0)
                     flag = true;
+            }
+            if (!defender.silenced)
+            {
+                defender.handcard.card.sim_card.OnAttacked(this, defender, attacker);
             }
 
             // 处理随从上附加的智慧祝福效果：每次攻击时抽取一张牌
@@ -6450,7 +6466,7 @@ namespace HREngine.Bots
                 }
 
                 // 触发敌方随从的效果
-                foreach (Minion m in this.enemyMinions)
+                foreach (Minion m in this.enemyMinions.ToArray())
                 {
                     if (m.name == CardDB.cardNameEN.troggzortheearthinator)
                     {
@@ -6478,13 +6494,12 @@ namespace HREngine.Bots
                     if (ohc.card.Corrupt && hc.manacost > ohc.manacost)
                     {
                         // 腐蚀卡的处理
-                        ohc.card = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(ohc.card.cardIDenum.ToString() + "t"));
+                        ohc.card = ohc.card.CollectionRelatedCardDataBase;
                         // if (ohc.card.nameCN == CardDB.cardNameCN.大力士)
                         // {
                         //     ohc.manacost = 0;
                         // }
                         afterCorrput.Add(ohc);
-                        // this.evaluatePenality -= 5;
                     }
                 }
                 foreach (Handmanager.Handcard ohc in afterCorrput)
@@ -8275,7 +8290,7 @@ namespace HREngine.Bots
                 entitiyID = hc.entity,  //实体id
                 playedThisTurn = true,  //从手牌打出
                 numAttacksThisTurn = 0, //这回合攻击过几次
-                // extraAttacksThisTurn = 0;//这回合额外攻击次数
+                extraAttacksThisTurn = 0,//这回合额外攻击次数
                 zonepos = zonepos,  //位置
                 name = hc.card.nameEN,  //英文名
                 nameCN = hc.card.nameCN,    //中文名
@@ -8622,7 +8637,7 @@ namespace HREngine.Bots
 
             // 更新己方或敌方随从状态
             List<Minion> temp = own ? this.ownMinions : this.enemyMinions;
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
                 switch (m.name)
                 {
@@ -8805,7 +8820,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
 
             // 遍历列表中的每个随从，并使其沉默
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
                 m.becomeSilence(this); // 调用随从的沉默方法，移除其所有能力和增益效果
             }
@@ -9402,9 +9417,9 @@ namespace HREngine.Bots
                 if (m.own) this.anzOwnTaunt--;
                 else this.anzEnemyTaunt--;
             }
-
+            Minion summoned =  createNewMinion(hc, m.zonepos, m.own);
             // 将当前随从变形为新随从
-            m.setMinionToMinion(createNewMinion(hc, m.zonepos, m.own));
+            m.setMinionToMinion(summoned);
 
             // 如果变形后的随从具有嘲讽，更新嘲讽数量
             if (m.taunt)
@@ -9416,8 +9431,8 @@ namespace HREngine.Bots
             // 激活新随从的光环效果并应用区域性BUFF
             m.handcard.card.sim_card.onAuraStarts(this, m);
             this.minionGetOrEraseAllAreaBuffs(m, true);
-
             // 更新随从状态
+            m.updateReadyness();
             if (m.own)
             {
                 this.tempTrigger.ownMinionsChanged = true;
@@ -9573,9 +9588,9 @@ namespace HREngine.Bots
             List<Minion> temp = mOwn.own ? this.ownMinions : this.enemyMinions;
 
             // 遍历随从列表，寻找目标随从进行磁力合并
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && m.zonepos == mOwn.zonepos + 1)
+                if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.MECHANICAL) && m.zonepos == mOwn.zonepos + 1)
                 {
                     // 将mOwn的属性传递给目标机械随从m
                     this.minionGetBuffed(m, mOwn.Angr, mOwn.Hp);
@@ -10739,7 +10754,7 @@ namespace HREngine.Bots
         public void allMinionOfASideGetDamage(bool own, int damages)
         {
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
                 minionGetDamageOrHeal(m, damages, true); // 然后对随从造成伤害
             }
@@ -10754,7 +10769,7 @@ namespace HREngine.Bots
         public void allCharsOfASideGetDamage(bool own, int damages)
         {
             List<Minion> temp = (own) ? this.ownMinions : this.enemyMinions;
-            foreach (Minion m in temp)
+            foreach (Minion m in temp.ToArray())
             {
                 minionGetDamageOrHeal(m, damages, true); // 对每个随从造成伤害
             }
@@ -11686,55 +11701,86 @@ namespace HREngine.Bots
         /// </summary>
         public void printBoard()
         {
-            Helpfunctions.Instance.logg("board/hash/turn: " + value + "  /  " + this.hashcode + "  /  " + this.turnCounter + " ++++++++++++++++++++++");
-            Helpfunctions.Instance.logg("惩罚 " + this.evaluatePenality);
-            Helpfunctions.Instance.logg("法力水晶 " + this.mana + "/" + this.ownMaxMana);
-            Helpfunctions.Instance.logg("已使用手牌数: " + this.cardsPlayedThisTurn + " 剩余手牌: " + this.owncards.Count + " 敌方手牌: " + this.enemyAnzCards);
+            StringBuilder head = new StringBuilder("", 100);
+            head.AppendFormat("board/hash/turn: {0} / {1} / {2}  ++++++++++++++++++++++\n", value, this.hashcode, this.turnCounter);
+            head.AppendFormat("惩罚 {0}\n", this.evaluatePenality);
+            head.AppendFormat("法力水晶 {0}/{1}\n", this.mana, this.ownMaxMana);
+            head.AppendFormat("已使用手牌数: {0} 剩余手牌: {1} 敌方手牌: {2}\n", this.cardsPlayedThisTurn, this.owncards.Count, this.enemyAnzCards);
+            head.AppendFormat("我方英雄: \n");
+            head.AppendFormat("血量: {0} + {1}\n", this.ownHero.Hp, this.ownHero.armor);
+            head.AppendFormat("攻击力: {0}\n", this.ownHero.Angr);
+            head.AppendFormat("武器: {0} {1} {2} {3} {4} {5}\n", this.ownWeapon.Angr, this.ownWeapon.Durability, this.ownWeapon.card.nameCN.ToString(), this.ownWeapon.card.cardIDenum, (this.ownWeapon.poisonous ? "剧毒" : "无剧毒buff"), (this.ownWeapon.lifesteal ? "吸血" : "无吸血buff"));
+            head.AppendFormat("冻结状态: {0} \n", this.ownHero.frozen);
+            head.AppendFormat("敌方英雄血量: {0} + {1}{2} \n", this.enemyHero.Hp, this.enemyHero.armor, ((this.enemyHero.immune) ? " immune" : ""));
+            Helpfunctions.Instance.logg(head.ToString());
 
-            Helpfunctions.Instance.logg("我方英雄: ");
-            Helpfunctions.Instance.logg("血量: " + this.ownHero.Hp + " + " + this.ownHero.armor);
-            Helpfunctions.Instance.logg("攻击力: " + this.ownHero.Angr);
-            Helpfunctions.Instance.logg("武器: " + this.ownWeapon.Angr + " " + this.ownWeapon.Durability + " " + this.ownWeapon.card.nameCN.ToString() + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? "剧毒" : "无剧毒buff") + " " + (this.ownWeapon.lifesteal ? "吸血" : "无吸血buff"));
-            Helpfunctions.Instance.logg("冻结状态: " + this.ownHero.frozen + " ");
-            Helpfunctions.Instance.logg("敌方英雄血量: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + ((this.enemyHero.immune) ? " immune" : ""));
+            // Helpfunctions.Instance.logg("board/hash/turn: " + value + "  /  " + this.hashcode + "  /  " + this.turnCounter + " ++++++++++++++++++++++");
+            // Helpfunctions.Instance.logg("惩罚 " + this.evaluatePenality);
+            // Helpfunctions.Instance.logg("法力水晶 " + this.mana + "/" + this.ownMaxMana);
+            // Helpfunctions.Instance.logg("已使用手牌数: " + this.cardsPlayedThisTurn + " 剩余手牌: " + this.owncards.Count + " 敌方手牌: " + this.enemyAnzCards);
+            // Helpfunctions.Instance.logg("我方英雄: ");
+            // Helpfunctions.Instance.logg("血量: " + this.ownHero.Hp + " + " + this.ownHero.armor);
+            // Helpfunctions.Instance.logg("攻击力: " + this.ownHero.Angr);
+            // Helpfunctions.Instance.logg("武器: " + this.ownWeapon.Angr + " " + this.ownWeapon.Durability + " " + this.ownWeapon.card.nameCN.ToString() + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? "剧毒" : "无剧毒buff") + " " + (this.ownWeapon.lifesteal ? "吸血" : "无吸血buff"));
+            // Helpfunctions.Instance.logg("冻结状态: " + this.ownHero.frozen + " ");
+            // Helpfunctions.Instance.logg("敌方英雄血量: " + this.enemyHero.Hp + " + " + this.enemyHero.armor + ((this.enemyHero.immune) ? " immune" : ""));
 
             if (this.enemySecretCount >= 1) Helpfunctions.Instance.logg("enemySecrets: " + Probabilitymaker.Instance.getEnemySecretData(this.enemySecretList));
-            foreach (Action a in this.playactions)
-            {
-                // a.print();
-            }
-            Helpfunctions.Instance.logg("我方随从################");
+            /*             foreach (Action a in this.playactions)
+                        {
+                            // a.print();
+                        } */
+            StringBuilder ownMinionsStr = new StringBuilder("我方随从################\n", 100);
+
+            // Helpfunctions.Instance.logg("我方随从################");
 
             foreach (Minion m in this.ownMinions)
             {
-                Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
+                ownMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entitiyID);
+                // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
             }
+            Helpfunctions.Instance.logg(ownMinionsStr.ToString());
 
 
             if (this.enemyMinions.Count > 0)
             {
-                Helpfunctions.Instance.logg("敌方随从################");
+                StringBuilder enemyMinionsStr = new StringBuilder("敌方随从################\n", 100);
+
+                // Helpfunctions.Instance.logg("敌方随从################");
 
                 foreach (Minion m in this.enemyMinions)
                 {
-                    Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
+                    enemyMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entitiyID);
+                    // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
                 }
+                Helpfunctions.Instance.logg(enemyMinionsStr.ToString());
             }
 
             if (this.diedMinions.Count > 0)
             {
-                Helpfunctions.Instance.logg("死亡随从############");
+                StringBuilder diedMinionsStr = new StringBuilder("死亡随从############\n", 100);
+
+                // Helpfunctions.Instance.logg("死亡随从############");
                 foreach (GraveYardItem m in this.diedMinions)
                 {
-                    Helpfunctions.Instance.logg("拥有者, entity, cardid: " + m.own + ", " + m.entityId + ", " + m.cardid);
+                    diedMinionsStr.AppendFormat("拥有者, entity, cardid: {0}, {1}, {2}\n", m.own, m.entityId, m.cardid);
+
+                    // Helpfunctions.Instance.logg("拥有者, entity, cardid: " + m.own + ", " + m.entityId + ", " + m.cardid);
                 }
+                Helpfunctions.Instance.logg(diedMinionsStr.ToString());
+
             }
 
-            Helpfunctions.Instance.logg("我方手牌: ");
+            StringBuilder owncardsStr = new StringBuilder("我方手牌: \n", 100);
+
+            // Helpfunctions.Instance.logg("我方手牌: ");
             foreach (Handmanager.Handcard hc in this.owncards)
             {
-                Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.MODULAR_ENTITY_PART_1 + " " + "MODULAR_ENTITY_PART_2: " + hc.MODULAR_ENTITY_PART_2) : ""));
+                owncardsStr.AppendFormat("pos {0} {1} (费用：{2}；{3}/{4}) elemPoweredUp {5} {6} {7} {8}\n", hc.position, hc.card.nameCN.ToString(), hc.manacost, (hc.addattack + hc.card.Attack), (hc.addHp + hc.card.Health), hc.poweredUp, hc.card.cardIDenum, hc.MODULAR_ENTITY_PART_1, hc.MODULAR_ENTITY_PART_2);
+                // Helpfunctions.Instance.logg("pos " + hc.position + " " + hc.card.nameCN.ToString() + "(费用：" + hc.manacost + "；" + hc.addattack + hc.card.Attack + "/" + +hc.addHp + hc.card.Health + ") elemPoweredUp" + hc.poweredUp + " " + hc.card.cardIDenum + " " + (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0 ? ("MODULAR_ENTITY_PART_1: " + hc.MODULAR_ENTITY_PART_1 + " " + "MODULAR_ENTITY_PART_2: " + hc.MODULAR_ENTITY_PART_2) : ""));
             }
+            Helpfunctions.Instance.logg(owncardsStr.ToString());
+
             Helpfunctions.Instance.logg("+++++++ printBoard end +++++++++");
 
             Helpfunctions.Instance.logg("");
@@ -11814,16 +11860,20 @@ namespace HREngine.Bots
         /// </summary>
         public void printBoardDebug()
         {
-            Helpfunctions.Instance.logg("hero " + this.ownHero.Hp + " " + this.ownHero.armor + " " + this.ownHero.entitiyID);
-            Helpfunctions.Instance.logg("ehero " + this.enemyHero.Hp + " " + this.enemyHero.armor + " " + this.enemyHero.entitiyID);
+            StringBuilder hero = new StringBuilder(20);
+            StringBuilder ehero = new StringBuilder(20);
+            hero.AppendFormat("hero {0} {1} {2}", this.ownHero.Hp, this.ownHero.armor, this.ownHero.entitiyID);
+            ehero.AppendFormat("ehero {0} {1} {2}", this.enemyHero.Hp, this.enemyHero.armor, this.enemyHero.entitiyID);
+            Helpfunctions.Instance.logg(hero.ToString());
+            Helpfunctions.Instance.logg(ehero.ToString());
             foreach (Minion m in ownMinions)
             {
-                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+                Helpfunctions.Instance.logg(m.name + "m.entitiyID");
             }
             Helpfunctions.Instance.logg("-");
             foreach (Minion m in enemyMinions)
             {
-                Helpfunctions.Instance.logg(m.name + " " + m.entitiyID);
+                Helpfunctions.Instance.logg(m.name + " m.entitiyID");
             }
             Helpfunctions.Instance.logg("-");
             foreach (Handmanager.Handcard hc in this.owncards)

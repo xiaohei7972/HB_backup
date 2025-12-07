@@ -55,7 +55,7 @@ namespace HREngine.Bots
 
         public bool learnmode = false;
         public bool printlearnmode = true;
-
+        GameState gameState = Triton.Game.Mapping.GameState.Get();
         Silverfish sf = Silverfish.Instance;
         DefaultBotSettings botset
         {
@@ -889,8 +889,59 @@ def Execute():
         /// </summary>
         public async Task OurTurnLogic()
         {
+            /* Triton.Game.Mapping.GameState.ResponseMode responseMode = Triton.Game.Mapping.GameState.Get().GetResponseMode();
+            switch (printUtils.emoteMode)
+            {
+                case "嘴臭模式":
+                    if (firstMove)
+                    {
+                        firstMove = false;
+                        playEmote(EmoteType.WELL_PLAYED);
+                    }
+                    else if (!firstTurn && firstMove)
+                    {
+                        firstMove = false;
+                        if (new Random().Next(0, 10) < 4)
+                            playEmote(EmoteType.THANKS);
+                    }
+                    break;
+                case "乞讨模式":
+                    if (!firstTurn && firstMove)
+                    {
+                        firstMove = false;
+                        if (new Random().Next(0, 10) < 4)
+                            playEmote(EmoteType.THANKS);
+                    }
+                    else if (firstTurn)
+                    {
+                        firstTurn = false;
+                        playEmote(EmoteType.THANKS);
+
+                    }
+                    break;
+                case "友善模式":
+                    if (firstTurn)
+                    {
+                        firstTurn = false;
+                        playEmote(EmoteType.GREETINGS);
+                    }
+                    break;
+                case "摊牌了我是脚本":
+                    {
+                        EmoteType[] emoteTypes = { EmoteType.CONCEDE, EmoteType.DEATH_LINE, EmoteType.EVENT_FIRE_FESTIVAL_GREETINGS, EmoteType.EVENT_HAPPY_NEW_YEAR, EmoteType.EVENT_LUNAR_NEW_YEAR, EmoteType.EVENT_WINTER_VEIL, EmoteType.LOW_CARDS, EmoteType.MIRROR_START, EmoteType.NO_CARDS, EmoteType.SORRY, EmoteType.START, EmoteType.THINK1, EmoteType.THINK2, EmoteType.THINK3, EmoteType.TIMER };
+                        playEmote(emoteTypes[new Random().Next(emoteTypes.Length)]);
+                    }
+                    break;
+                case "精神污染模式":
+                    {
+                        EmoteType[] emoteTypes = { EmoteType.GREETINGS, EmoteType.THANKS, EmoteType.OOPS, EmoteType.WELL_PLAYED, EmoteType.WOW, EmoteType.THREATEN };
+                        playEmote(emoteTypes[new Random().Next(emoteTypes.Length)]);
+                    }
+                    break;
+                default: break;
+            } */
             // 首回合播放表情，根据不同模式选择不同的表情类型
-            if (firstMove && "嘴臭模式".Equals(printUtils.emoteMode))
+            /* if (firstMove && "嘴臭模式".Equals(printUtils.emoteMode))
             {
                 firstMove = false;
                 playEmote(EmoteType.WELL_PLAYED);
@@ -920,10 +971,11 @@ def Execute():
             {
                 EmoteType[] emoteTypes = { EmoteType.GREETINGS, EmoteType.THANKS, EmoteType.OOPS, EmoteType.WELL_PLAYED, EmoteType.WOW, EmoteType.THREATEN };
                 playEmote(emoteTypes[new Random().Next(emoteTypes.Length)]);
-            }
+        }
+        */
 
             // 当最佳动作值大于5000时的处理
-            if (Ai.Instance.bestmoveValue > 5000)
+            /* if (Ai.Instance.bestmoveValue > 5000)
             {
                 if ("嘴臭模式".Equals(printUtils.emoteMode))
                 {
@@ -940,15 +992,15 @@ def Execute():
                     playEmote(EmoteType.WELL_PLAYED);
                 }
             }
-
             // 当最佳动作值小于等于-700时的处理
-            if (Ai.Instance.bestmoveValue <= -700)
+
+            else if (Ai.Instance.bestmoveValue <= -700)
             {
                 if ("乞讨模式".Equals(printUtils.emoteMode))
                 {
                     playEmote(EmoteType.THANKS);
                 }
-            }
+            } */
 
             // 检查行为模式是否已更改
             if (this.behave.BehaviorName() != DefaultRoutineSettings.Instance.DefaultBehavior)
@@ -960,11 +1012,77 @@ def Execute():
             // 如果在目标或选择模式，等待
             if (this.learnmode && (TritonHs.IsInTargetMode() || TritonHs.IsInChoiceMode()))
             {
-                // await Coroutine.Sleep(50);
+                await Coroutine.Sleep(50);
                 return;
             }
 
+
+            /* switch (responseMode)
+            {
+
+                case GameState.ResponseMode.OPTION_TARGET:
+                    // case GameState.ResponseMode.OPTION_REVERSE_TARGET:
+                    {
+                        if (dirtytarget >= 0)
+                        {
+                            Log.Info("瞄准中...");
+                            HSCard source = dirtyTargetSource == 9000 ? TritonHs.OurHeroPowerCard : getEntityWithNumber(dirtyTargetSource);
+                            HSCard target = getEntityWithNumber(dirtytarget);
+
+                            if (target == null)
+                            {
+                                Log.Error("目标为空...");
+                                TritonHs.CancelTargetingMode();
+                                return;
+                            }
+
+                            dirtytarget = -1;
+                            dirtyTargetSource = -1;
+
+                            if (source == null)
+                                await TritonHs.DoTarget(target);
+                            else
+                                await source.DoTarget(target);
+
+                            // await Coroutine.Sleep(555);
+                            await Coroutine.Sleep(20);
+                            return;
+                        }
+
+                        Log.Error("目标丢失...");
+                        TritonHs.CancelTargetingMode();
+                        return;
+                    }
+                case GameState.ResponseMode.OPTION:
+                case GameState.ResponseMode.SUB_OPTION:
+                case GameState.ResponseMode.CHOICE:
+                    Log.DebugFormat("选择：{0}", responseMode);
+                    {
+                        await Coroutine.Sleep(20 + makeChoice());
+                        switch (dirtychoice)
+                        {
+                            case 0:
+                                TritonHs.ChooseOneClickMiddle();
+                                break;
+                            case 1:
+                                TritonHs.ChooseOneClickLeft();
+                                break;
+                            case 2:
+                                TritonHs.ChooseOneClickRight();
+                                break;
+                        }
+
+                        dirtychoice = -1;
+                        await Coroutine.Sleep(20);
+                        // 指向泰坦技能的使用目标
+                        await TitanAbilityUseOnTagets();
+                        return;
+                    }
+                default: Log.DebugFormat("{0}", responseMode); break;
+            } */
             // 处理目标模式
+
+
             if (TritonHs.IsInTargetMode())
             {
                 if (dirtytarget >= 0)
@@ -989,7 +1107,7 @@ def Execute():
                         await source.DoTarget(target);
 
                     // await Coroutine.Sleep(555);
-                     await Coroutine.Sleep(20);
+                    await Coroutine.Sleep(20);
                     return;
                 }
 
@@ -1022,6 +1140,7 @@ def Execute():
                 return;
             }
 
+
             // 更新一切
             bool sleepRetry = false;
             bool templearn = Silverfish.Instance.updateEverything(behave, 0, out sleepRetry);
@@ -1049,7 +1168,7 @@ def Execute():
             }
 
             // 执行最佳动作
-            var moveTodo = Ai.Instance.bestmove;
+            Action moveTodo = Ai.Instance.bestmove;
 
             if (moveTodo == null || moveTodo.actionType == actionEnum.endturn || Ai.Instance.bestmoveValue < -9999)
             {
@@ -1229,6 +1348,20 @@ def Execute():
             }
         }
 
+        /*         private async Task UseGrunty(Action moveTodo)
+                {
+                    await Coroutine.Sleep(20);
+                    HSCard cardtoplay = getCardWithNumber(moveTodo.card.entity);
+                    int entityID = cardtoplay.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1);
+                    dirtyTargetSource = entityID;
+                    dirtytarget = moveTodo.target.entitiyID;
+                    HSCard dirtyTargetSource1 = getCardWithNumber(dirtyTargetSource);
+                    HSCard dirtytarget1 = getCardWithNumber(dirtytarget);
+                    Helpfunctions.Instance.ErrorLog("使用: " + dirtyTargetSource1.Name + " 瞄准: " + dirtytarget1.Name);
+
+                    await cardtoplay.UseAt(moveTodo.place);
+                } */
+
         /// <summary>
         /// 处理打出卡牌的动作。
         /// </summary>
@@ -1246,7 +1379,8 @@ def Execute():
                 HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
                 if (target != null)
                 {
-                    Helpfunctions.Instance.ErrorLog("使用: " + cardtoplay.Name + " 瞄准: " + target.Name);
+                    // Helpfunctions.Instance.ErrorLog("使用: " + cardtoplay.Name + " 瞄准: " + target.Name);
+                    Log.DebugFormat("使用: {0} 瞄准: {1}", cardtoplay.Name, target.Name);
                     if (moveTodo.druidchoice >= 1)
                     {
                         dirtytarget = moveTodo.target.entitiyID;
@@ -1446,7 +1580,7 @@ def Execute():
                 }
                 else
                 {
-                    Helpfunctions.Instance.ErrorLog("使用地标: " + location.Name + " 暂时没有目标"  + "    惩罚值：" + moveTodo.penalty);
+                    Helpfunctions.Instance.ErrorLog("使用地标: " + location.Name + " 暂时没有目标" + "    惩罚值：" + moveTodo.penalty);
                     await location.LeftClickCard();
                     // 更新使用次数及地标是否准备好
                     moveTodo.own.handcard.card.Health--;
@@ -1517,7 +1651,7 @@ def Execute():
         {
             if (dirtychoice < 1)
             {
-                var ccm = ChoiceCardMgr.Get();
+                var  ccm = ChoiceCardMgr.Get();
                 var lscc = ccm.m_lastShownChoiceState;
                 GAME_TAG choiceMode = GAME_TAG.CHOOSE_ONE;
                 int sourceEntityId = -1;
@@ -1529,6 +1663,7 @@ def Execute():
                     sourceEntityCId = CardDB.Instance.cardIdstringToEnum(entity.GetCardId());
                     if (entity != null)
                     {
+                        //触发发现的卡牌
                         var sourceCard = entity.GetCard();
                         if (sourceCard != null)
                         {
@@ -1556,16 +1691,29 @@ def Execute():
                                 choiceMode = GAME_TAG.TITAN;
                                 dirtychoice = -1;
                             }
+                            /*
+                            else if (sourceCard.GetEntity().GetName() == "调酒师鲍勃")
+                            }
+                            else if (sourceCard.GetEntity().GetName() == "玛润")
+                            {
+                                choiceMode = GAME_TAG.TARGETING_ARROW_TYPE;
+                                dirtychoice = -1;
+                            } 
+                            */
                         }
                     }
                 }
 
                 Ai ai = Ai.Instance;
+                //发现牌的列表
                 List<Handmanager.Handcard> discoverCards = new List<Handmanager.Handcard>();
+                //最佳发现价值
                 float bestDiscoverValue = -2000000;
-                var choiceCardMgr = ChoiceCardMgr.Get();
-                var cards = choiceCardMgr.GetFriendlyCards();
-
+                //选择牌管理器
+                ChoiceCardMgr choiceCardMgr = ChoiceCardMgr.Get();
+                //获取当前选择的卡牌列表
+                List<Card> cards = choiceCardMgr.GetFriendlyCards();
+                //遍历当前选择的卡牌列表，将其转换成Handcard,添加到discoverCards
                 for (int i = 0; i < cards.Count; i++)
                 {
                     var hc = new Handmanager.Handcard();
@@ -1575,7 +1723,7 @@ def Execute():
                     hc.manacost = hc.card.calculateManaCost(ai.nextMoveGuess);
                     discoverCards.Add(hc);
                 }
-
+                //芬利爵士的选择
                 int sirFinleyChoice = -1;
                 if (ai.bestmove == null) Log.ErrorFormat("[提示] 没有获得卡牌数据");
                 // 芬利爵士的发现
@@ -1585,10 +1733,12 @@ def Execute():
                 }
 
                 DateTime tmp = DateTime.Now;
+                //发现卡牌数量
                 int discoverCardsCount = discoverCards.Count;
                 if (sirFinleyChoice != -1) dirtychoice = sirFinleyChoice;
                 else
                 {
+                    //下回合模拟
                     int dirtyTwoTurnSim = ai.mainTurnSimulator.getSecondTurnSimu();
                     ai.mainTurnSimulator.setSecondTurnSimu(true, 50);
                     using (TritonHs.Memory.ReleaseFrame(true))
@@ -1597,15 +1747,22 @@ def Execute():
                         Playfield basePlf = new Playfield(ai.nextMoveGuess);
                         for (int i = 0; i < discoverCardsCount; i++)
                         {
+                            //当前回合
                             Playfield tmpPlf = new Playfield(basePlf);
+                            //下回合
                             Playfield nextPlf = new Playfield(basePlf);
+                            //未来回合
                             Playfield featurePlf = new Playfield(basePlf);
-
+                            //当前回合斩杀判断为false
                             tmpPlf.isLethalCheck = false;
+                            //未来回合斩杀判断为false
                             featurePlf.isLethalCheck = false;
+                            //下回合法力水晶等于当前回合法力水晶+1
                             nextPlf.mana = tmpPlf.mana + 1 > 10 ? 10 : tmpPlf.mana + 1;
+                            //未来回合法力水晶等于10
                             featurePlf.mana = 10;
 
+                            //最佳发现价值
                             float bestval = bestDiscoverValue;
                             switch (choiceMode)
                             {
@@ -1614,6 +1771,7 @@ def Execute():
                                     // 考虑当前回合、下回合和未来收益，权重5：3：2吧
                                     try
                                     {
+                                        //TODO：这里自定义发现卡牌的选择
                                         switch (ai.bestmove.card.card.nameEN)
                                         {
                                             case CardDB.cardNameEN.eternalservitude:
@@ -1622,6 +1780,116 @@ def Execute():
                                                 nextPlf.callKid(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
                                                 featurePlf.callKid(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
                                                 bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                break;
+                                            case CardDB.cardNameEN.heroswelcome_DINO_424:
+                                                {
+                                                    Minion tmpPlfMinion = tmpPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion nextPlfMinion = nextPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion featurePlfMinion = featurePlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    if (tmpPlfMinion != null)
+                                                    {
+                                                        tmpPlf.minionSetAngrToX(tmpPlfMinion, 10);
+                                                        tmpPlf.minionSetLifetoX(tmpPlfMinion, 10);
+                                                    }
+                                                    if (nextPlfMinion != null)
+                                                    {
+                                                        nextPlf.minionSetAngrToX(nextPlfMinion, 10);
+                                                        nextPlf.minionSetLifetoX(nextPlfMinion, 10);
+                                                    }
+                                                    if (featurePlfMinion != null)
+                                                    {
+                                                        featurePlf.minionSetAngrToX(featurePlfMinion, 10);
+                                                        featurePlf.minionSetLifetoX(featurePlfMinion, 10);
+                                                    }
+                                                    bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                }
+                                                break;
+                                            case CardDB.cardNameEN.nebula:
+                                                {
+
+                                                    Minion tmpPlfMinion = tmpPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion nextPlfMinion = nextPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion featurePlfMinion = featurePlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    if (tmpPlfMinion != null)
+                                                    {
+                                                        tmpPlfMinion.Elusive = true;
+                                                        tmpPlfMinion.taunt = true;
+                                                    }
+                                                    if (nextPlfMinion != null)
+                                                    {
+                                                        nextPlfMinion.Elusive = true;
+                                                        nextPlfMinion.taunt = true;
+                                                    }
+                                                    if (featurePlfMinion != null)
+                                                    {
+                                                        featurePlfMinion.Elusive = true;
+                                                        featurePlfMinion.taunt = true;
+                                                    }
+                                                    bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                }
+                                                break;
+                                            case CardDB.cardNameEN.assimilatingblight:
+                                                {
+
+                                                    Minion tmpPlfMinion = tmpPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion nextPlfMinion = nextPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion featurePlfMinion = featurePlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    if (tmpPlfMinion != null)
+                                                    {
+                                                        tmpPlfMinion.reborn = true;
+                                                    }
+                                                    if (nextPlfMinion != null)
+                                                    {
+                                                        nextPlfMinion.reborn = true;
+                                                    }
+                                                    if (featurePlfMinion != null)
+                                                    {
+                                                        featurePlfMinion.reborn = true;
+                                                    }
+                                                    bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                }
+                                                break;
+                                            case CardDB.cardNameEN.delayedproduct:
+                                                {
+
+                                                    Minion tmpPlfMinion = tmpPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion nextPlfMinion = nextPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion featurePlfMinion = featurePlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    if (tmpPlfMinion != null)
+                                                    {
+                                                        tmpPlfMinion.dormant = 2;
+                                                    }
+                                                    if (nextPlfMinion != null)
+                                                    {
+                                                        nextPlfMinion.dormant = 2;
+                                                    }
+                                                    if (featurePlfMinion != null)
+                                                    {
+                                                        featurePlfMinion.dormant = 2;
+                                                    }
+                                                    bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                }
+                                                break;
+                                            case CardDB.cardNameEN.storyofumbra:
+                                                {
+
+                                                    Minion tmpPlfMinion = tmpPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion nextPlfMinion = nextPlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    Minion featurePlfMinion = featurePlf.callKidAndReturn(discoverCards[i].card, tmpPlf.ownMinions.Count - 1, true);
+                                                    if (tmpPlfMinion != null)
+                                                    {
+                                                        tmpPlf.doDeathrattles(new List<Minion>() { tmpPlfMinion });
+                                                    }
+                                                    if (nextPlfMinion != null)
+                                                    {
+                                                        nextPlf.doDeathrattles(new List<Minion>() { nextPlfMinion });
+                                                    }
+                                                    if (featurePlfMinion != null)
+                                                    {
+                                                        featurePlf.doDeathrattles(new List<Minion>() { featurePlfMinion });
+                                                    }
+                                                    bestval = ai.mainTurnSimulator.doallmoves(tmpPlf) * 0.5f + ai.mainTurnSimulator.doallmoves(nextPlf) * 0.3f + ai.mainTurnSimulator.doallmoves(featurePlf) * 0.2f;
+                                                }
                                                 break;
                                             // 芬利爵士
                                             case CardDB.cardNameEN.sirfinleymrrgglton:
@@ -1640,6 +1908,7 @@ def Execute():
                                                 }
                                                 break;
                                             default:
+                                                //默认根据Hsreplay的打分文件获取价值
                                                 bestval = ai.botBase.getDiscoverVal(discoverCards[i].card, tmpPlf);
                                                 break;
                                         }
@@ -1657,6 +1926,7 @@ def Execute():
                                     {
                                         if (m.entitiyID == sourceEntityId)
                                         {
+                                            //当已拥有这个关键词时为true
                                             bool forbidden = false;
                                             switch (discoverCards[i].card.cardIDenum)
                                             {
@@ -1694,6 +1964,9 @@ def Execute():
                                         }
                                     }
                                     break;
+                                // case GAME_TAG.TARGETING_ARROW_TYPE:
+                                //     bestval += 200;
+                                //     break;
                                 default:
                                     bestval = ai.botBase.getDiscoverVal(discoverCards[i].card, tmpPlf);
                                     break;

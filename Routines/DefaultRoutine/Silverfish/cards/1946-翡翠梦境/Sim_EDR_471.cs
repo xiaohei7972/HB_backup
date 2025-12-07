@@ -20,7 +20,8 @@ namespace HREngine.Bots
                 m.anzGotDmg = 0;
                 for (int i = 0; i < tmp; i++)
                 {
-                    p.minionGetArmor(p.ownHero, 1);
+                    p.minionGetArmor(m.own ? p.ownHero : p.enemyHero, 1);
+                    p.minionGetBuffed(m, 1, 0);
                 }
             }
         }

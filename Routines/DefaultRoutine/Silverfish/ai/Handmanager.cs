@@ -1,7 +1,7 @@
 namespace HREngine.Bots
 {
     using System.Collections.Generic;
-
+    using System.Text;
     public class Handmanager  // 手牌管理
     {
 
@@ -100,6 +100,8 @@ namespace HREngine.Bots
                 this.poweredUp = hc.poweredUp;
                 this.SCRIPT_DATA_NUM_1 = hc.SCRIPT_DATA_NUM_1;
                 this.SCRIPT_DATA_NUM_2 = hc.SCRIPT_DATA_NUM_2;
+                this.MODULAR_ENTITY_PART_1 = hc.MODULAR_ENTITY_PART_1;
+                this.MODULAR_ENTITY_PART_2 = hc.MODULAR_ENTITY_PART_2;
                 this.discovered = hc.discovered;
                 this.TAG_ONE_TURN_EFFECT = hc.TAG_ONE_TURN_EFFECT;
                 this.LUNAHIGHLIGHTHINT = hc.LUNAHIGHLIGHTHINT;
@@ -111,6 +113,8 @@ namespace HREngine.Bots
                 this.conditionalCount = hc.conditionalCount;
                 //条件卡牌
                 this.conditionalList = hc.conditionalList;
+
+
             }
             public Handcard(CardDB.Card c)
             {
@@ -263,18 +267,19 @@ namespace HREngine.Bots
             help.logg("Own Handcards: ");
             foreach (Handmanager.Handcard hc in this.handCards)
             {
-                // hc.card.updateDIYCard();
-                string s = "pos " + hc.position + " " + hc.card.nameCN + "(" + hc.card.Attack + "/" + hc.card.Health + ")" + " " + hc.manacost + " entity " + hc.entity + " " + hc.card.cardIDenum + " " + hc.addattack + " " + hc.addHp + " " + hc.poweredUp;
-                // if (hc.MODULAR_ENTITY_PART_1 != 0 && hc.MODULAR_ENTITY_PART_2 != 0)
-                s += " " + hc.MODULAR_ENTITY_PART_1 + " " + hc.MODULAR_ENTITY_PART_2;
+                StringBuilder ownHandcard = new StringBuilder(60);
+                ownHandcard.AppendFormat("pos {0} {1}({2}/{3}) {4} entity {5} {6}", hc.position, hc.card.nameCN, hc.card.Attack, hc.card.Health, hc.manacost, hc.entity, hc.card.cardIDenum);
+                ownHandcard.AppendFormat(" {0} {1} {2}", hc.addattack, hc.addHp, hc.poweredUp);
+                ownHandcard.AppendFormat(" {0} {1}", hc.MODULAR_ENTITY_PART_1, hc.MODULAR_ENTITY_PART_2);
+                // string s = "pos " + hc.position + " " + hc.card.nameCN + "(" + hc.card.Attack + "/" + hc.card.Health + ")" + " " + hc.manacost + " entity " + hc.entity + " " + hc.card.cardIDenum + " " + hc.addattack + " " + hc.addHp + " " + hc.poweredUp;
                 if (hc.enchs.Count > 0)
                 {
                     foreach (CardDB.cardIDEnum cardIDEnum in hc.enchs)
                     {
-                        s += " " + cardIDEnum.ToString();
+                        ownHandcard.AppendFormat(" {0}", cardIDEnum.ToString());
                     }
                 }
-                help.logg(s);
+                help.logg(ownHandcard.ToString());
             }
             help.logg("Enemy cards: " + this.enemyAnzCards);
         }

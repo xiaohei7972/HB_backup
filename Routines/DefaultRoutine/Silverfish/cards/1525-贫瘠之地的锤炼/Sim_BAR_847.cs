@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>突袭</b>在一个友方随从攻击并存活下来后，使其获得+1/+1。
 	class Sim_BAR_847 : SimTemplate
 	{
-		
+        public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+        {
+            if(attacker.own && attacker.Hp >= 1)
+            {
+                p.minionGetBuffed(attacker,1,1);
+            }
+        }
 		
 	}
 }

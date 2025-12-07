@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//<b>突袭</b>每当本随从攻击时，使你手牌中的所有随从牌获得+1/+1。
 	class Sim_CS3_025 : SimTemplate
 	{
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target,ref bool terminatedAttack)
 		{
 			if (attacker.own)
 			{

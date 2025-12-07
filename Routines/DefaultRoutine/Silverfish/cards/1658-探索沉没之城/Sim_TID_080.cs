@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//<b>潜行</b>。攻击时拥有+3攻击力和<b>免疫</b>。
 	class Sim_TID_080 : SimTemplate
 	{
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target,ref bool terminatedAttack)
 		{
 			p.minionGetTempBuff(attacker, 3, 0);
 		}

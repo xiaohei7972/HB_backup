@@ -18,7 +18,7 @@ namespace HREngine.Bots
 				p.minionGetRush(own);
             }
         }
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
 		{
 			if (target != null)
 			{

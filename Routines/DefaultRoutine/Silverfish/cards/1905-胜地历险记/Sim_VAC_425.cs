@@ -23,7 +23,6 @@ namespace HREngine.Bots
 				if (triggerEffectMinion.CooldownTurn > 0)
 				{
 					triggerEffectMinion.CooldownTurn = 0;
-					triggerEffectMinion.Ready = true;
 					triggerEffectMinion.updateReadyness();
 				}
 			}

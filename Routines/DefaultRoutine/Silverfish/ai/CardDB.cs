@@ -435,7 +435,24 @@ namespace HREngine.Bots
             else return CardDB.SpellSchool.PHYSICAL_COMBAT;
         }
 
-
+        /// <summary>
+        /// 特殊标签
+        /// </summary>
+        public enum Specialtags
+        {
+            /// <summary>跟班</summary>
+            markOfEvil = 994,
+            /// <summary>树人</summary>
+            Treant = 2831,
+            /// <summary>小鬼</summary>
+            IMP = 1965,
+            /// <summary>雏龙</summary>
+            Whelp = 2355,
+            /// <summary>星舰组件</summary>
+            StarshipPiece = 3631,
+            /// <summary>星舰</summary>
+            Starship = 3555,
+        };
 
         /// <summary>
         /// <value> 异常类型 </value>
@@ -647,7 +664,7 @@ namespace HREngine.Bots
             /// </summary>
             REQ_STEADY_SHOT = 49,
             /// <summary>
-            /// <value> 英雄技能 </value>
+            /// <value> 要求目标是随从或者敌方英雄 </value>
             /// </summary>
             REQ_MINION_OR_ENEMY_HERO = 50,
             /// <summary>
@@ -798,6 +815,9 @@ namespace HREngine.Bots
             REQ_HAS_OVERLOADED_MANA,
             REQ_LETTUCE_ABILITY_CANNOT_TARGET_OWNER,
             REQ_TARGET_NOT_HAVE_TAG = 116,
+            /// <summary>
+            /// 需要目标有对应标签,param为标签tag数
+            /// </summary>
             REQ_TARGET_MUST_HAVE_TAG,
             /// <summary>
             /// <value> 可交易 </value>
@@ -863,6 +883,7 @@ namespace HREngine.Bots
             public bool Stealth = false;//潜行
             public bool Elusive = false;//扰魔
             public bool windfury = false;//风怒
+            public bool megaWindfury = false;//超级风怒
             public bool poisonous = false;//剧毒
             public bool lifesteal = false;//吸血
             public int dormant = 0;//休眠 0表示非休眠生物或者已醒，还有多少回合醒来
@@ -914,6 +935,8 @@ namespace HREngine.Bots
             public int needWithExactAttackValueOf = 0;
             public int needWithMinimumCorpeses = 0;
             public int needRaceForPlaying = 0;
+            public CardDB.Specialtags needTagForPlaying = 0;
+
             public int needMinNumberOfEnemy = 0;
             public int needMinTotalMinions = 0;
             public int needMinOwnMinions = 0;
@@ -961,15 +984,26 @@ namespace HREngine.Bots
             public bool Temporary = false; // 临时
             public int armor = 0; //英雄牌的护甲值
             public cardIDEnum heroPower = cardIDEnum.None; //英雄牌的技能id
+            public int KeepHeroClass = 0;//打出英雄保持原职业
+            public int CollectionRelatedCardDataBaseId = 0;
+            public CardDB.Card CollectionRelatedCardDataBase;
             public int Objective = 0; // 光环 如救生光环
             public int ObjectiveAura = 0; // 会影响场面的光环 如征战平原
             public int Sigil = 0; // 咒符
-            public bool markOfEvil = false; // 跟班
-            public bool Treant = false;  // 树人
-            public bool IMP = false;  // 小鬼
-            public bool Whelp = false;  // 雏龙
-            public bool StarshipPiece = false;  // 星舰组件
-            public bool Starship = false;   // 星舰           
+
+            /// <summary>跟班</summary>
+            public bool markOfEvil = false;
+            /// <summary>树人</summary>
+
+            public bool Treant = false;
+            /// <summary>小鬼</summary>
+            public bool IMP = false;
+            /// <summary>雏龙</summary>
+            public bool Whelp = false;
+            /// <summary>星舰组件</summary>
+            public bool StarshipPiece = false;
+            /// <summary>星舰</summary>
+            public bool Starship = false;
             public bool Crewmate = false;  // 乘务员
             public int MultipleClasses = 0; // 194: 玉莲帮 296: 暗金教 532: 玉莲帮
             public bool Zerg = false;   // 异虫
@@ -987,7 +1021,7 @@ namespace HREngine.Bots
             public bool CanTargetCardsInHand = false;
             public bool InteractableObject = false;
             public int UsesCharges = 0;
-            public int TriggerVisual =0;
+            public int TriggerVisual = 0;//有触发效果
             public int MODULAR_ENTITY_PART_1 = 0;//自定义模块1
             public int MODULAR_ENTITY_PART_2 = 0;//自定义模块2
             public void updateDIYCard()
@@ -998,8 +1032,7 @@ namespace HREngine.Bots
                     CardDB.Card part2 = CardDB.Instance.getCardDataFromDbfID(MODULAR_ENTITY_PART_2.ToString());
                     if (part1 != null && part2 != null)
                     {
-                        //cost = part1.cost + part2.cost;
-                        cost = 0;
+                        cost = part1.cost + part2.cost;
                         HideCost = false;
                         Attack = part1.Attack + part2.Attack;
                         Health = part1.Health + part2.Health;
@@ -1014,38 +1047,26 @@ namespace HREngine.Bots
                         poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
                         lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
                         reborn = (part1.reborn || part2.reborn);                              //复生
-                        //foreach (var fun in part1.sim_card.)
-                        //{
-                        //    if(fun!=null)
-                        //    {
-                        //    }
-                        //}
-                        //    foreach (var fun in part2.sim_card)
-                        //{
-                            
-                        //}
+
+                        /*               switch (MODULAR_ENTITY_PART_1)
+                                      {
+                                          case 104944: { } break;//递归模块
+                                          case 104945: { } break;//失控模块
+                                          case 104946: { } break;//能量模块
+                                          case 104947: { } break;//输能模块
+                                          case 104948: { } break;//病毒模块
+                                          case 104949: { } break;//复制模块
+                                          case 104950: { } break;//计数模块
+                                          case 104951: { } break;//完美模块
+
+                                      } */
+
+
                     }
                 }
             }
-/*             public void getDIYCard(CardDB.Card part1, CardDB.Card part2)
-            {
-                cost = part1.cost + part2.cost;
-                Attack = part1.Attack + part2.Attack;
-                Health = part1.Health + part2.Health;
-                textCN = part1.textCN + part2.textCN;
-                tank = (part1.tank || part2.tank);                                    //嘲讽
-                Shield = (part1.Shield || part2.Shield);                              //圣盾
-                Charge = (part1.Charge || part2.Charge);                              //冲锋
-                Rush = (part1.Rush || part2.Rush);                                    //突袭
-                Stealth = (part1.Stealth || part2.Stealth);                           //潜行
-                Elusive = (part1.Elusive || part2.Elusive);                           //扰魔
-                windfury = (part1.windfury || part2.windfury);                        //风怒
-                poisonous = (part1.poisonous || part2.poisonous);                     //剧毒
-                lifesteal = (part1.lifesteal || part2.lifesteal);                     //吸血
-                reborn = (part1.reborn || part2.reborn);                              //复生
-            } */
-            public List<Race> races = new List<Race>(); //TODO:种族集合
 
+            public List<Race> races = new List<Race>(); //TODO:种族集合
 
             //TODO:种族数
             public int GetRaceCount()
@@ -1056,28 +1077,28 @@ namespace HREngine.Bots
             /// 获取种族集合
             /// </summary>
             /// <returns>种族集合</returns>
-            public List<Race> GetRaces()
+            public List<CardDB.Race> GetRaces()
             {
 
-                this.races = Enumerable.ToList<Race>(Enumerable.Distinct<Race>(this.races));
+                this.races = Enumerable.ToList<CardDB.Race>(Enumerable.Distinct<Race>(this.races));
                 if (this.races.Count > 1)
                 {
-                    Race[] order = new Race[]
+                    CardDB.Race[] order = new Race[]
                     {
-                        Race.UNDEAD,
-                        Race.ELEMENTAL,
-                        Race.MECHANICAL,
-                        Race.DEMON,
-                        Race.MURLOC,
-                        Race.QUILBOAR,
-                        Race.NAGA,
-                        Race.PET,
-                        Race.DRAGON,
-                        Race.DRAENEI,
-                        Race.TOTEM,
-                        Race.PIRATE
+                        CardDB.Race.UNDEAD,
+                        CardDB.Race.ELEMENTAL,
+                        CardDB.Race.MECHANICAL,
+                        CardDB.Race.DEMON,
+                        CardDB.Race.MURLOC,
+                        CardDB.Race.QUILBOAR,
+                        CardDB.Race.NAGA,
+                        CardDB.Race.PET,
+                        CardDB.Race.DRAGON,
+                        CardDB.Race.DRAENEI,
+                        CardDB.Race.TOTEM,
+                        CardDB.Race.PIRATE
                     };
-                    this.races.Sort((Race r1, Race r2) => Array.IndexOf<Race>(order, r1).CompareTo(Array.IndexOf<Race>(order, r2)));
+                    this.races.Sort((CardDB.Race r1, CardDB.Race r2) => Array.IndexOf<CardDB.Race>(order, r1).CompareTo(Array.IndexOf<CardDB.Race>(order, r2)));
                 }
                 return this.races;
             }
@@ -1197,6 +1218,7 @@ namespace HREngine.Bots
                 bool REQ_TARGET_IS_NON_TITAN = false;
                 bool REQ_TARGET_SILVER_HAND_RECRUIT = false;
                 bool REQ_LOCATION_TARGET = false;
+                bool REQ_TARGET_MUST_HAVE_TAG = false;
                 foreach (PlayReq pr in this.sim_card.GetPlayReqs())
                 {
                     switch (pr.errorType)
@@ -1389,9 +1411,15 @@ namespace HREngine.Bots
                             continue;
                         case ErrorType2.REQ_TARGET_IS_NON_TITAN:
                             REQ_TARGET_IS_NON_TITAN = true;
+                            extraParam = true;
                             continue;
                         case ErrorType2.REQ_TARGET_SILVER_HAND_RECRUIT:
                             REQ_TARGET_SILVER_HAND_RECRUIT = true;
+                            extraParam = true;
+                            continue;
+                        case ErrorType2.REQ_TARGET_MUST_HAVE_TAG:
+                            REQ_TARGET_MUST_HAVE_TAG = true;
+                            extraParam = true;
                             continue;
                     }
                 }
@@ -1437,6 +1465,47 @@ namespace HREngine.Bots
                 if (extraParam)
                 {
                     wereTargets = true;
+                    if (REQ_TARGET_MUST_HAVE_TAG)
+                    {
+                        foreach (Minion m in targets)
+                        {
+                            switch (this.needTagForPlaying)
+                            {
+                                case Specialtags.IMP:
+                                    m.extraParam = !m.handcard.card.IMP;
+                                    break;
+                                case Specialtags.markOfEvil:
+                                    m.extraParam = !m.handcard.card.markOfEvil;
+                                    break;
+                                case Specialtags.Treant:
+                                    m.extraParam = !m.handcard.card.Treant;
+                                    break;
+                                case Specialtags.Whelp:
+                                    m.extraParam = !m.handcard.card.Whelp;
+                                    break;
+                                case Specialtags.StarshipPiece:
+                                case Specialtags.Starship:
+                                    m.extraParam = !m.handcard.card.Starship && !m.handcard.card.StarshipPiece;
+                                    break;
+                            }
+                        }
+
+                    }
+                    if (REQ_TARGET_IS_NON_TITAN)
+                    {
+                        foreach (Minion m in targets)
+                        {
+                            if (!m.handcard.card.Titan) m.extraParam = true;
+                        }
+                    }
+                    if (REQ_TARGET_SILVER_HAND_RECRUIT)
+                    {
+                        foreach (Minion m in targets)
+                        {
+                            if (!m.handcard.card.SilverHandRecruit) m.extraParam = true;
+                        }
+                    }
+
                     if (REQ_TARGET_WITH_RACE)
                     {
                         foreach (Minion m in targets)
@@ -1462,20 +1531,7 @@ namespace HREngine.Bots
                     }
 
 
-                    if (REQ_TARGET_IS_NON_TITAN)
-                    {
-                        foreach (Minion m in targets)
-                        {
-                            if (m.handcard.card.Titan) m.extraParam = true;
-                        }
-                    }
-                    if (REQ_TARGET_SILVER_HAND_RECRUIT)
-                    {
-                        foreach (Minion m in targets)
-                        {
-                            if (!m.handcard.card.SilverHandRecruit) m.extraParam = true;
-                        }
-                    }
+
                     if (REQ_DAMAGED_TARGET)
                     {
                         foreach (Minion m in targets)
@@ -3164,7 +3220,7 @@ namespace HREngine.Bots
                                 card.Spellburst = true;
                             }
                             break;
-                        case "1452":
+                        case "1551":
                             {
                                 card.Corrupted = true;
                             }
@@ -3322,7 +3378,18 @@ namespace HREngine.Bots
                                 card.armor = int.Parse(tag.GetAttribute("value")); // 英雄牌护甲
                             }
                             break;
-
+                        case "3382":
+                            {
+                                card.KeepHeroClass = int.Parse(tag.GetAttribute("value"));//打出英雄保持原职业
+                            }
+                            break;
+                        case "1452":
+                            {
+                                card.CollectionRelatedCardDataBaseId = int.Parse(tag.GetAttribute("value"));//收藏中关联的卡牌
+                                card.CollectionRelatedCardDataBase = getCardDataFromDbfID(tag.GetAttribute("value"));
+                            }
+                            break;
+                            
                         case "1077":
                             {
                                 card.CastsWhenDrawn = int.Parse(tag.GetAttribute("value")); // 抽到时触发效果的属性
@@ -3366,6 +3433,7 @@ namespace HREngine.Bots
                         case "2831":
                             {
                                 card.Treant = true; // 树人
+
                             }
                             break;
                         case "1965":
@@ -3380,12 +3448,12 @@ namespace HREngine.Bots
                             break;
                         case "3555":
                             {
-                                card.StarshipPiece = true; // 星舰组件
+                                card.Starship = true; // 星舰
                             }
                             break;
                         case "3568":
                             {
-                                card.Starship = true; // 星舰
+                                card.StarshipPiece = true; // 星舰组件
                             }
                             break;
                         case "3631":
@@ -3628,7 +3696,7 @@ namespace HREngine.Bots
                     {
                     }
                 }
-                if (c.trigers.Count > 10) c.trigers.Clear();
+                if (c.trigers.Count > 20) c.trigers.Clear();
             }
         }
     }
@@ -3660,6 +3728,16 @@ namespace HREngine.Bots
         {
             this.errorType = errorType;
             this.param = param;
+        }
+        public PlayReq(CardDB.ErrorType2 errorType, CardDB.Race race)
+        {
+            this.errorType = errorType;
+            this.param = (int)race;
+        }
+        public PlayReq(CardDB.ErrorType2 errorType, CardDB.Specialtags specialtags)
+        {
+            this.errorType = errorType;
+            this.param = (int)specialtags;
         }
 
         public PlayReq(CardDB.ErrorType2 errorType)
@@ -3703,6 +3781,9 @@ namespace HREngine.Bots
                     break;
                 case CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE_AND_MINIMUM_FRIENDLY_SECRETS:
                     card.needControlaSecret = param;
+                    break;
+                case CardDB.ErrorType2.REQ_TARGET_MUST_HAVE_TAG:
+                    card.needTagForPlaying = (CardDB.Specialtags)param;
                     break;
             }
         }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Linq;
 using Buddy.Coroutines;
 using Triton.Bot;
@@ -18,7 +19,7 @@ namespace HREngine.Bots
         // private static readonly ILog Log = Logger.GetLoggerInstanceForType();
         public string versionnumber = "2025.08.08";
         private bool singleLog = false;
-        private string botbehave = "noname";
+        private StringBuilder botbehave = new StringBuilder("noname", 20);
         private bool needSleep = false;
 
         public Playfield lastpf;
@@ -809,7 +810,7 @@ namespace HREngine.Bots
 
                 m.numAttacksThisTurn = card.GetTag(GAME_TAG.NUM_ATTACKS_THIS_TURN);//本回合攻击次数
                 m.extraAttacksThisTurn = card.GetTag(GAME_TAG.EXTRA_ATTACKS_THIS_TURN);//本回合额外的攻击次数
-                m.CooldownTurn = card.GetLocationCooldown();//获取地标冷却
+                // m.CooldownTurn = card.GetLocationCooldown();//获取地标冷却
                 m.playedThisTurn = (card.GetTag(GAME_TAG.NUM_TURNS_IN_PLAY) == 0) ? true : false;
 
                 m.Spellburst = card.GetTag(GAME_TAG.SPELLBURST) != 0;//法力迸发
@@ -873,6 +874,7 @@ namespace HREngine.Bots
 
                 m.Ready = card.CanBeUsed;
                 m.updateReadyness();
+                
                 // if (m.rush > 0 && !m.untouchable && m.charge == 0 && (m.numAttacksThisTurn == 0 || (m.numAttacksThisTurn == 1 && m.windfury)))
                 // {
                 //     m.Ready = true;
@@ -1021,52 +1023,49 @@ namespace HREngine.Bots
 
         private void updateBehaveString(Behavior botbase)
         {
-            this.botbehave = botbase.BehaviorName();
-            this.botbehave += " " + Ai.Instance.maxwide + " maxCal " + Ai.Instance.maxCal + " maxWide " + Ai.Instance.maxwide;
-            this.botbehave += " face " + ComboBreaker.Instance.attackFaceHP;
-            if (Settings.Instance.berserkIfCanFinishNextTour > 0) this.botbehave += " berserk:" + Settings.Instance.berserkIfCanFinishNextTour;
-            if (Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp > 0) this.botbehave += " womob:" + Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp;
+            botbehave = new StringBuilder(botbase.BehaviorName(), 100);
+            botbehave.AppendFormat(" {0} maxCal {1} maxWide {2}", Ai.Instance.maxwide, Ai.Instance.maxCal, Ai.Instance.maxwide);
+            botbehave.AppendFormat(" face {0}", ComboBreaker.Instance.attackFaceHP);
+            if (Settings.Instance.berserkIfCanFinishNextTour > 0) botbehave.AppendFormat(" berserk:{0}", Settings.Instance.berserkIfCanFinishNextTour);
+            if (Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp > 0) botbehave.AppendFormat(" womob:{0}", Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp);
             if (Settings.Instance.secondTurnAmount > 0)
             {
                 if (Ai.Instance.nextMoveGuess.mana == -100)
                 {
                     Ai.Instance.updateTwoTurnSim();
                 }
-                this.botbehave += " twoturnsim " + Settings.Instance.secondTurnAmount + " ntss " +
-                                  Settings.Instance.nextTurnDeep + " " + Settings.Instance.nextTurnMaxWide + " " +
-                                  Settings.Instance.nextTurnTotalBoards;
+                botbehave.AppendFormat(" twoturnsim {0} ntss {1} {2} {3}", Settings.Instance.secondTurnAmount, Settings.Instance.nextTurnDeep, Settings.Instance.nextTurnMaxWide, Settings.Instance.nextTurnTotalBoards);
+
             }
 
             if (Settings.Instance.playaround)
             {
-                this.botbehave += " playaround";
-                this.botbehave += " " + Settings.Instance.playaroundprob + " " + Settings.Instance.playaroundprob2;
+                botbehave.AppendFormat(" playaround {0} {1}", Settings.Instance.playaroundprob, Settings.Instance.playaroundprob2);
             }
-
-            this.botbehave += " ets " + Settings.Instance.enemyTurnMaxWide;
+            botbehave.AppendFormat(" ets {0}", Settings.Instance.enemyTurnMaxWide);
 
             if (Settings.Instance.twotsamount > 0)
             {
-                this.botbehave += " ets2 " + Settings.Instance.enemyTurnMaxWideSecondStep;
+                botbehave.AppendFormat(" ets2 {0}", Settings.Instance.enemyTurnMaxWideSecondStep);
             }
 
             if (Settings.Instance.useSecretsPlayAround)
             {
-                this.botbehave += " secret";
+                botbehave.Append(" secret");
             }
 
             if (Settings.Instance.secondweight != 0.5f)
             {
-                this.botbehave += " weight " + (int)(Settings.Instance.secondweight * 100f);
+                botbehave.AppendFormat(" weight {0}", (int)(Settings.Instance.secondweight * 100f));
             }
 
             if (Settings.Instance.placement != 0)
             {
-                this.botbehave += " plcmnt:" + Settings.Instance.placement;
+                botbehave.AppendFormat(" plcmnt {0}", Settings.Instance.placement);
             }
+            botbehave.AppendFormat(" aA {0}", Settings.Instance.adjustActions);
 
-            this.botbehave += " aA " + Settings.Instance.adjustActions;
-            if (Settings.Instance.concedeMode != 0) this.botbehave += " cede:" + Settings.Instance.concedeMode;
+            if (Settings.Instance.concedeMode != 0) botbehave.AppendFormat(" cede:{0}", Settings.Instance.concedeMode);
 
         }
 
@@ -1148,14 +1147,14 @@ namespace HREngine.Bots
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("开始计算, 已花费时间: " + DateTime.Now.ToString("HH:mm:ss") + " V" +
-                                        this.versionnumber + " " + this.botbehave);
+                                        this.versionnumber + " " + this.botbehave.ToString());
             if (!Helpfunctions.Instance.writelogg) return;
             // 输出当前场面价值判定
-            string normalInfo = "";
-            String enemyVal = "[敌方场面] ";
-            String myVal = "[我方场面] ";
-            String handCard = "[我方手牌] ";
-            String enemyGuessHandCard = "[敌方剩余卡牌预测] ";
+            StringBuilder normalInfo = new StringBuilder("", 100);
+            StringBuilder enemyVal = new StringBuilder("[敌方场面] ", 20);
+            StringBuilder myVal = new StringBuilder("[我方场面] ", 20);
+            StringBuilder handCard = new StringBuilder("[我方手牌] ", 20);
+            StringBuilder enemyGuessHandCard = new StringBuilder("[敌方剩余卡牌预测] ", 20);
             // String playedRaceThisTurn = "[本回合使用种族类型]: ";
             // String playedRacesLastTurn = "[上回合使用种族类型]: ";
             // String playedSpellSchoolThisTurn = "[本回合使用法术类型]: ";
@@ -1192,44 +1191,78 @@ namespace HREngine.Bots
             // // playedSpellSchoolLastTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
             // playedSpellSchoolLastTurn += ";";
 
-            normalInfo += "水晶： " + p.mana + " / " + p.ownMaxMana
-    + " [我方英雄] " + p.ownHeroName + " （生命: " + p.ownHero.Hp + " + " + p.ownHero.armor
-    + (p.ownWeapon != null ? " 武器: " + p.ownWeapon.card.nameCN + " ( " + p.ownWeapon.Angr + " / " + p.ownWeapon.Durability + " ) " : "")
-    + (p.ownSecretsIDList.Count > 0 ? " 奥秘数: " + p.ownSecretsIDList.Count : "") + ") "
-    + "[敌方英雄] " + p.enemyHeroName + " （生命: " + p.enemyHero.Hp + " + " + p.enemyHero.armor
-    + (p.enemyWeapon != null ? " 武器: " + p.enemyWeapon.card.nameCN + " ( " + p.enemyWeapon.Angr + " / " + p.enemyWeapon.Durability + " ) " : "")
-    + (p.enemySecretCount > 0 ? " 奥秘数: " + p.enemySecretCount : "") + (p.enemyHero.immune ? " 免疫" : "") + ") ";
+
+            normalInfo.AppendFormat("水晶： {0} / {1}", p.mana, p.ownMaxMana);
+            StringBuilder ownWeapon = new StringBuilder("");
+            if (p.ownWeapon != null)
+                ownWeapon.AppendFormat("武器:  {0} ( {1} / {2} ) ", p.ownWeapon.card.nameCN, p.ownWeapon.Angr, p.ownWeapon.Durability);
+
+            normalInfo.AppendFormat(" [我方英雄] {0}（生命: {1} + {2} {3}奥秘数: {4} )", p.ownHeroName, p.ownHero.Hp, p.ownHero.armor, ownWeapon, p.ownSecretsIDList.Count);
+            StringBuilder enemyWeapon = new StringBuilder("");
+            if (p.enemyWeapon != null)
+                enemyWeapon.AppendFormat("武器:  {0} ( {1} / {2} ) ", p.enemyWeapon.card.nameCN, p.enemyWeapon.Angr, p.enemyWeapon.Durability);
+
+            normalInfo.AppendFormat(" [敌方英雄] {0}（生命: {1} + {2} {3}奥秘数: {4}{5})", p.enemyHeroName, p.enemyHero.Hp, p.enemyHero.armor, enemyWeapon, p.enemySecretCount, (p.enemyHero.immune ? " 免疫" : ""));
+            normalInfo.AppendFormat(" [任务] quests: {0} {1} {2}", p.ownQuest.Id, p.ownQuest.questProgress, p.ownQuest.maxProgress);
+            normalInfo.AppendFormat(" {0} {1} {2}", p.enemyQuest.Id, p.enemyQuest.questProgress, p.enemyQuest.maxProgress);
+
             foreach (Minion m in p.enemyMinions)
             {
-                enemyVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.frozen ? "[冻结]" : "") + (m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ");
+                enemyVal.Append(m.handcard.card.nameCN).Append(" ( " + m.Angr + " / " + m.Hp + " ) ").Append(m.frozen ? "[冻结]" : "").Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                enemyVal.Append(m.windfury ? "[风怒]" : "");
+                enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                enemyVal.Append(m.taunt ? "[嘲讽]" : "");
+                enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
+                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.lifesteal ? "[吸血]" : "");
+                enemyVal.Append(m.poisonous ? "[剧毒]" : "");
+                enemyVal.Append(m.reborn ? "[复生]" : "");
+                enemyVal.Append(m.stealth ? "[潜行]" : "");
+                enemyVal.Append(m.immune ? "[免疫]" : "");
             }
             foreach (Minion m in p.ownMinions)
             {
-                myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ")
-                 + (m.handcard.card.Titan ? "[泰坦]" + (m.handcard.card.TitanAbilityUsed1 ? " 技能1可以使用" : " 技能1冷却") + (m.handcard.card.TitanAbilityUsed2 ? " 技能2可以使用" : " 技能2冷却") + (m.handcard.card.TitanAbilityUsed3 ? " 技能3可以使用" : " 技能3冷却") : " ");
-                // myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " )" + (m.handcard.card.GetRaceCount() > 0 ? "[第一种族:" + m.handcard.card.GetRaces()[0].ToString() + "]" : "") + (m.handcard.card.GetRaceCount() > 1 ? "[第二种族:" + m.handcard.card.GetRaces()[1].ToString() + "]" : "") + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : " ");
+                myVal.Append(m.handcard.card.nameCN).Append(" ( " + m.Angr + " / " + m.Hp + " ) ").Append(m.frozen ? "[冻结]" : "").Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                myVal.Append(m.windfury ? "[风怒]" : "");
+                myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                myVal.Append(m.taunt ? "[嘲讽]" : "");
+                myVal.Append(m.rush > 0 ? "[突袭]" : "");
+                myVal.Append(m.divineshild ? "[圣盾]" : "");
+                myVal.Append(m.lifesteal ? "[吸血]" : "");
+                myVal.Append(m.poisonous ? "[剧毒]" : "");
+                myVal.Append(m.reborn ? "[复生]" : "");
+                myVal.Append(m.stealth ? "[潜行]" : "");
+                myVal.Append(m.immune ? "[免疫]" : "");
+                if (m.handcard.card.Titan)
+                {
+                    myVal.Append("[泰坦]");
+                    myVal.Append(m.handcard.card.TitanAbilityUsed1 ? " 技能1可以使用" : " 技能1冷却");
+                    myVal.Append(m.handcard.card.TitanAbilityUsed2 ? " 技能2可以使用" : " 技能2冷却");
+                    myVal.Append(m.handcard.card.TitanAbilityUsed3 ? " 技能3可以使用" : " 技能3冷却");
+                }
             }
             foreach (Handmanager.Handcard hc in p.owncards)
             {
-                handCard += hc.card.nameCN + "(费用： " + hc.manacost + " ； " + (hc.addattack + hc.card.Attack) + " / " + (hc.addHp + hc.card.Health) + " ) ";
+                handCard.AppendFormat("{0}(费用： {1} ； {2} / {3} ) ", hc.card.nameCN, hc.manacost, (hc.addattack + hc.card.Attack), (hc.addHp + hc.card.Health));
+
             }
             foreach (var item in Hrtprozis.Instance.guessEnemyDeck)
             {
                 CardDB.Card card = CardDB.Instance.getCardDataFromDbfID(item.Key);
-                enemyGuessHandCard += card.nameCN + (item.Value > 1 ? "(" + item.Value + ")" : "") + ";";
+                enemyGuessHandCard.AppendFormat("{0}{1};", card.nameCN, (item.Value > 1 ? "(" + item.Value + ")" : ""));
             }
 
             // Helpfunctions.Instance.logg(playedRaceThisTurn);
             // Helpfunctions.Instance.logg(playedRacesLastTurn);
             // Helpfunctions.Instance.logg(playedSpellSchoolThisTurn);
             // Helpfunctions.Instance.logg(playedSpellSchoolLastTurn);
-            Helpfunctions.Instance.logg(normalInfo);
+            Helpfunctions.Instance.logg(normalInfo.ToString());
             Helpfunctions.Instance.logg("(猜测对手构筑为:" + p.enemyGuessDeck + " 套牌代码：" + Hrtprozis.Instance.enemyDeckCode);
             Helpfunctions.Instance.logg("预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + "， 加上场攻一共 " + (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr()) + " )");
-            Helpfunctions.Instance.logg(enemyVal);
-            Helpfunctions.Instance.logg(myVal);
-            Helpfunctions.Instance.logg(handCard);
-            Helpfunctions.Instance.logg(enemyGuessHandCard);
+            Helpfunctions.Instance.logg(enemyVal.ToString());
+            Helpfunctions.Instance.logg(myVal.ToString());
+            Helpfunctions.Instance.logg(handCard.ToString());
+            Helpfunctions.Instance.logg(enemyGuessHandCard.ToString());
 
             Helpfunctions.Instance.logg("#######################################################################");
             Helpfunctions.Instance.logg("#######################################################################");

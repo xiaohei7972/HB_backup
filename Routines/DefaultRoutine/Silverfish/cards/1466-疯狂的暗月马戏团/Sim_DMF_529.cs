@@ -11,7 +11,14 @@ namespace HREngine.Bots
 	//在一个友方<b>突袭</b>随从攻击后，对敌方英雄造成2点伤害。
 	class Sim_DMF_529 : SimTemplate
 	{
-		
-		
+		public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+		{
+			Minion hero = triggerEffectMinion.own ? p.enemyHero : p.ownHero;
+			if (attacker.own && attacker.rush > 0)
+			{
+				p.minionGetDamageOrHeal(hero, 2);
+			}
+		}
+
 	}
 }

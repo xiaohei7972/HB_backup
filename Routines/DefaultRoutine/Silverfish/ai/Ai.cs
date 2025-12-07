@@ -30,7 +30,7 @@ namespace HREngine.Bots
         public int lethalMissing = 30; //RR
 
         public MiniSimulator mainTurnSimulator;
- 		public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
+        public List<EnemyTurnSimulator> enemyTurnSim = new List<EnemyTurnSimulator>();
         public List<MiniSimulatorNextTurn> nextTurnSimulator = new List<MiniSimulatorNextTurn>();
         public List<EnemyTurnSimulator> enemySecondTurnSim = new List<EnemyTurnSimulator>();
 
@@ -88,7 +88,7 @@ namespace HREngine.Bots
         public void setMaxWide(int mw)
         {
             this.maxwide = mw;
-            if (maxwide <= 0) this.maxwide = 3000;            
+            if (maxwide <= 0) this.maxwide = 3000;
             if (maxwide <= 100) this.maxwide = 100;
             this.mainTurnSimulator.updateParams(maxdeep, maxwide, 0);
         }
@@ -193,7 +193,7 @@ namespace HREngine.Bots
                 this.bestmove = this.bestActions[0];
                 this.bestActions.RemoveAt(0);
             }
-            this.bestmoveValue = bestval;  
+            this.bestmoveValue = bestval;
 
             if (bestmove != null && bestmove.actionType != actionEnum.endturn) // save the guessed move, so we doesnt need to recalc!
             {
@@ -212,7 +212,7 @@ namespace HREngine.Bots
                 help.logg("斩杀检验结束：还差伤害:" + this.lethalMissing);
             }
         }
-        
+
         public void doNextCalcedMove()
         {
             help.logg("noRecalcNeeded!!!-----------------------------------");
@@ -275,7 +275,8 @@ namespace HREngine.Bots
             help.loggonoff(false);
             //do we need to recalc?
             help.logg("recalc-check###########");
-            if (this.dontRecalc && posmoves[0].isEqual(this.nextMoveGuess, true))
+            //检查是否改变
+            if (this.dontRecalc && posmoves[0].isEqual(this.nextMoveGuess, false))
             {
                 doNextCalcedMove();
             }
@@ -301,7 +302,7 @@ namespace HREngine.Bots
                 }
             }
         }
-        
+
 
 
         public List<double> autoTester(bool printstuff, string data = "", int mode = 0) //测试用函数  返回值是每一步的计算时间
@@ -357,7 +358,7 @@ namespace HREngine.Bots
             //    //可以斩杀
             //}
             //else //如果不足以斩杀
-             
+
             if (mode == 0 || mode == 2)
             {
                 posmoves.Clear();
@@ -398,34 +399,63 @@ namespace HREngine.Bots
             (Application.Current.MainWindow as MainWindow).playfieldActionList.Add("回合开始", new Playfield(p));
 #endif
 
-            string normalInfo = "";
-            String enemyVal = "[敌方场面] ";
-            String myVal = "[我方场面] ";
-            String handCard = "[我方手牌] ";
+            StringBuilder normalInfo = new StringBuilder("", 100);
+            StringBuilder enemyVal = new StringBuilder("[敌方场面] ", 20);
+            StringBuilder myVal = new StringBuilder("[我方场面] ", 20);
+            StringBuilder handCard = new StringBuilder("[我方手牌] ", 20);
 
-            normalInfo += "水晶： " + p.mana + " / " + p.ownMaxMana
-                + " [我方英雄] " + p.ownHeroName + " （生命: " + p.ownHero.Hp + " + " + p.ownHero.armor + " 奥秘数: " + p.ownSecretsIDList.Count + " ) "
-                + "[敌方英雄] " + p.enemyHeroName + " （生命: " + p.enemyHero.Hp + " + " + p.enemyHero.armor + " 奥秘数: " + p.enemySecretCount + (p.enemyHero.immune ? " 免疫" : "") + " ) "
-                + "[任务] quests: " + p.ownQuest.Id + " " + p.ownQuest.questProgress + " " + p.ownQuest.maxProgress + " "
-                + p.enemyQuest.Id + " " + p.enemyQuest.questProgress + " " + p.enemyQuest.maxProgress;
+            normalInfo.AppendFormat("水晶： {0} / {1}", p.mana, p.ownMaxMana);
+            normalInfo.AppendFormat(" [我方英雄] {0}（生命: {1} + {2} 奥秘数: {3} )", p.ownHeroName, p.ownHero.Hp, p.ownHero.armor, p.ownSecretsIDList.Count);
+            normalInfo.AppendFormat(" [敌方英雄] {0}（生命: {1} + {2} 奥秘数: {3}{4})", p.enemyHeroName, p.enemyHero.Hp, p.enemyHero.armor, p.enemySecretCount, (p.enemyHero.immune ? " 免疫" : ""));
+            normalInfo.AppendFormat(" [任务] quests: {0} {1} {2}", p.ownQuest.Id, p.ownQuest.questProgress, p.ownQuest.maxProgress);
+            normalInfo.AppendFormat(" {0} {1} {2}", p.enemyQuest.Id, p.enemyQuest.questProgress, p.enemyQuest.maxProgress);
+
+            // normalInfo += "水晶： " + p.mana + " / " + p.ownMaxMana
+            // + " [我方英雄] " + p.ownHeroName + " （生命: " + p.ownHero.Hp + " + " + p.ownHero.armor + " 奥秘数: " + p.ownSecretsIDList.Count + " ) "
+            // + "[敌方英雄] " + p.enemyHeroName + " （生命: " + p.enemyHero.Hp + " + " + p.enemyHero.armor + " 奥秘数: " + p.enemySecretCount + (p.enemyHero.immune ? " 免疫" : "") + " ) "
+            // + "[任务] quests: " + p.ownQuest.Id + " " + p.ownQuest.questProgress + " " + p.ownQuest.maxProgress + " "
+            // + p.enemyQuest.Id + " " + p.enemyQuest.questProgress + " " + p.enemyQuest.maxProgress;
             foreach (Minion m in p.enemyMinions)
             {
-                enemyVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " ) " + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : "");
+                enemyVal.AppendFormat("{0} ({1}/{2}) ", m.handcard.card.nameCN, m.Angr, m.Hp);
+                enemyVal.Append(m.frozen ? "[冻结]" : "");
+                enemyVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                enemyVal.Append(m.windfury ? "[风怒]" : "");
+                enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                enemyVal.Append(m.taunt ? "[嘲讽]" : "");
+                enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
+                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.lifesteal ? "[吸血]" : "");
+                enemyVal.Append(m.poisonous ? "[剧毒]" : "");
+                enemyVal.Append(m.reborn ? "[复生]" : "");
+                enemyVal.Append(m.stealth ? "[潜行]" : "");
+                enemyVal.Append(m.immune ? "[免疫]" : "");
             }
             foreach (Minion m in p.ownMinions)
             {
-                myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " ) " + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : "");
+                myVal.AppendFormat("{0} ({1}/{2}) ", m.handcard.card.nameCN, m.Angr, m.Hp);
+                myVal.Append(m.frozen ? "[冻结]" : "");
+                myVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                myVal.Append(m.windfury ? "[风怒]" : "");
+                myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                myVal.Append(m.taunt ? "[嘲讽]" : "");
+                myVal.Append(m.rush > 0 ? "[突袭]" : "");
+                myVal.Append(m.divineshild ? "[圣盾]" : "");
+                myVal.Append(m.lifesteal ? "[吸血]" : "");
+                myVal.Append(m.poisonous ? "[剧毒]" : "");
+                myVal.Append(m.reborn ? "[复生]" : "");
+                myVal.Append(m.stealth ? "[潜行]" : "");
+                myVal.Append(m.immune ? "[免疫]" : "");
             }
             foreach (Handmanager.Handcard hc in p.owncards)
             {
-                handCard += hc.card.nameCN + " (费用: " + hc.manacost + " ; " + (hc.addattack + hc.card.Attack) + " / " + (hc.addHp + hc.card.Health) + " ) ";
+                handCard.AppendFormat("{0}(费用：{1} ； {2} / {3} ) ", hc.card.nameCN, hc.manacost, (hc.addattack + hc.card.Attack), (hc.addHp + hc.card.Health));
             }
 
-            help.logg(normalInfo + (p.enemyGuessDeck == "" ? "": "(猜测对手构筑为:" + p.enemyGuessDeck + " 套牌代码：" + Hrtprozis.Instance.enemyDeckCode + " 预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + " 加上场攻一共 "+ (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr()) + " )") ) ;
-
-            help.logg(enemyVal);
-            help.logg(myVal);
-            help.logg(handCard);
+            help.logg(normalInfo.ToString() + (p.enemyGuessDeck == "" ? "" : "(猜测对手构筑为:" + p.enemyGuessDeck + " 套牌代码：" + Hrtprozis.Instance.enemyDeckCode + " 预计直伤： " + Hrtprozis.Instance.enemyDirectDmg + " 加上场攻一共 " + (Hrtprozis.Instance.enemyDirectDmg + p.calEnemyTotalAngr()) + " )"));
+            help.logg(enemyVal.ToString());
+            help.logg(myVal.ToString());
+            help.logg(handCard.ToString());
             help.logg("########################################################################################################");
             help.logg("simulate best board，最终结果如下：");
             help.logg("########################################################################################################");
@@ -455,7 +485,7 @@ namespace HREngine.Bots
                 tempbestboard.mana = -100;
                 help.ErrorLog("end turn");
             }
-            
+
             foreach (Action imove in this.bestActions)  // imove:每一步动作  bestmove + bestActions 才是整体，因为有个RemoveAt的操作
             {
                 step++;
@@ -478,33 +508,73 @@ namespace HREngine.Bots
             (Application.Current.MainWindow as MainWindow).UpdatePlayfieldActionList();
 #endif
 
-            normalInfo = "水晶： " + tempbestboard.mana + " / " + tempbestboard.ownMaxMana
-                + " [我方英雄] " + tempbestboard.ownHeroName + " （生命: " + tempbestboard.ownHero.Hp + " + " + tempbestboard.ownHero.armor + " 奥秘数: " + tempbestboard.ownSecretsIDList.Count + " ) "
-                + "[敌方英雄] " + tempbestboard.enemyHeroName + " （生命: " + tempbestboard.enemyHero.Hp + " + " + tempbestboard.enemyHero.armor + " 奥秘数: " + tempbestboard.enemySecretCount + (tempbestboard.enemyHero.immune ? " 免疫" : "") + " ) "
-                + "[任务] quests: " + tempbestboard.ownQuest.Id + " " + tempbestboard.ownQuest.questProgress + " " + tempbestboard.ownQuest.maxProgress + " "
-                + tempbestboard.enemyQuest.Id + " " + tempbestboard.enemyQuest.questProgress + " " + tempbestboard.enemyQuest.maxProgress;
-            enemyVal = "[敌方场面] ";
-            myVal = "[我方场面] ";
-            handCard = "[我方手牌] ";
-            foreach (Minion m in tempbestboard.enemyMinions)
+            // normalInfo = "水晶： " + tempbestboard.mana + " / " + tempbestboard.ownMaxMana
+            //     + " [我方英雄] " + tempbestboard.ownHeroName + " （生命: " + tempbestboard.ownHero.Hp + " + " + tempbestboard.ownHero.armor + " 奥秘数: " + tempbestboard.ownSecretsIDList.Count + " ) "
+            //     + "[敌方英雄] " + tempbestboard.enemyHeroName + " （生命: " + tempbestboard.enemyHero.Hp + " + " + tempbestboard.enemyHero.armor + " 奥秘数: " + tempbestboard.enemySecretCount + (tempbestboard.enemyHero.immune ? " 免疫" : "") + " ) "
+            //     + "[任务] quests: " + tempbestboard.ownQuest.Id + " " + tempbestboard.ownQuest.questProgress + " " + tempbestboard.ownQuest.maxProgress + " "
+            //     + tempbestboard.enemyQuest.Id + " " + tempbestboard.enemyQuest.questProgress + " " + tempbestboard.enemyQuest.maxProgress;
+            //enemyVal = "[敌方场面] ";
+            //myVal = "[我方场面] ";
+            normalInfo = new StringBuilder("", 100);
+            normalInfo.AppendFormat("水晶： {0} / {1}", p.mana, p.ownMaxMana);
+            normalInfo.AppendFormat(" [我方英雄] {0}（生命: {1} + {2} 奥秘数: {3} )", p.ownHeroName, p.ownHero.Hp, p.ownHero.armor, p.ownSecretsIDList.Count);
+            normalInfo.AppendFormat(" [敌方英雄] {0}（生命: {1} + {2} 奥秘数: {3}{4})", p.enemyHeroName, p.enemyHero.Hp, p.enemyHero.armor, p.enemySecretCount, (p.enemyHero.immune ? " 免疫" : ""));
+            normalInfo.AppendFormat(" [任务] quests: {0} {1} {2}", p.ownQuest.Id, p.ownQuest.questProgress, p.ownQuest.maxProgress);
+            normalInfo.AppendFormat(" {0} {1} {2}", p.enemyQuest.Id, p.enemyQuest.questProgress, p.enemyQuest.maxProgress);
+            enemyVal = new StringBuilder("[敌方场面] ", 60);
+            myVal = new StringBuilder("[我方场面] ", 60);
+            handCard = new StringBuilder("[我方手牌] ", 60);
+            /*foreach (Minion m in tempbestboard.enemyMinions)
             {
                 enemyVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " ) " + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.reborn ? "[复生]" : "") + (m.divineshild ? "[圣盾]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : "");
             }
             foreach (Minion m in tempbestboard.ownMinions)
             {
                 myVal += m.handcard.card.nameCN + " ( " + m.Angr + " / " + m.Hp + " ) " + (m.frozen ? "[冻结]" : "") + (!m.Ready || m.cantAttack ? "[无法攻击]" : "") + (m.reborn ? "[复生]" : "") + (m.divineshild ? "[圣盾]" : "") + (m.windfury ? "[风怒]" : "") + (m.taunt ? "[嘲讽]" : "");
+            }*/
+            foreach (Minion m in tempbestboard.enemyMinions)
+            {
+                enemyVal.AppendFormat("{0} ({1}/{2}) ", m.handcard.card.nameCN, m.Angr, m.Hp);
+                enemyVal.Append(m.frozen ? "[冻结]" : "");
+                enemyVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                enemyVal.Append(m.windfury ? "[风怒]" : "");
+                enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                enemyVal.Append(m.taunt ? "[嘲讽]" : "");
+                enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
+                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.lifesteal ? "[吸血]" : "");
+                enemyVal.Append(m.poisonous ? "[剧毒]" : "");
+                enemyVal.Append(m.reborn ? "[复生]" : "");
+                enemyVal.Append(m.stealth ? "[潜行]" : "");
+                enemyVal.Append(m.immune ? "[免疫]" : "");
+            }
+            foreach (Minion m in tempbestboard.ownMinions)
+            {
+                myVal.AppendFormat("{0} ({1}/{2}) ", m.handcard.card.nameCN, m.Angr, m.Hp);
+                myVal.Append(m.frozen ? "[冻结]" : "");
+                myVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                myVal.Append(m.windfury ? "[风怒]" : "");
+                myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                myVal.Append(m.taunt ? "[嘲讽]" : "");
+                myVal.Append(m.rush > 0 ? "[突袭]" : "");
+                myVal.Append(m.divineshild ? "[圣盾]" : "");
+                myVal.Append(m.lifesteal ? "[吸血]" : "");
+                myVal.Append(m.poisonous ? "[剧毒]" : "");
+                myVal.Append(m.reborn ? "[复生]" : "");
+                myVal.Append(m.stealth ? "[潜行]" : "");
+                myVal.Append(m.immune ? "[免疫]" : "");
             }
             foreach (Handmanager.Handcard hc in tempbestboard.owncards)
             {
-                handCard += hc.card.nameCN + " (费用: " + hc.manacost + " ; " + (hc.addattack + hc.card.Attack) + " / " + (hc.addHp + hc.card.Health) + " ) ";
+                handCard.AppendFormat("{0}(费用：{1} ； {2} / {3} ) ", hc.card.nameCN, hc.manacost, (hc.addattack + hc.card.Attack), (hc.addHp + hc.card.Health));
             }
 
             help.logg("########################################################################################################");
             help.logg("最终场面：");
-            help.logg(normalInfo);
-            help.logg(enemyVal);
-            help.logg(myVal);
-            help.logg(handCard);
+            help.logg(normalInfo.ToString());
+            help.logg(enemyVal.ToString());
+            help.logg(myVal.ToString());
+            help.logg(handCard.ToString());
             help.logg("########################################################################################################");
 
             // 打印结果设置

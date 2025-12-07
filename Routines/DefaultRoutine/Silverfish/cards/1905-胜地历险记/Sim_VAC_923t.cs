@@ -16,13 +16,21 @@ namespace HREngine.Bots
 		{
 			if (target != null)
 			{
-				kid.Attack = triggerMinion.handcard.card.TAG_SCRIPT_DATA_NUM_1;
-				kid.Health = triggerMinion.Hp;
-				kid.CooldownTurn = triggerMinion.CooldownTurn;
+				int Attack = triggerMinion.handcard.card.TAG_SCRIPT_DATA_NUM_1;
+				int Health = triggerMinion.Hp;
+				// int CooldownTurn = triggerMinion.CooldownTurn;
 
-				p.minionGetBuffed(target, triggerMinion.handcard.card.TAG_SCRIPT_DATA_NUM_1 < 3 ? 3 : triggerMinion.handcard.card.TAG_SCRIPT_DATA_NUM_1, 0);
+				p.minionGetBuffed(target, triggerMinion.TAG_SCRIPT_DATA_NUM_1, 0);
 				p.minionGetRush(target);
-				p.callKid(kid, triggerMinion.zonepos - 1, triggerMinion.own);
+				Minion SancAzel = p.callKidAndReturn(kid, triggerMinion.zonepos - 1, triggerMinion.own);
+
+				if (SancAzel != null)
+				{
+					SancAzel.Hp = Health - 1;
+					SancAzel.Angr = Attack;
+					SancAzel.CooldownTurn = 2;
+				}
+
 			}
 		}
 

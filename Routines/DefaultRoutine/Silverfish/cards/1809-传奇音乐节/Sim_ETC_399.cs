@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>突袭</b>。在一个友方<b>突袭</b>随从攻击后，使你的随从获得+1攻击力。
 	class Sim_ETC_399 : SimTemplate
 	{
-		
-		
+		public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+		{
+			if (attacker.own && attacker.rush > 0)
+			{
+				p.allMinionOfASideGetBuffed(attacker.own, 1, 0);
+			}
+		}
+
 	}
 }

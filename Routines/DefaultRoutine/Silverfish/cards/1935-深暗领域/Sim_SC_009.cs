@@ -11,7 +11,20 @@ namespace HREngine.Bots
 	//在一个友方随从攻击后，随机对一个敌人造成1点伤害<i>（如果你的随从为异虫则为2点）</i>。
 	class Sim_SC_009 : SimTemplate
 	{
-		
-		
+		public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+		{
+			if (attacker.own)
+			{
+				if (attacker.handcard.card.Zerg)
+				{
+					p.DealDamageToRandomCharacter(triggerEffectMinion.own, 2);
+				}
+				else
+				{
+					p.DealDamageToRandomCharacter(triggerEffectMinion.own, 1);
+				}
+			}
+		}
+
 	}
 }

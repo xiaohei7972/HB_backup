@@ -77,7 +77,9 @@ namespace HREngine.Bots
                         break;
                     case CardDB.cardIDEnum.TLC_830:
                         // 判断随从是否为野兽或全部
-                        if (m.handcard.card.race == CardDB.Race.PET || m.handcard.card.race == CardDB.Race.ALL)
+                        // if (m.handcard.card.race == CardDB.Race.PET || m.handcard.card.race == CardDB.Race.ALL)
+
+                        if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(),CardDB.Race.PET))
                         {
                             foreach (KeyValuePair<int, bool> kvp in anrgPets)
                             {
@@ -96,7 +98,7 @@ namespace HREngine.Bots
             }
             public void trigger_played()
             {
-                
+
             }
 
             /// <summary>
@@ -121,17 +123,17 @@ namespace HREngine.Bots
             /// </summary>
             /// <param name="target"></param>
             /// <param name="qId"></param>
-            public void trigger_SpellWasPlayed(Handmanager.Handcard hc,Minion target, int qId)
+            public void trigger_SpellWasPlayed(Handmanager.Handcard hc, Minion target, int qId)
             {
                 switch (Id)
                 {
                     case CardDB.cardIDEnum.UNG_954: if (target != null && target.own && !target.isHero) questProgress++; break;
                     case CardDB.cardIDEnum.UNG_028: if (qId > 67) questProgress++; break;
-                    case CardDB.cardIDEnum.SW_450:  break;
+                    case CardDB.cardIDEnum.SW_450: break;
                     case CardDB.cardIDEnum.SW_450t: break;
                     case CardDB.cardIDEnum.SW_450t2: break;
-                    case CardDB.cardIDEnum.TLC_817t: if (hc.card.SpellSchool== CardDB.SpellSchool.HOLY) questProgress++; break;
-                    case CardDB.cardIDEnum.TLC_817t2: if (hc.card.SpellSchool== CardDB.SpellSchool.SHADOW) questProgress++; break;
+                    case CardDB.cardIDEnum.TLC_817t: if (hc.card.SpellSchool == CardDB.SpellSchool.HOLY) questProgress++; break;
+                    case CardDB.cardIDEnum.TLC_817t2: if (hc.card.SpellSchool == CardDB.SpellSchool.SHADOW) questProgress++; break;
 
                 }
             }

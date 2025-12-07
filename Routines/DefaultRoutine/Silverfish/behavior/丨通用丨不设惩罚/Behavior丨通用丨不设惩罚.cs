@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using log4net;
-using Triton.Common.LogUtilities;
 
 namespace HREngine.Bots
 {
     public partial class Behavior丨通用丨不设惩罚 : Behavior
     {
-        private static readonly ILog ilog_0 = Logger.GetLoggerInstanceForType();
         /// <summary>
         /// 敌方奖励
         /// </summary>
@@ -505,12 +502,12 @@ namespace HREngine.Bots
             Hsreplay hs = Hsreplay.Instance;
 
             // 从对应职业的数据列表中找到匹配的卡牌数据
-            var cardStats = Hsreplay.AllCardStats.FirstOrDefault(c => c.DbfId == card.dbfId);
+            CardStats cardStats = Hsreplay.AllCardStats.FirstOrDefault(c => c.DbfId == card.dbfId);
 
             if (cardStats != null)
             {
                 Helpfunctions.Instance.logg("getDiscoverVal - 使用Hsreplay数据比对" + card.nameCN.ToString() + " => " + cardStats.WinrateWhenDrawn);
-                ilog_0.Info("getDiscoverVal - 使用Hsreplay数据比对" + card.nameCN.ToString() + " => " + cardStats.WinrateWhenDrawn);
+                // ilog_0.Info("getDiscoverVal - 使用Hsreplay数据比对" + card.nameCN.ToString() + " => " + cardStats.WinrateWhenDrawn);
                 // 返回 WinrateWhenDrawn 的整数部分
                 return (int)cardStats.WinrateWhenDrawn;
             }

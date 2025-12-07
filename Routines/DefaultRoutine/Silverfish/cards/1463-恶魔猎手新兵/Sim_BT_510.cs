@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//<b>嘲讽</b>在本随从被攻击后，对所有敌人造成1点伤害。
 	class Sim_BT_510 : SimTemplate
 	{
-		
+        public override void AfterAttacked(Playfield p, Minion defender, Minion attacker)
+        {
+            p.allCharsOfASideGetDamage(defender.own,1);
+        }
 		
 	}
 }

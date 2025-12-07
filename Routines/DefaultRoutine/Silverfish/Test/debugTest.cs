@@ -16,7 +16,6 @@ using Triton.Common;
 using Triton.Game;
 using Triton.Game.Mapping;
 using Triton.Game.Data;
-
 using Buddy.Coroutines;
 
 public class RuntimeCode
@@ -28,12 +27,13 @@ public class RuntimeCode
         // CardDB.Card card = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.DINO_434);
         // Log.DebugFormat(card.ToString());
         debugTest ts = new debugTest();
+        // ts.choieCard();
         ts.traverseEntity();
         // ts.judgeResponseMode();
         // ts.getId();
         // using (TritonHs.AcquireFrame())
         // {
-                // TAG_STEP tAG_STEP = (TAG_STEP)gameEntity.GetTag(GAME_TAG.STEP);
+        // TAG_STEP tAG_STEP = (TAG_STEP)gameEntity.GetTag(GAME_TAG.STEP);
         // Log.DebugFormat(tAG_STEP.ToString());
         // Log.DebugFormat(TritonHs.IsInTargetMode().ToString());
         // Log.DebugFormat(gameEntity.GetTag(GAME_TAG.PLAYSTATE).ToString())
@@ -50,23 +50,41 @@ public class RuntimeCode
         public void exterAttacks()
         {
             // GameState gameEntity = GameState.Get();
-        // var entity = gameEntity.GetEntity(106);
-        // Log.DebugFormat("枯竭的 EXHAUSTED 43：" + entity.GetTag(GAME_TAG.EXHAUSTED).ToString());
-        // Log.DebugFormat("枯竭的 TAG_SCRIPT_DATA_NUM_1 43：" + entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
-        // Log.DebugFormat("枯竭的 TAG_SCRIPT_DATA_NUM_2 43：" + entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
+            // var entity = gameEntity.GetEntity(106);
+            // Log.DebugFormat("枯竭的 EXHAUSTED 43：" + entity.GetTag(GAME_TAG.EXHAUSTED).ToString());
+            // Log.DebugFormat("枯竭的 TAG_SCRIPT_DATA_NUM_1 43：" + entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_1).ToString());
+            // Log.DebugFormat("枯竭的 TAG_SCRIPT_DATA_NUM_2 43：" + entity.GetTag(GAME_TAG.TAG_SCRIPT_DATA_NUM_2).ToString());
 
-        /*   GameState gameEntity = GameState.Get();
-          var entity = gameEntity.GetEntity(14);
-          Log.DebugFormat(entity.ToString());
-          Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
-          Log.DebugFormat("这回合额外攻击的次数 EXTRA_ATTACKS_THIS_TURN 444：" + entity.GetTag(444).ToString()); */
-        /*             var HERP = gameEntity.GetEntity(68);
-                    Log.DebugFormat(HERP.ToString());
-                    Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + HERP.GetTag(297).ToString());
-                    Log.DebugFormat("这回合额外攻击的次数 EXTRA_ATTACKS_THIS_TURN 444：" + HERP.GetTag(444).ToString());
-                    Log.DebugFormat("本回合打出的卡牌数量 NUM_CARDS_PLAYED_THIS_TURN 269：" + HERP.GetTag(269).ToString());
-                    Log.DebugFormat("本场打出的法术数量 NUM_SPELLS_PLAYED_THIS_GAME 1780：" + HERP.GetTag(1780).ToString());
-                    Log.DebugFormat("本场英雄力量伤害数量 NUM_HERO_POWER_DAMAGE_THIS_GAME 1025：" + HERP.GetTag(1025).ToString()); */
+            /*   GameState gameEntity = GameState.Get();
+              var entity = gameEntity.GetEntity(14);
+              Log.DebugFormat(entity.ToString());
+              Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + entity.GetTag(297).ToString());
+              Log.DebugFormat("这回合额外攻击的次数 EXTRA_ATTACKS_THIS_TURN 444：" + entity.GetTag(444).ToString()); */
+            /*             var HERP = gameEntity.GetEntity(68);
+                        Log.DebugFormat(HERP.ToString());
+                        Log.DebugFormat("这回合攻击次数 NUM_ATTACKS_THIS_TURN 297：" + HERP.GetTag(297).ToString());
+                        Log.DebugFormat("这回合额外攻击的次数 EXTRA_ATTACKS_THIS_TURN 444：" + HERP.GetTag(444).ToString());
+                        Log.DebugFormat("本回合打出的卡牌数量 NUM_CARDS_PLAYED_THIS_TURN 269：" + HERP.GetTag(269).ToString());
+                        Log.DebugFormat("本场打出的法术数量 NUM_SPELLS_PLAYED_THIS_GAME 1780：" + HERP.GetTag(1780).ToString());
+                        Log.DebugFormat("本场英雄力量伤害数量 NUM_HERO_POWER_DAMAGE_THIS_GAME 1025：" + HERP.GetTag(1025).ToString()); */
+
+        }
+        public void choieCard()
+        {
+            var choiceCardMgr = ChoiceCardMgr.Get();
+            var cards = choiceCardMgr.GetFriendlyCards();
+            foreach (var card in cards)
+            {
+                // Log.DebugFormat(card.GetName());
+                string nameCN = card.GetName();
+                string cardId = card.GetCardId();
+                int entitiyID = card.GetEntityId();
+                Zone tAG_ZONE = card.GetZone();
+
+                Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entitiyID, tAG_ZONE);
+                Log.InfoFormat(card.GetDamage().ToString());
+
+            }
 
         }
         public void getReqPlay()
@@ -90,10 +108,19 @@ public class RuntimeCode
         {
             using (TritonHs.AcquireFrame())
             {
+                BnetPlayer myPlayer = BnetPresenceMgr.Get().GetMyPlayer();
+
                 //仅获取名字
-                Player player = GameState.GetOpposingSidePlayer();
-                // Log.DebugFormat("{0}",player.GetName());
-                // Log.DebugFormat("{0}",player.GetGameAccountId());
+                Player Oppoplayer = GameState.GetOpposingSidePlayer();
+                Player Friendlyplayer = GameState.GetFriendlySidePlayer();
+                BnetPlayer OppobnetPlayer = Oppoplayer.GetBnetPlayer();
+                BnetPlayer Friendlynetplayer = Friendlyplayer.GetBnetPlayer();
+                // Log.DebugFormat("{0}",Oppoplayer.GetName());
+                // Log.DebugFormat("{0}", player.m_heroPower.GetName());
+
+                Log.DebugFormat("{0}", Friendlynetplayer.GetAccount().GetFullName());
+                Log.DebugFormat("{0}", Friendlynetplayer.GetBattleTag().GetNumber());
+
 
             }
         }
@@ -104,19 +131,19 @@ public class RuntimeCode
         {
             GameState.ResponseMode responseMode = GameState.GetResponseMode();
 
-            Log.DebugFormat("{0}", responseMode);
+            // Log.DebugFormat("{0}", responseMode);
 
             switch (responseMode)
             {
                 case GameState.ResponseMode.OPTION: Log.DebugFormat("选项：{0}", responseMode); break;
                 case GameState.ResponseMode.SUB_OPTION: Log.DebugFormat("子选项：{0}", responseMode); break;
                 case GameState.ResponseMode.OPTION_TARGET: Log.DebugFormat("选项目标：{0}", responseMode); break;
+                case GameState.ResponseMode.OPTION_REVERSE_TARGET: Log.DebugFormat("选项目标：{0}", responseMode); break;
                 case GameState.ResponseMode.CHOICE: Log.DebugFormat("选择：{0}", responseMode); break;
                 default: Log.DebugFormat("{0}", responseMode); break;
-                    // Log.DebugFormat("ResponseMode：{0}", );
             }
 
-            // Log.DebugFormat("{0}", GameState.GetResponseMode());
+            // Log.DebugFormat("{0}", GameState.IsInChoiceMode());
 
 
         }
@@ -140,7 +167,7 @@ public class RuntimeCode
                 // }
                 Log.InfoFormat("{0}  ", tAG_ZONEs.Contains(TAG_ZONE.SECRET));
 
-                for (int i = 0; i < 90; i++)
+                for (int i = 0; i < 200; i++)
                 {
                     Entity entity = GameState.GetEntity(i);
                     if (entity != null)
@@ -151,7 +178,7 @@ public class RuntimeCode
                         int entitiyID = entity.GetEntityId();
                         TAG_ZONE tAG_ZONE = entity.GetZone();
                         TAG_CARDTYPE tAG_CARDTYPE = entity.GetCardType();
-                        if (tAG_ZONEs.Contains(tAG_ZONE) || true)
+                        if (tAG_ZONEs.Contains(tAG_ZONE))
                         {
                             Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entitiyID, tAG_ZONE);
                             /*
@@ -170,13 +197,14 @@ public class RuntimeCode
                                 case TAG_CARDTYPE.MINION:
                                 // case TAG_CARDTYPE.SPELL:
                                 // case TAG_CARDTYPE.LOCATION:
+                                // case TAG_CARDTYPE.HERO:
                                     {
                                         // Log.InfoFormat("{0} (ID:{1})  实体id {2} 是否睡着了{3}", nameCN, cardId, entitiyID, entity.IsAsleep());
                                         // Log.InfoFormat("{0} (ID:{1})  是否有复制亡语{2}", nameCN, cardId, entity.GetTag(GAME_TAG.DEATHRATTLE));
                                         // Log.InfoFormat("{0} (ID:{1})  选择角色类型{2}", nameCN, cardId, entity.GetTag(1692));
                                         // Log.InfoFormat("{0} (ID:{1})  使用条件{2}", nameCN, cardId, GameState.GetErrorType(entity));
 
-                                        /* foreach (GAME_TAG tag in allTags)
+                                        foreach (GAME_TAG tag in allTags)
                                         {
                                             int tagValue = entity.GetTag(tag);
                                             if (tagValue != 0)
@@ -186,7 +214,7 @@ public class RuntimeCode
                                         foreach (Entity each in eachs)
                                         {
                                             Log.WarnFormat(each.ToString());
-                                        } */
+                                        }
                                         continue;
                                     }
                                 case TAG_CARDTYPE.ENCHANTMENT:

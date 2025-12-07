@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//在一个友方随从攻击后，获得+1攻击力。
 	class Sim_GIL_655 : SimTemplate
 	{
-		
-		
+		public override void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
+		{
+			if (attacker.own)
+			{
+				p.minionGetBuffed(triggerEffectMinion, 1, 0);
+			}
+		}
+
 	}
 }

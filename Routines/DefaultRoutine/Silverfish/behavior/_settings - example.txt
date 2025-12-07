@@ -33,3 +33,4 @@ ImprovedCalculations = 1;   // 0 - disabled(for old PCs), 1 - enabled
 adjustActions = 0; // test!! - reorder actions after calculations: 0 - as calculated (by Default), 1 - AoE first
 printRules = 0; //0 - off, 1 - on
 concedeMode = 0; //0 - concede if direct defeat, 1 - concede if Playfield has a value <= -10000
+speedupLevel = 2;

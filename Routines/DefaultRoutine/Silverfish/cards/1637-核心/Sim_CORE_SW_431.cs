@@ -11,7 +11,7 @@ namespace HREngine.Bots
 	//<b>突袭</b>每当本随从攻击时，使你的英雄在本回合中获得+3攻击力。
 	class Sim_CORE_SW_431 : SimTemplate
 	{
-		public override void onMinionAttack(Playfield p, Minion attacker, Minion target)
+		public override void onMinionAttack(Playfield p, Minion attacker, Minion target,ref bool terminatedAttack)
 		{
 			p.minionGetTempBuff(attacker.own ? p.ownHero : p.enemyHero, 3, 0);
 		}
