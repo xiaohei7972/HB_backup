@@ -298,17 +298,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
             }
 
         }
-        /*set
-            {
-                if (!value.Equals(int_0))
-                {
-                    int_0 = value;
-                    if (int_0 < 0) int_0 = 0;
-                    if (int_0 > int_1) int_0 = int_1;
-                    NotifyPropertyChanged(() => AutoConcedeMinDelayMs);
-                }
-                ilog_0.InfoFormat("[天梯脚本设置] 投降最小延时(ms) = {0}.", int_0);
-            }*/
+
         [DefaultValue(1)]
 
         public int AutoConcedeNumberOfLosses
@@ -373,6 +363,24 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 else
                 {
                     if (NeedNowConcede) NeedNowConcede = false;
+                }
+            }
+        }
+
+        //判断对面名字投降
+        private bool bool_13;
+        [DefaultValue(false)]
+        public bool JudgmentOpponentNameConcede
+        {
+            get { return bool_13; }
+            set
+            {
+                if (!value.Equals(bool_13))
+                {
+                    bool_13 = value;
+                    NotifyPropertyChanged(() => JudgmentOpponentNameConcede);
+                    ilog_0.InfoFormat("[天梯脚本设置] 判断对面名字投降 = {0}.", bool_13);
+
                 }
             }
         }
@@ -504,5 +512,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 }
             }
         }
+
+
     }
+    
 }

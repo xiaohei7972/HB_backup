@@ -34,6 +34,7 @@
                         <RowDefinition Height="25" />
                         <RowDefinition Height="25" />
                         <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -68,6 +69,8 @@
                     <Label Grid.Row="5" Grid.Column="0" Content="急速投降至互投区" VerticalAlignment="Center" Margin="3" ToolTipService.ToolTip="一直在留牌阶段立即投降，直到对手从传说到钻石到白金到青铜再到传说，即到了互投区."/>
                     <CheckBox x:Name="ForceConcedeAtMulliganCheckBox" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Margin="3"/>
 
+                    <Label Grid.Row="6" Grid.Column="0" Content="判断对面名字投降" VerticalAlignment="Center" Margin="3" ToolTipService.ToolTip="判断对手名字是否为的字辈来选择是否投降."/>
+                    <CheckBox x:Name="JudgmentOpponentNameConcedeCheckBox" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" Margin="3"/>
                 </Grid>
                 <Grid>
                     <Grid.RowDefinitions>

@@ -1,3 +1,5 @@
+using Buddy.Coroutines;
+using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,14 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
-using Buddy.Coroutines;
-using log4net;
 using Triton.Bot.Settings;
 using Triton.Common;
 using Triton.Common.LogUtilities;
@@ -197,6 +198,13 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                         throw new Exception("The SettingsControl could not be created.");
                     }
 
+                    //判断对面名字投降
+                    if (!Wpf.SetupCheckBoxBinding(userControl, "JudgmentOpponentNameConcedeCheckBox", "JudgmentOpponentNameConcede", BindingMode.TwoWay, DefaultBotSettings.Instance))
+                    {
+                        ilog_0.DebugFormat("[SettingsControl] SetupCheckBoxBinding failed for 'JudgmentOpponentNameConcedeCheckBox'.");
+                        throw new Exception("The SettingsControl could not be created.");
+                    }
+
                     //投降延时
                     if (!Wpf.SetupTextBoxBinding(userControl, "AutoConcedeMinDelayMsTextBox", "AutoConcedeMinDelayMs", BindingMode.TwoWay, DefaultBotSettings.Instance))
                     {
@@ -260,6 +268,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         private void GameOverEventArgsFunc(object sender, GameOverEventArgs e)
         {
             ilog_0.InfoFormat("[游戏结束后]");
+
             if (e.Result == GameOverFlag.Victory)
             {
                 if (DefaultBotSettings.Instance.AutoConcedeAfterConstructedWin)
@@ -375,7 +384,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                             await Coroutine.Sleep(3000);
                             break;
                         default:
-                            await ClientRandomClick("[登录]", 2500);
+                            await ClientRandomClick(string.Format("[登录] {0}", presenceStatus), 2500);
                             return;
                     }
                 }
@@ -466,7 +475,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                                 return;
                             }
                         default:
-                            await ClientRandomClick("[主菜单]", 2500);
+                            await ClientRandomClick(string.Format("[主菜单] {0}", presenceStatus), 2500);
                             return;
                     }
                 }
@@ -642,14 +651,14 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                             await CollectionCard(collectionManagerScene_0);
                             continue;
                         default:
-                            await ClientRandomClick("[我的收藏]", 2500);
+                            await ClientRandomClick(string.Format("[我的收藏] {0}", presenceStatus), 2500);
                             return;
                     }
                 }
             }
             else
             {
-                await ClientRandomClick("[我的收藏]", 2500);
+                await ClientRandomClick("presenceStatus [我的收藏]", 2500);
             }
         }
 
@@ -1003,6 +1012,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     PresenceStatus presenceStatus = item.AsEnum<PresenceStatus>();
                     TritonHs.smethod_4(presenceMgr, ref presenceStatus);
+                    // ilog_0.DebugFormat("[卡组选择] 当前状态:{0}", presenceStatus);
                     switch (presenceStatus)
                     {
                         case PresenceStatus.PLAY_DECKPICKER:
@@ -1016,7 +1026,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                             await Coroutine.Sleep(5000);
                             break;
                         default:
-                            await ClientRandomClick("[卡组选择]", 2500);
+                            await ClientRandomClick(string.Format("[卡组选择] {0}", presenceStatus), 2500);
                             return;
                     }
                 }
@@ -1083,6 +1093,47 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     bool_4 = true;
                     await Coroutine.Sleep(1000);
                     return;
+                }
+                //判断对手名字来投降
+                if (DefaultBotSettings.Instance.JudgmentOpponentNameConcede)
+                {
+                    Game.Mapping.Player opponentPlayer = GameState.Get().GetOpposingSidePlayer();
+                    String pattern = ".{2,4}[之,的].{1,4}";
+                    string tagName = "";
+                    string tagNumber = "";
+                    if (opponentPlayer != null)
+                    {
+                        BnetPlayer bnetPlayer = opponentPlayer.GetBnetPlayer();
+                        if (bnetPlayer != null)
+                        {
+
+                            BnetBattleTag battleTagObj = bnetPlayer.GetBattleTag();
+
+                            if (battleTagObj != null)
+                            {
+                                tagName = battleTagObj.GetName();
+                                tagNumber = battleTagObj.GetNumber();
+                            }
+                        }
+
+                    }
+
+                    ilog_0.DebugFormat("[对局开始:] 对手的id为：{0}#{1}", tagName, tagNumber);
+                    if (tagNumber.Length < 5)
+                    {
+                        ilog_0.DebugFormat("[对局开始:]对手id小于5位数，准备投降");
+                        TritonHs.Concede(true);
+                        return;
+                    }
+                    bool a = Regex.IsMatch(tagName, pattern);
+                    ilog_0.DebugFormat("[对局开始:]{0}", a ? "是人机格式的id" : "不是人机格式的id");
+                    if (!a)
+                    {
+                        ilog_0.DebugFormat("准备投降");
+                        //DefaultBotSettings.Instance.NeedNowConcede = true;
+                        TritonHs.Concede(true);
+                        return;
+                    }
                 }
                 Vector3 position = mulliganButton.Transform.Position;
                 MulliganData mulliganData = new MulliganData();
@@ -1375,7 +1426,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 ilog_0.InfoFormat("[战斗结束] 本局 [{0}]，点击继续...",
                     realClassName == "DefeatScreen" ? "失败" : "胜利");
                 Client.LeftClickAt(endGameScreen.m_continueText.Transform.Position);
-                await Coroutine.Sleep(2500);
+                ilog_0.InfoFormat("[游戏结束后]开始随机等待几秒");
+                await Coroutine.Sleep(Client.Random.Next(1000, 8000));
                 stopwatch.Reset();
             }
             else
@@ -1385,7 +1437,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     stopwatch.Restart();
                 }
                 ilog_0.DebugFormat("[战斗结束] 请稍等...");
-                await Coroutine.Sleep(1000);
+                await Coroutine.Sleep(Client.Random.Next(1000, 4000));
             }
         }
 
@@ -1548,28 +1600,37 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                             break;
                         case SceneMgr.Mode.GAMEPLAY:
                             {
-                                if (gameType == GameType.GT_MERCENARIES_PVE ||
-                                    gameType == GameType.GT_MERCENARIES_PVP ||
-                                    gameType == GameType.GT_MERCENARIES_PVE_COOP)
+                                switch (gameType)
                                 {
-                                    if (gameState == null || !gameState.IsGameOver())
-                                    {
-                                        TritonHs.Concede(logReason: true);
-                                        await Coroutine.Sleep(1000);
-                                    }
-                                    else
-                                    {
-                                        await ClientRandomClick("[炉石兄弟全局]", 2500);
-                                    }
-                                }
-                                else
-                                {
-                                    await SceneGamePlayProc(Gameplay.Get());
+                                    case GameType.GT_MERCENARIES_PVE:
+                                    // case GameType.GT_VS_FRIEND:
+                                    case GameType.GT_MERCENARIES_PVP:
+                                    case GameType.GT_MERCENARIES_PVE_COOP:
+
+                                        {
+                                            if (gameState == null || !gameState.IsGameOver())
+                                            {
+                                                TritonHs.Concede(logReason: true);
+                                                await Coroutine.Sleep(1000);
+                                            }
+                                            else
+                                            {
+                                                await ClientRandomClick(string.Format("[炉石兄弟全局] {0}", mode), 2500);
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        {
+
+                                            await SceneGamePlayProc(Gameplay.Get());
+                                        }
+                                        break;
+
                                 }
                                 break;
                             }
                         case SceneMgr.Mode.FATAL_ERROR:
-                            await ClientRandomClick("[炉石兄弟全局]", 2500);
+                            await ClientRandomClick(string.Format("[炉石兄弟全局] {0}", mode), 2500);
                             break;
                         case SceneMgr.Mode.STARTUP:
                         case SceneMgr.Mode.INVALID:
@@ -1582,7 +1643,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                         case SceneMgr.Mode.TAVERN_BRAWL:
                         default:
                             {
-                                await ClientRandomClick("[炉石兄弟全局]", 2500);
+                                await ClientRandomClick(string.Format("[炉石兄弟全局] {0}", mode), 2500);
                                 break;
                             }
                     }
