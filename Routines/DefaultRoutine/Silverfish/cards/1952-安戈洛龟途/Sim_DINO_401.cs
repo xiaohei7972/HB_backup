@@ -11,18 +11,28 @@ namespace HREngine.Bots
 	//<b>突袭</b>。在本随从攻击一个敌方随从后，还会对所有其他敌方随从造成伤害。
 	class Sim_DINO_401 : SimTemplate
 	{
-        public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
-        {
-			if (!defender.isHero)
+		public override void afterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount)
+		{
+			if (defender.handcard.card.type == CardDB.cardtype.MOB)
+			// if(!defender.isHero)
 			{
-				foreach (Minion minion in attacker.own ? p.enemyMinions : p.ownMinions)
+				List<Minion> minions = new List<Minion>(attacker.own ? p.enemyMinions : p.ownMinions);
+				foreach (Minion minion in minions)
 				{
 					if (minion.entitiyID == defender.entitiyID) continue;
+					if (!defender.divineshild)
+					{
+						if (attacker.poisonous)
+						{
+							p.minionGetDestroyed(defender);
+						}
+					}
 					p.minionGetDamageOrHeal(minion, attacker.Angr);
+
 					// p.minionAttacksMinion(attacker, minion, true);
 				}
 			}
-        }
-		
+		}
+
 	}
 }

@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//<b>突袭</b>。<b>扰魔</b>。每次只能受到1点伤害。
 	class Sim_VAC_527 : SimTemplate
 	{
-		
-		
+		public override int ReturnMinionReceiveDamage(Playfield p, Minion m, int damage)
+		{
+			return 1;
+		}
+
 	}
 }

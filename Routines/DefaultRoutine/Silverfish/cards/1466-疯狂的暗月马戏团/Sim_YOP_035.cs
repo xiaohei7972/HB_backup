@@ -11,7 +11,10 @@ namespace HREngine.Bots
 	//每次只能受到1点伤害。
 	class Sim_YOP_035 : SimTemplate
 	{
-		
+        public override int ReturnMinionReceiveDamage(Playfield p, Minion m, int damage)
+        {
+            return 1;
+        }
 		
 	}
 }
