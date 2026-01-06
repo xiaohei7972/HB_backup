@@ -13,7 +13,7 @@ namespace HREngine.Bots
 			if (target != null && own.own)
 			{
 				target.lifesteal = true;
-				p.minionGetBuffed(target, 3, 0);
+				p.minionGetTempBuff(target, 3, 0);
 			}
 			if (target == null && own.own)
 			{
@@ -24,9 +24,10 @@ namespace HREngine.Bots
         public override PlayReq[] GetPlayReqs()
         {
             return new PlayReq[] {
-                new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
                 new PlayReq(CardDB.ErrorType2.REQ_FRIENDLY_TARGET),
                 new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_WITH_RACE,CardDB.Race.DEMON),
             };
         }
 	}

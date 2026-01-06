@@ -10,7 +10,16 @@ namespace HREngine.Bots
 		//<b>战吼：</b>对所有非恶魔随从造成2点伤害。
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			p.allMinionOfASideGetDamage(!own.own, 1);
+			foreach (Minion m in p.ownMinions.ToArray())
+			{
+				if (!RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.DEMON))
+					p.minionGetDamageOrHeal(m, 2);
+			}
+			foreach (Minion m in p.enemyMinions.ToArray())
+			{
+				if (!RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.DEMON))
+					p.minionGetDamageOrHeal(m, 2);
+			}
 		}
 
 	}

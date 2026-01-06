@@ -11,7 +11,14 @@ namespace HREngine.Bots
 	//<b>战吼：</b>召唤一个本随从的复制。<b>注能（@）：</b>改为召唤两个复制。
 	class Sim_REV_244 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			Minion sunmmoned = p.callKidAndReturn(own.handcard.card, own.zonepos, own.own);
+			if (sunmmoned != null)
+			{
+				sunmmoned.setMinionToMinion(own);
+			}
+		}
+
 	}
 }

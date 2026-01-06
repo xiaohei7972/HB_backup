@@ -11,7 +11,21 @@ namespace HREngine.Bots
 	//<b>战吼：</b>变形成为一个随从的3/3的复制。
 	class Sim_ETC_110 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (target != null)
+			{
+				own.setMinionToMinion(target);
+			}
+			p.minionSetAngrToX(own,3);
+			p.minionSetLifetoX(own,3);
+		}
+		public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_IF_AVAILABLE),
+                new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
+            };
+        }
 	}
 }

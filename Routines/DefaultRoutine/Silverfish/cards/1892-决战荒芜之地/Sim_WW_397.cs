@@ -12,9 +12,18 @@ namespace HREngine.Bots
 	class Sim_WW_397 : SimTemplate
 	{
 		public override void onDeathrattle(Playfield p, Minion m)
-        {
-            p.allMinionsGetDamage(2);
-        }
-		
+		{
+			foreach (Minion minion in p.ownMinions.ToArray())
+			{
+				if (!RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.ELEMENTAL) && m.own != minion.own)
+					p.minionGetDamageOrHeal(m, 2);
+			}
+			foreach (Minion minion in p.enemyMinions.ToArray())
+			{
+				if (!RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.ELEMENTAL) && m.own != minion.own)
+					p.minionGetDamageOrHeal(m, 2);
+			}
+		}
+
 	}
 }

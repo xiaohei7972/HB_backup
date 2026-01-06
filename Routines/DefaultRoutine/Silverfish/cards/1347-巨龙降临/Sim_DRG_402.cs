@@ -14,16 +14,21 @@ namespace HREngine.Bots
 			{
 				if (m.own)
 				{
-					p.drawACard(target.handcard.card.nameEN, m.own, true);
+					p.drawACard(target.handcard.card.cardIDenum, m.own, true);
+					Minion sunmmoned = p.callKidAndReturn(target.handcard.card,target.zonepos,m.own);
+					if (sunmmoned != null)
+					{
+						sunmmoned.setMinionToMinion(target);
+					}
 					p.ownDeckSize++;
 				}
 				else p.enemyDeckSize++;
 			}
-			if (target != null && p.ownMinions.Count < 7)
-			{
-				p.callKid(target.handcard.card, m.zonepos, m.own);
-				p.ownMinions[m.zonepos].setMinionToMinion(target);
-			}
+			// if (target != null && p.ownMinions.Count < 7)
+			// {
+			// 	p.callKid(target.handcard.card, m.zonepos, m.own);
+			// 	p.ownMinions[m.zonepos].setMinionToMinion(target);
+			// }
 		}
 
         public override PlayReq[] GetPlayReqs()
