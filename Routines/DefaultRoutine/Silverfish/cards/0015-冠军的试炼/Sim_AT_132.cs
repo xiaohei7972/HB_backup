@@ -14,7 +14,7 @@ namespace HREngine.Bots
 			if (upgradedHeroPower != 0)
 			{
 				CardDB.Card heroPowerCard = CardDB.Instance.getCardDataFromDbfID(upgradedHeroPower.ToString());
-				p.setNewHeroPower(heroPowerCard, m.own);
+				p.setNewHeroPower(heroPowerCard.cardIDenum, m.own);
 			}
 			/* TAG_CLASS HeroStartClass = (m.own) ? p.ownHeroStartClass : p.enemyHeroStartClass;
 			CardDB.cardIDEnum tmp = CardDB.cardIDEnum.None;

@@ -4,7 +4,10 @@ using System.Linq;
 
 namespace HREngine.Bots
 {
-    public partial class Behavior丨通用丨不设惩罚 : Behavior
+    /// <summary>
+    /// 便宜策略使用需谨慎
+    /// </summary>
+    public partial class Behavior丨狂野丨宇宙兽王猎 : Behavior
     {
         /// <summary>
         /// 敌方奖励
@@ -19,12 +22,13 @@ namespace HREngine.Bots
         // 抢脸血线
         private int aggroboarder = 15;
 
-
-        public override string BehaviorName() { return "丨通用丨不设惩罚"; }
+        // private static readonly ILog ilog_0 = Common.LogUtilities.Logger.GetLoggerInstanceForType();
+        public override string BehaviorName() { return "丨狂野丨宇宙兽王猎"; }
         PenalityManager penman = PenalityManager.Instance;
 
         public override int getComboPenality(CardDB.Card card, Minion target, Playfield p, Handmanager.Handcard nowHandcard)
         {
+
             // 无法选中
             if (target != null && target.untouchable)
             {
@@ -32,32 +36,329 @@ namespace HREngine.Bots
             }
             // 初始惩罚值
             int penalty = 0;
-
-            switch (card.nameCN.ToString())
+            switch (card.nameCN)
             {
-                case "树篱迷宫":
-                    penalty = -47; // 优先级数值转为负值作为惩罚值
+                case CardDB.cardNameCN.蛇油:
+                    {
+                        if (p.spellpower > 1)
+                        {
+                            penalty -= p.spellpower * 20;
+
+                        }
+                        else
+                        {
+                            penalty += 100;
+
+                        }
+
+                    }
                     break;
-                case "远足步道":
-                    penalty = -49;
+                case CardDB.cardNameCN.毒蛇花:
+                    {
+                        if (target != null)
+                        {
+
+                            if (target.handcard.card.nameCN == CardDB.cardNameCN.恐鳞 || target.handcard.card.nameCN == CardDB.cardNameCN.恐鳞_WON_025)
+                            {
+                                penalty -= 50;
+                                foreach (Minion m in p.enemyMinions)
+                                {
+                                    penalty -= 20;
+                                }
+                            }
+                            else
+                            {
+                                penalty += 10;
+                            }
+                        }
+                    }
                     break;
-                case "尤格萨隆的监狱":
-                    penalty = -52;
+                case CardDB.cardNameCN.奇迹推销员:
+                case CardDB.cardNameCN.跳虫_SC_010:
+                case CardDB.cardNameCN.潜踪群蛇:
+                    {
+                        penalty -= 30;
+                    }
                     break;
-                case "惊险悬崖":
-                    penalty = -68;
+                case CardDB.cardNameCN.击伤猎物:
+                    {
+                        if (target != null)
+                        {
+
+                            if (target.Hp == 1)
+                            {
+                                penalty -= 30;
+                            }
+                            else if (target.divineshild)
+                            {
+                                penalty -= 20;
+                            }
+                            //满场亏一个111
+                            if (p.ownMinions.Count == 7)
+                            {
+                                penalty += 20;
+                            }
+                        }
+                    }
                     break;
-                case "鹦鹉乐园":
-                    penalty = -59;
+                case CardDB.cardNameCN.神话观测者:
+                    {
+                        penalty -= 10;
+                        foreach (Minion m in p.ownMinions)
+                        {
+                            penalty -= 20;
+                        }
+                    }
                     break;
-                case "大地之末号":
-                    penalty = -59;
+                case CardDB.cardNameCN.选种饲养员:
+                    {
+                        // if(p.prozis)
+
+                    }
                     break;
-                case "潮汐之地":
-                    penalty = -50;
+                case CardDB.cardNameCN.异教低阶牧师:
+                case CardDB.cardNameCN.音箱践踏者:
+                case CardDB.cardNameCN.洛欧塞布:
+                case CardDB.cardNameCN.锋鳞:
+
+                    {
+                        penalty -= 20;
+                        if (getPlayfieldValue(p) > 30)
+                        {
+                            //场面好就封魔
+                            penalty -= 40;
+                        }
+
+                    }
                     break;
-                case "小玩物小屋":
-                    penalty = -48;
+                case CardDB.cardNameCN.灵体偷猎者:
+                    {
+                        penalty -= 40;
+
+                    }
+                    break;
+
+                case CardDB.cardNameCN.野性之魂:
+                    {
+                        penalty -= 40;
+                        if (p.ownMinions.Count > 6)
+                        {
+                            //满场不下
+                            penalty += 100;
+                        }
+                        else if (p.ownMinions.Count == 6)
+                        {
+                            //6个格子，下了小亏
+                            penalty += 20;
+                        }
+
+                    }
+                    break;
+
+                case CardDB.cardNameCN.艾拉隆:
+                    {
+                        if (p.ownMinions.Count == 6)
+                        {
+                            //满场下很亏
+                            penalty += 66;
+                        }
+                        else if (p.ownMinions.Count == 5)
+                        {
+                            //6个格子，下了小亏
+                            penalty += 44;
+                        }
+                        else if (p.ownMinions.Count == 4)
+                        {
+                            penalty += 22;
+
+                        }
+                        else
+                        {
+                            penalty -= 40;
+                        }
+                    }
+                    break;
+
+                case CardDB.cardNameCN.水晶养护工:
+                    {
+                        if (p.ownMaxMana <= p.enemyMaxMana)
+                        {
+                            penalty -= 40;
+                        }
+                        else
+                        {
+                            penalty += 20;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.迷失者塞尔杜林:
+                    {
+                        penalty -= 20;
+                        foreach (Minion m in p.enemyMinions)
+                        {
+                            if (m.Hp <= 3 && !m.divineshild)
+                            {
+                                penalty -= 20;
+                            }
+                            else
+                            {
+                                penalty -= 10;
+                            }
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.酸喉:
+                case CardDB.cardNameCN.酸喉_WON_024:
+                    {
+                        if (p.ownMinions.Any((m) => (m.handcard.card.nameCN == CardDB.cardNameCN.恐鳞 || m.handcard.card.nameCN == CardDB.cardNameCN.恐鳞_WON_025)))
+                        {
+                            penalty -= 60;
+                        }
+                        else
+                        {
+                            penalty -= 20;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.恐鳞:
+                case CardDB.cardNameCN.恐鳞_WON_025:
+                    {
+                        if (p.ownMinions.Any((m) => (m.handcard.card.nameCN == CardDB.cardNameCN.酸喉 || m.handcard.card.nameCN == CardDB.cardNameCN.酸喉_WON_024)))
+                        {
+                            penalty -= 60;
+                        }
+                        else if (p.owncards.Any((hc) => hc.card.nameCN == CardDB.cardNameCN.毒蛇花))
+                        {
+                            penalty -= 60;
+                        }
+                        else
+                        {
+                            foreach (Minion m in p.enemyMinions)
+                            {
+                                if (m.Hp == 1 || m.divineshild)
+                                {
+                                    penalty -= 12;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.大主教奈丽:
+                    {
+                        penalty -= 23;
+                    }
+                    break;
+                case CardDB.cardNameCN.导航员伊莉斯:
+                    {
+                        penalty -= 25;
+                    }
+                    break;
+                case CardDB.cardNameCN.苔原犀牛:
+                    {
+                        penalty += 30;
+                    }
+                    break;
+                case CardDB.cardNameCN.雷诺杰克逊:
+                    {
+                        if (p.ownHero.Hp <= 18)
+                        {
+                            penalty -= 60;
+                        }
+                        penalty -= 20;
+                    }
+                    break;
+                case CardDB.cardNameCN.奎尔萨拉斯的希望:
+                    {
+                        if (p.ownWeapon == null)
+                        {
+                            penalty += 30;
+                        }
+                        else
+                        {
+                            penalty -= 30;
+
+                        }
+                        foreach (Minion m in p.ownMinions)
+                        {
+                            penalty -= 10;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.调酒师鲍勃:
+                    {
+                        if (p.enemyMinions.Count > 3)
+                        {
+                            penalty -= 37;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.海卓拉顿:
+                    {
+                        penalty -= 40;
+                        if (p.ownMinions.Count > 5)
+                        {
+                            penalty += 20;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.兽王莱欧洛克斯:
+                    {
+                        int pets = 0;
+                        foreach (Handmanager.Handcard handcard in p.owncards)
+                        {
+                            if (RaceUtils.MinionBelongsToRace(handcard.card.GetRaces(), CardDB.Race.PET))
+                            {
+                                pets++;
+                            }
+                        }
+                        if (pets == 0)
+                        {
+                            //手上没野兽不出
+                            penalty += 100;
+                        }
+                        else if (pets == 1)
+                        {
+                            //只有一个野兽有点小亏
+                            penalty += 20;
+                        }
+                        else if (pets >= 2)
+                        {
+                            //两个或两个以上下了不亏
+                            penalty -= 80;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.荆棘谷之心:
+                    {
+                        int diePet = 0;
+                        foreach (GraveYardItem m in p.diedMinions)
+                        {
+                            CardDB.Card dieCard = CardDB.Instance.getCardDataFromID(m.cardid);
+                            if (RaceUtils.MinionBelongsToRace(dieCard.GetRaces(), CardDB.Race.PET) && dieCard.cost >= 5)
+                            {
+                                diePet++;
+                            }
+                        }
+                        if (diePet == 0)
+                        {
+                            penalty += 100;
+                        }
+                        else
+                        {
+                            penalty -= diePet * 30;
+                        }
+                    }
+                    break;
+                case CardDB.cardNameCN.戈德林:
+                    {
+                        foreach (Minion m in p.ownMinions)
+                        {
+                            if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), CardDB.Race.PET))
+                            {
+                                penalty -= m.Angr * 10;
+                            }
+                        }
+                    }
                     break;
                 default:
                     penalty = 0; // 如果卡牌名称不匹配，使用初始惩罚值
@@ -98,9 +399,33 @@ namespace HREngine.Bots
                         continue;
                     // 英雄攻击
                     case actionEnum.attackWithHero:
+                        if (p.ownWeapon.card.nameCN == CardDB.cardNameCN.奎尔萨拉斯的希望)
+                        {
+                            a.penalty += 50;
+                        }
                         continue;
                     case actionEnum.useHeroPower:
-                        a.penalty -= 50;
+                        if (p.ownHeroAblility.card.nameCN == CardDB.cardNameCN.稳固射击)
+                        {
+                            if (p.enemyHero.Hp <= 10)
+                            {
+                                a.penalty += 50;
+
+                            }
+                        }
+                        else if (p.ownHeroAblility.card.nameCN == CardDB.cardNameCN.追踪术_GDB_846hp)
+                        {
+                            if (p.owncards.Count < 7)
+                            {
+                                a.penalty += 20;
+
+                            }
+                            else
+                            {
+                                a.penalty -= 50;
+                            }
+
+                        }
                         useAb = true;
                         break;
                     case actionEnum.playcard:
@@ -116,7 +441,7 @@ namespace HREngine.Bots
                 }
             }
             // 对手基本随从交换模拟
-            retval += enemyTurnPen(p);
+            // retval += enemyTurnPen(p);
             retval -= p.lostDamage;
             retval += getSecretPenality(p); // 奥秘的影响
             retval -= p.enemyWeapon.Angr * 3 + p.enemyWeapon.Durability * 3;
@@ -194,11 +519,11 @@ namespace HREngine.Bots
             }
             //光环
             if (m.Aura) retval += 30;
+            if (m.TriggerVisual) retval += 40;
             if (m.dormant > 0)
             {
                 retval -= bonus_mine * m.dormant;
             }
-    
             // 血量越低，解怪优先度越高
             if (p.ownHero.Hp <= 15)
             {
@@ -261,17 +586,33 @@ namespace HREngine.Bots
             if (m.Overkill) retval += 5;
             // 剧毒
             if (m.poisonous) retval += 10;
-            // switch (m.handcard.card.nameCN)
-            // {
-            //     case CardDB.cardNameCN.黑眼:
-            //         break;
-            // }
             //光环
             if (m.Aura) retval += 30;
-            if (m.TriggerVisual) retval += 30;
+            if (m.TriggerVisual) retval += 40;
             if (m.dormant > 0)
             {
                 retval -= bonus_mine * m.dormant;
+            }
+
+            switch (m.handcard.card.nameCN)
+            {
+
+                case CardDB.cardNameCN.神话观测者:
+                    retval += 3 * p.ownMinions.Count * 12;
+                    break;
+                case CardDB.cardNameCN.苔原犀牛:
+                    retval += 44;
+                    break;
+                case CardDB.cardNameCN.戈德林:
+                    retval += 70;
+                    break;
+                case CardDB.cardNameCN.海卓拉顿:
+                    if (p.ownMinions.Any((minion) => (minion.handcard.card.nameCN == CardDB.cardNameCN.海卓拉顿之头 || minion.handcard.card.nameCN == CardDB.cardNameCN.海卓拉顿之头_TSC_950t2)))
+                    {
+                        retval += 50;
+                    }
+
+                    break;
             }
             return retval;
         }
