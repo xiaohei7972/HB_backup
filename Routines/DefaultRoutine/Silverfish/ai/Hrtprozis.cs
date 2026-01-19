@@ -2,6 +2,7 @@ namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     public enum HeroEnum
     {
@@ -718,8 +719,13 @@ namespace HREngine.Bots
             help.logg(this.numMinionsPlayedThisTurn + " " + this.cardsPlayedThisTurn + " " + this.ueberladung + " " + this.lockedMana + " " + this.ownPlayerController);
 
             help.logg("ownhero:");
+            StringBuilder ownHeroEnchs = new StringBuilder(this.ownHero.enchs.Count > 0 ? " 附魔:" : "", 50);
+            foreach (CardDB.cardIDEnum cardIDEnum in this.ownHero.enchs)
+            {
+                ownHeroEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
+            }
             help.logg((this.heroname == HeroEnum.None ? this.heronameingame : this.heroname.ToString()) + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack + " " + this.enemyHero.stealth
-                + (this.ownHero.enchs.Count > 0 ? " 附魔:" + this.ownHero.enchs.ToString() : "")
+                + ownHeroEnchs.ToString()
                 );
             help.logg("weapon: " + ownWeapon.Angr + " " + ownWeapon.Durability + " " + this.ownWeapon.card.nameCN + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? 1 : 0) + " " + (this.ownWeapon.lifesteal ? 1 : 0) + " " + this.ownWeapon.scriptNum1);
             help.logg("ability: " + this.ownAbilityisReady + " " + this.heroAbility.cardIDenum);
@@ -735,7 +741,12 @@ namespace HREngine.Bots
             help.logg(Questmanager.Instance.getQuestsString());
             help.logg("advanced: " + this.ownCrystalCore + " " + (this.ownMinionsInDeckCost0 ? 1 : 0));
             help.logg("enemyhero:");
-            help.logg((this.enemyHeroname == HeroEnum.None ? this.enemyHeronameingame : this.enemyHeroname.ToString()) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID + " " + this.enemyHero.stealth + (this.enemyHero.enchs.Count > 0 ? " 附魔:" + this.enemyHero.enchs.ToArray().ToString() : ""));
+            StringBuilder enemyHeroEnchs = new StringBuilder(this.enemyHero.enchs.Count > 0 ? " 附魔:" : "", 50);
+            foreach (CardDB.cardIDEnum cardIDEnum in this.enemyHero.enchs)
+            {
+                enemyHeroEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
+            }
+            help.logg((this.enemyHeroname == HeroEnum.None ? this.enemyHeronameingame : this.enemyHeroname.ToString()) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID + " " + this.enemyHero.stealth + (enemyHeroEnchs.ToString()));
             help.logg("weapon: " + this.enemyWeapon.Angr + " " + this.enemyWeapon.Durability + " " + this.enemyWeapon.card.nameCN + " " + this.enemyWeapon.card.cardIDenum + " " + (this.enemyWeapon.poisonous ? 1 : 0) + " " + (this.enemyWeapon.lifesteal ? 1 : 0) + " " + this.enemyWeapon.scriptNum1);
             help.logg("ability: " + "True" + " " + this.enemyAbility.cardIDenum);
             help.logg("fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue);
@@ -795,8 +806,15 @@ namespace HREngine.Bots
                     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
                 }
                 if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
-                if (m.enchs.Count > 0) mini += " 附魔:" + m.enchs.ToArray().ToString();
-
+                if (m.enchs.Count > 0)
+                {
+                    StringBuilder miniEnchs = new StringBuilder(" 附魔:", 50);
+                    foreach (CardDB.cardIDEnum cardIDEnum in m.enchs)
+                    {
+                        miniEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
+                    }
+                    mini += miniEnchs.ToString();
+                }
                 help.logg(mini);
             }
 
@@ -857,8 +875,15 @@ namespace HREngine.Bots
                 }
                 if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
 
-                if (m.enchs.Count > 0) mini += " 附魔:" + m.enchs.ToArray().ToString();
-
+                if (m.enchs.Count > 0)
+                {
+                    StringBuilder miniEnchs = new StringBuilder(" 附魔:", 50);
+                    foreach (CardDB.cardIDEnum cardIDEnum in m.enchs)
+                    {
+                        miniEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
+                    }
+                    mini += miniEnchs.ToString();
+                }
                 help.logg(mini);
             }
 
