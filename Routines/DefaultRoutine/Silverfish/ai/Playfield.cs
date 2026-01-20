@@ -5796,7 +5796,7 @@ namespace HREngine.Bots
                 }
                 else // 处理法术卡牌
                 {
-                    c.sim_card.onCardPlay(this, false, target, choice,hc); // 执行卡牌的主要效果
+                    c.sim_card.onCardPlay(this, false, target, choice, hc); // 执行卡牌的主要效果
                     this.doDmgTriggers(); // 触发伤害效果
                 }
             }
@@ -5896,7 +5896,7 @@ namespace HREngine.Bots
             if (logging) Helpfunctions.Instance.logg("play hero power " + c.nameEN + " on target " + target);
 
             // 执行英雄技能的主要效果
-            c.sim_card.onCardPlay(this, ownturn, target, choice,this.ownHeroAblility);
+            c.sim_card.onCardPlay(this, ownturn, target, choice, this.ownHeroAblility);
 
             // 计算英雄技能执行后敌方英雄的生命值差
             int damageDealt = enemyHeroHpBefore - this.enemyHero.Hp;
@@ -6919,7 +6919,6 @@ namespace HREngine.Bots
         {
             // 处理己方随从的回合结束效果，包括双重触发和随从销毁逻辑
             HandleEndTurnForMinions(this.ownMinions, ownturn, true, this.ownTurnEndEffectsTriggerTwice);
-
             // 处理敌方随从的回合结束效果，包括双重触发和随从销毁逻辑
             HandleEndTurnForMinions(this.enemyMinions, ownturn, false, this.enemyTurnEndEffectsTriggerTwice);
 
@@ -7035,6 +7034,16 @@ namespace HREngine.Bots
                         m.handcard.card.sim_card.onTurnEndsTrigger(this, m, ownturn);
                     }
                 }
+                //处理地标冷却
+                if (isOwnMinions == ownturn)
+                {
+                    if (m.handcard.card.type == CardDB.cardtype.LOCATION && m.CooldownTurn > 0)
+                    {
+                        m.CooldownTurn -= 1;
+                        m.updateReadyness();
+                        Helpfunctions.Instance.logg("卡牌名称 - " + m.handcard.card.nameCN + " 地标冷却回合 - " + m.CooldownTurn);
+                    }
+                }
 
                 // 判断随从是否在回合结束时被销毁
                 if ((isOwnMinions && ownturn && m.destroyOnOwnTurnEnd) ||
@@ -7044,6 +7053,7 @@ namespace HREngine.Bots
                     this.minionGetDestroyed(m);
                 }
             }
+
         }
 
         /// <summary>
@@ -8653,7 +8663,7 @@ namespace HREngine.Bots
             addMinionToBattlefield(m);
 
             // 触发随从的打出效果、抉择
-            m.handcard.card.sim_card.onCardPlay(this, m, hc.target, choice,hc);
+            m.handcard.card.sim_card.onCardPlay(this, m, hc.target, choice, hc);
             // 触发随从的战吼效果
             m.handcard.card.sim_card.getBattlecryEffect(this, m, hc.target, choice);
 

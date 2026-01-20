@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace HREngine.Bots
@@ -958,7 +958,10 @@ namespace HREngine.Bots
             public cardIDEnum cardIDenum = cardIDEnum.None;
             public List<cardtrigers> trigers;
             public SimTemplate sim_card = new SimTemplate();
-            public int sameCard = 0;
+            /// <summary>
+            /// 将其视为同一张卡。储存defid,根据卡defid获取同一张卡的sim
+            /// </summary>
+            public string TreatItAsTheSameCard = "";
             public int TAG_SCRIPT_DATA_NUM_1 = 0;//标签脚本数据编号1，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
             public int TAG_SCRIPT_DATA_NUM_2 = 0;//标签脚本数据编号2，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
             public int TAG_SCRIPT_DATA_NUM_3 = 0;//标签脚本数据编号3，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
@@ -1180,12 +1183,6 @@ namespace HREngine.Bots
                     }
                 }
             }
-            public Card()
-            {
-
-            }
-
-
 
             /// <summary>
             /// 存在错误类型
@@ -1667,15 +1664,15 @@ namespace HREngine.Bots
                             targetEnemyHero = false;
                         }
                     }
-                    /*                     if (REQ_TARGET_NO_NATURE)
-                                        {
-                                            if (p.useNature < 1)
-                                            {
-                                                foreach (Minion m in targets) m.extraParam = true;
-                                                targetOwnHero = false;
-                                                targetEnemyHero = false;
-                                            }
-                                        } */
+                    if (REQ_TARGET_NO_NATURE)
+                    {
+                        if (p.useNature < 1)
+                        {
+                            foreach (Minion m in targets) m.extraParam = true;
+                            targetOwnHero = false;
+                            targetEnemyHero = false;
+                        }
+                    }
                     if (REQ_LEGENDARY_TARGET)
                     {
                         wereTargets = false;
@@ -3422,7 +3419,7 @@ namespace HREngine.Bots
                             break;
                         case "858":
                             {
-                                card.sameCard = int.Parse(tag.GetAttribute("value"));//套牌规则视为同一卡牌defid
+                                card.TreatItAsTheSameCard = tag.GetAttribute("value");//套牌规则视为同一卡牌defid
                             }
                             break;
                         case "2837":
@@ -3666,10 +3663,11 @@ namespace HREngine.Bots
                 {
                     item.ForgeCost = item.DECK_ACTION_COST;
                 }
-                if (item.sameCard != 0)
+                if (!string.IsNullOrEmpty(item.TreatItAsTheSameCard))
                 {
-                    Card OriginCard = this.getCardDataFromDbfID(item.sameCard.ToString());
-                    item.sim_card = OriginCard.sim_card;
+                    Card OriginCard = this.getCardDataFromDbfID(item.TreatItAsTheSameCard);
+                    if (OriginCard != this.unknownCard)
+                        item.sim_card = OriginCard.sim_card;
                 }
             }
         }
