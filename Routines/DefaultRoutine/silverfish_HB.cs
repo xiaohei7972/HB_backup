@@ -39,7 +39,6 @@ namespace HREngine.Bots
         List<GraveYardItem> graveYard = new List<GraveYardItem>();
         private delegate List<HSCard> getAllCardsDele();
         static getAllCardsDele getAllCards;
-        GameState gameState = GameState.Get();
         int ownController = 1;
         int enemyController = 2;
         private int currentMana = 0;
@@ -111,7 +110,6 @@ namespace HREngine.Bots
             }
             setBehavior();
             getAllCards = Extensions.GetAllCards;
-            gameState = GameState.Get();
 
         }
 
@@ -141,7 +139,7 @@ namespace HREngine.Bots
                 bCount++;
                 string bPath = Path.GetDirectoryName(file);//获取文件夹名字
                 String fullPath = Path.GetFullPath(file);//获取完整路径
-                String bNane = Path.GetFileNameWithoutExtension(file).Remove(0, 9);//获取除了Behavior之后的名字
+                String bNane = Path.GetFileNameWithoutExtension(file).Remove(0, 8);//获取除了Behavior之后的名字
                 if (BehaviorDB.ContainsKey(bNane))
                 {
                     if (!BehaviorPath.ContainsKey(bNane)) BehaviorPath.Add(bNane, bPath);//加入db
@@ -263,7 +261,6 @@ namespace HREngine.Bots
         /// <returns></returns>
         public bool updateEverything(Behavior botbase, int numcal, out bool sleepRetry)
         {
-            gameState = GameState.Get();
             this.needSleep = false;
             this.updateBehaveString(botbase);
 
@@ -295,7 +292,7 @@ namespace HREngine.Bots
             Hrtprozis.Instance.updateLurkersDB(this.LurkersDB);//潜伏者?
             Handmanager.Instance.setHandcards(this.handCards, this.anzcards, this.enemyAnzCards);//手牌
             Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownHeroFatigue, this.enemyDecksize, this.enemyHeroFatigue);//疲劳
-            Hrtprozis.Instance.updateJadeGolemsInfo(gameState.GetFriendlySidePlayer().GetTag(GAME_TAG.JADE_GOLEM), gameState.GetOpposingSidePlayer().GetTag(GAME_TAG.JADE_GOLEM));//青玉
+            Hrtprozis.Instance.updateJadeGolemsInfo(GameState.Get().GetFriendlySidePlayer().GetTag(GAME_TAG.JADE_GOLEM), GameState.Get().GetOpposingSidePlayer().GetTag(GAME_TAG.JADE_GOLEM));//青玉
 
             Hrtprozis.Instance.updateTurnInfo(this.gTurn, this.gTurnStep);//回合
             updateCThunInfobyCThun();//克苏恩
@@ -413,7 +410,7 @@ namespace HREngine.Bots
         private void updateRealTimeInfo()
         {
             // List<HSCard> allcards = getAllCards();
-            // gameState = GameState.Get();
+
             //turn
             int currTurn = TritonHs.GameState.GetTurn();
             if (gTurn == currTurn)
@@ -424,8 +421,8 @@ namespace HREngine.Bots
             //hero
             // this.ownController = TritonHs.OurHero.ControllerId;
             // this.enemyController = TritonHs.EnemyHero.ControllerId;
-            ownController = gameState.GetFriendlyPlayerId();
-            enemyController = gameState.GetOpposingPlayerId();
+            ownController = GameState.Get().GetFriendlyPlayerId();
+            enemyController = GameState.Get().GetOpposingPlayerId();
             this.ownHero = new Minion();
             this.enemyHero = new Minion();
             this.currentMana = TritonHs.CurrentMana;
@@ -611,42 +608,6 @@ namespace HREngine.Bots
             StringBuilder myVal = new StringBuilder("[我方场面] ", 20);
             StringBuilder handCard = new StringBuilder("[我方手牌] ", 20);
             StringBuilder enemyGuessHandCard = new StringBuilder("[敌方剩余卡牌预测] ", 20);
-            // String playedRaceThisTurn = "[本回合使用种族类型]: ";
-            // String playedRacesLastTurn = "[上回合使用种族类型]: ";
-            // String playedSpellSchoolThisTurn = "[本回合使用法术类型]: ";
-            // String playedSpellSchoolLastTurn = "[上回合使用法术类型]: ";
-            // // playedRaceThisTurn +=  "【 ";
-            // foreach (CardDB.Race race in p.playedRacesThisTurn)
-            // {
-            //     playedRaceThisTurn += race.ToString() + " ";
-            // }
-            // // playedRaceThisTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
-            // playedRaceThisTurn += ";";
-
-            // // playedRacesLastTurn +=  "【 ";
-            // foreach (CardDB.Race race in p.playedRacesLastTurn)
-            // {
-            //     playedRacesLastTurn += race.ToString() + " ";
-            // }
-            // // playedRacesLastTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
-            // playedRacesLastTurn += ";";
-
-            // // playedSpellSchoolThisTurn +=  "【 ";
-            // foreach (CardDB.SpellSchool spellSchool in p.playedSpellSchoolThisTurn)
-            // {
-            //     playedSpellSchoolThisTurn += spellSchool.ToString() + " ";
-            // }
-            // // playedSpellSchoolThisTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
-            // playedSpellSchoolThisTurn += ";";
-
-            // // playedSpellSchoolLastTurn +=  "【 ";
-            // foreach (CardDB.SpellSchool spellSchool in p.playedSpellSchoolLastTurn)
-            // {
-            //     playedSpellSchoolLastTurn += spellSchool.ToString() + " ";
-            // }
-            // // playedSpellSchoolLastTurn.Remove(playedRaceThisTurn.LastIndexOf(" "), 1);
-            // playedSpellSchoolLastTurn += ";";
-
 
             normalInfo.AppendFormat("水晶： {0} / {1}", p.mana, p.ownMaxMana);
             StringBuilder ownWeapon = new StringBuilder("");
@@ -662,23 +623,6 @@ namespace HREngine.Bots
             normalInfo.AppendFormat(" [任务] quests: {0} {1} {2}", p.ownQuest.Id, p.ownQuest.questProgress, p.ownQuest.maxProgress);
             normalInfo.AppendFormat(" {0} {1} {2}", p.enemyQuest.Id, p.enemyQuest.questProgress, p.enemyQuest.maxProgress);
 
-            foreach (Minion m in p.enemyMinions)
-            {
-                enemyVal.AppendFormat("{0} ( {1} / {2} ) ", m.handcard.card.nameCN, m.Angr, m.Hp);
-                enemyVal.Append(m.frozen ? "[冻结]" : "");
-                enemyVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
-                enemyVal.Append(m.handcard.card.nameCN).Append(" ( " + m.Angr + " / " + m.Hp + " ) ").Append(m.frozen ? "[冻结]" : "").Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
-                enemyVal.Append(m.windfury ? "[风怒]" : "");
-                enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
-                enemyVal.Append(m.taunt ? "[嘲讽]" : "");
-                enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
-                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
-                enemyVal.Append(m.lifesteal ? "[吸血]" : "");
-                enemyVal.Append(m.poisonous ? "[剧毒]" : "");
-                enemyVal.Append(m.reborn ? "[复生]" : "");
-                enemyVal.Append(m.stealth ? "[潜行]" : "");
-                enemyVal.Append(m.immune ? "[免疫]" : "");
-            }
             foreach (Minion m in p.ownMinions)
             {
                 myVal.AppendFormat("{0} ( {1} / {2} ) ", m.handcard.card.nameCN, m.Angr, m.Hp);
@@ -701,6 +645,23 @@ namespace HREngine.Bots
                     myVal.Append(m.handcard.card.TitanAbilityUsed2 ? " 技能2可以使用" : " 技能2冷却");
                     myVal.Append(m.handcard.card.TitanAbilityUsed3 ? " 技能3可以使用" : " 技能3冷却");
                 }
+            }
+            foreach (Minion m in p.enemyMinions)
+            {
+                enemyVal.AppendFormat("{0} ( {1} / {2} ) ", m.handcard.card.nameCN, m.Angr, m.Hp);
+                enemyVal.Append(m.frozen ? "[冻结]" : "");
+                enemyVal.Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                enemyVal.Append(m.handcard.card.nameCN).Append(" ( " + m.Angr + " / " + m.Hp + " ) ").Append(m.frozen ? "[冻结]" : "").Append(!m.Ready || m.cantAttack ? "[无法攻击]" : "");
+                enemyVal.Append(m.windfury ? "[风怒]" : "");
+                enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
+                enemyVal.Append(m.taunt ? "[嘲讽]" : "");
+                enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
+                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.lifesteal ? "[吸血]" : "");
+                enemyVal.Append(m.poisonous ? "[剧毒]" : "");
+                enemyVal.Append(m.reborn ? "[复生]" : "");
+                enemyVal.Append(m.stealth ? "[潜行]" : "");
+                enemyVal.Append(m.immune ? "[免疫]" : "");
             }
             foreach (Handmanager.Handcard hc in p.owncards)
             {
@@ -754,10 +715,9 @@ namespace HREngine.Bots
         /// </summary>
         public void updateGame()
         {
-            gameState = GameState.Get();
 
-            Player FriendlyPlayer = gameState.GetFriendlySidePlayer();
-            Player OpposingPlayer = gameState.GetOpposingSidePlayer();
+            Player FriendlyPlayer = GameState.Get().GetFriendlySidePlayer();
+            Player OpposingPlayer = GameState.Get().GetOpposingSidePlayer();
 
             update(FriendlyPlayer, FriendlyPlayer.GetControllerId(), FriendlyPlayer.IsControlledByFriendlySidePlayer());
             update(OpposingPlayer, OpposingPlayer.GetControllerId(), OpposingPlayer.IsControlledByFriendlySidePlayer());

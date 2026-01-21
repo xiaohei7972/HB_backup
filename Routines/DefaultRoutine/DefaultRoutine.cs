@@ -30,7 +30,6 @@ using Triton.Bot.Logic.Bots.DefaultBot;
 using Logger = Triton.Common.LogUtilities.Logger;
 using System.Diagnostics;
 using System.Threading;
-using System.Data.SqlTypes;
 
 namespace HREngine.Bots
 {
@@ -54,7 +53,6 @@ namespace HREngine.Bots
         bool canBeDelay = false;
         public bool learnmode = false;
         public bool printlearnmode = true;
-        GameState gameState = GameState.Get();
         Silverfish sf = Silverfish.Instance;
         DefaultBotSettings botset
         {
@@ -71,7 +69,6 @@ namespace HREngine.Bots
             Helpfunctions.Instance.ErrorLog("----------------------------");
             Helpfunctions.Instance.ErrorLog("您正在使用的AI版本为" + Silverfish.Instance.versionnumber);
             Helpfunctions.Instance.ErrorLog("----------------------------");
-            gameState = GameState.Get();
         }
 
         #region Scripting
@@ -812,22 +809,21 @@ def Execute():
         public async Task EmoteLogic(EmoteData data)
         {
             Log.InfoFormat("[表情] 使用表情 [{0}].", data.Emote);
-            gameState = GameState.Get();
             if (data.Emote == EmoteType.GREETINGS)
             {
-                gameState.GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
+                GameState.Get().GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
             }
             else if (data.Emote == EmoteType.WELL_PLAYED)
             {
-                gameState.GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
+                GameState.Get().GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
             }
             else if (data.Emote == EmoteType.OOPS)
             {
-                gameState.GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.WELL_PLAYED);
+                GameState.Get().GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.WELL_PLAYED);
             }
             else if (data.Emote == EmoteType.THREATEN)
             {
-                gameState.GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
+                GameState.Get().GetCurrentPlayer().GetHeroCard().PlayEmote(EmoteType.THANKS);
             }
             else if (data.Emote == EmoteType.THANKS)
             {
@@ -889,7 +885,6 @@ def Execute():
         /// </summary>
         public async Task OurTurnLogic()
         {
-            gameState = GameState.Get();
             /* 
             switch (printUtils.emoteMode)
             {
@@ -1007,6 +1002,7 @@ def Execute():
             {
                 try
                 {
+                    //获取回溯管理器实例
                     RewindUIManager rewindUIManager = RewindUIManager.Get();
 
                     if (rewindUIManager == null)
@@ -1014,30 +1010,30 @@ def Execute():
                         return;
                     }
                     Log.WarnFormat("处于回溯状态");
-                    UIBButton rewindButton = rewindUIManager.m_rewindButton;
-                    UIBButton keepButton = rewindUIManager.m_keepButton;
 
-                    if (rewindButton == null || keepButton == null)
+                    if (rewindUIManager.m_rewindButton == null || rewindUIManager.m_keepButton == null)
                     {
                         Log.WarnFormat("回溯或保持当前时间线按钮位空");
                         return;
                     }
-                    Log.WarnFormat("开始点击回溯或维持时间线按钮");
 
-                    // UIBButton targetButton = random.Next(0, 1) == 0 ? rewindButton : keepButton;
-                    if (random.Next(0, 1) == 0) TritonHs.KeepTimeline();
-                    else TritonHs.RewindTimeline();
-                    // Log.WarnFormat("移动到回溯按钮上");
-                    // //移动到按钮上
-                    // Client.LeftClickAtDialog(targetButton.Transform.Position);
-                    // await Coroutine.Sleep(300);
-                    // //点击鼠标左键
-                    // Log.WarnFormat("点击鼠标左键");
-                    // Client.LeftClickAt(targetButton.Transform.Position);
+                    Log.WarnFormat("开始点击回溯或维持时间线按钮");
+                    if (random.Next(0, 2) > 1)
+                    {
+                        Log.WarnFormat("点击维持时间线按钮");
+                        // await TritonHs.KeepTimeline();
+                        rewindUIManager.m_keepButton.TriggerPress();
+                        rewindUIManager.m_keepButton.TriggerRelease();
+                    }
+                    else
+                    {
+                        Log.WarnFormat("点击回溯按钮");
+                        // await TritonHs.RewindTimeline();
+                        rewindUIManager.m_rewindButton.TriggerPress();
+                        rewindUIManager.m_rewindButton.TriggerRelease();
+                    }
                     await Coroutine.Sleep(random.Next(100, 500));
-                    // Log.WarnFormat("点击{0}按钮", targetButton.GetText());
-                    // targetButton.TriggerPress();
-                    // targetButton.TriggerRelease();
+
                 }
                 catch (Exception ex)
                 {
@@ -1053,19 +1049,19 @@ def Execute():
                 Silverfish.Instance.lastpf = null;
             }
             // 如果在目标或选择模式，等待
-            if (this.learnmode && (TritonHs.IsInTargetMode() || TritonHs.IsInChoiceMode()))
+            if (this.learnmode && (GameState.Get().IsInTargetMode() || GameState.Get().IsInChoiceMode()))
             {
                 await Coroutine.Sleep(50);
                 return;
             }
 
-
-            if (gameState.IsInMainOptionMode())
+            //处于主操作模式
+            if (GameState.Get().IsInMainOptionMode())
             {
                 goto actions;
             }
-            //else if (gameState.IsInTargetMode() || gameState.IsInSubOptionMode())
-            else if (gameState.IsInTargetMode())
+            //处于目标模式
+            else if (GameState.Get().IsInTargetMode())
             {
                 if (dirtytarget >= 0)
                 {
@@ -1097,7 +1093,8 @@ def Execute():
                 return;
 
             }
-            else if (gameState.IsInChoiceMode())
+            //处于选择模式
+            else if (GameState.Get().IsInChoiceMode())
             {
                 await Coroutine.Sleep(555 + makeChoice());
                 switch (dirtychoice)
@@ -1121,8 +1118,8 @@ def Execute():
             // switch (responseMode)
             // {
 
-            //     case GameState.ResponseMode.OPTION_TARGET:
-            //         // case GameState.ResponseMode.OPTION_REVERSE_TARGET:
+            //     case GameState.Get().ResponseMode.OPTION_TARGET:
+            //         // case GameState.Get().ResponseMode.OPTION_REVERSE_TARGET:
             //         {
             //             // Log.DebugFormat("选择：{0}", responseMode);
 
@@ -1156,8 +1153,8 @@ def Execute():
             //             TritonHs.CancelTargetingMode();
             //             return;
             //         }
-            //     case GameState.ResponseMode.SUB_OPTION:
-            //     case GameState.ResponseMode.CHOICE:
+            //     case GameState.Get().ResponseMode.SUB_OPTION:
+            //     case GameState.Get().ResponseMode.CHOICE:
             //         // Log.DebugFormat("选择：{0}", responseMode);
             //         {
             //             await Coroutine.Sleep(20 + makeChoice());
@@ -1180,7 +1177,7 @@ def Execute():
             //             await TitanAbilityUseOnTagets();
             //             return;
             //         }
-            //     // case GameState.ResponseMode.OPTION:
+            //     // case GameState.Get().ResponseMode.OPTION:
             //     default:
             //         {
             //             Log.DebugFormat("当前responseModeL:{0}", responseMode);
@@ -1423,7 +1420,7 @@ def Execute():
                     break;
             }
             //地标减少冷却回合
-            Playfield lastPlay = Ai.Instance.bestplay;
+            /* Playfield lastPlay = Ai.Instance.bestplay;
             foreach (Minion m in lastPlay.ownMinions)
             {
                 if (m.handcard.card.type == CardDB.cardtype.LOCATION && m.CooldownTurn > 0)
@@ -1436,7 +1433,7 @@ def Execute():
                     }
                     Helpfunctions.Instance.logg("卡牌名称 - " + m.handcard.card.nameCN + " 地标冷却回合 - " + m.CooldownTurn);
                 }
-            }
+            } */
             await TritonHs.EndTurn();
         }
 
@@ -1748,7 +1745,6 @@ def Execute():
         /// <returns></returns>
         private int makeChoice()
         {
-            gameState = GameState.Get();
             if (dirtychoice < 1)
             {
                 var ccm = ChoiceCardMgr.Get();
@@ -1759,7 +1755,7 @@ def Execute():
                 if (lscc != null)
                 {
                     sourceEntityId = lscc.m_sourceEntityId;
-                    Entity entity = gameState.GetEntity(lscc.m_sourceEntityId);
+                    Entity entity = GameState.Get().GetEntity(lscc.m_sourceEntityId);
                     sourceEntityCId = CardDB.Instance.cardIdstringToEnum(entity.GetCardId());
                     if (entity != null)
                     {
@@ -1817,10 +1813,20 @@ def Execute():
                 for (int i = 0; i < cards.Count; i++)
                 {
                     var hc = new Handmanager.Handcard();
+                    Entity entity = cards[i].GetEntity();
                     hc.card = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(cards[i].GetCardId()));
                     hc.position = 100 + i;
                     hc.entity = cards[i].GetEntityId();
                     hc.manacost = hc.card.calculateManaCost(ai.nextMoveGuess);
+                    if (entity.HasTag(GAME_TAG.HAS_DARK_GIFT))
+                    {
+                        int darkGiftEntityId = entity.GetTag(GAME_TAG.DARK_GIFT);
+                        if (darkGiftEntityId != 0)
+                        {
+                            Entity darkGiftEntity = GameState.Get().GetEntity(darkGiftEntityId);
+                            hc.enchs.Add(CardDB.Instance.cardIdstringToEnum(darkGiftEntity.GetCardId()));
+                        }
+                    }
                     discoverCards.Add(hc);
                 }
                 //芬利爵士的选择
