@@ -447,7 +447,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         }
 
         //全局动画速度
-        private string s_001;
+        /* private string s_001;
         [DefaultValue("1.0")]
         public string SliderShopSpeedRatioText
         {
@@ -461,10 +461,10 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 }
                 ilog_0.InfoFormat("[天梯脚本设置] 全局动画速度(齿轮) = {0}.", s_001);
             }
-        }
+        } */
 
         //全局动画速度滑动条
-        private float i_001;
+        /* private float i_001;
         private int i_002;
         private float i_013;
         [DefaultValue(1.0f)]
@@ -511,9 +511,9 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     ilog_0.ErrorFormat("An exception occurred: {0}.", e);
                 }
             }
-        }
+        }*/
 
 
     }
     
-}
+} 

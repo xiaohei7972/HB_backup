@@ -218,7 +218,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     }
 
                     //全局动画速度
-                    if (!Wpf.SetupLabelBinding(userControl, "SliderShopSpeedRatioTextLabel", "SliderShopSpeedRatioText", BindingMode.TwoWay, DefaultBotSettings.Instance))
+                    /* if (!Wpf.SetupLabelBinding(userControl, "SliderShopSpeedRatioTextLabel", "SliderShopSpeedRatioText", BindingMode.TwoWay, DefaultBotSettings.Instance))
                     {
                         ilog_0.DebugFormat("[SettingsControl] SetupLabelBinding failed for 'SliderShopSpeedRatioTextLabel'.");
                         throw new Exception("The SettingsControl could not be created.");
@@ -227,7 +227,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     {
                         ilog_0.DebugFormat("[SettingsControl] SetupSliderBinding failed for 'SliderShopSpeedRatioSlider'.");
                         throw new Exception("The SettingsControl could not be created.");
-                    }
+                    } */
 
 
                     userControl_0 = userControl;
@@ -1602,11 +1602,18 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                             {
                                 switch (gameType)
                                 {
-                                    case GameType.GT_MERCENARIES_PVE:
-                                    // case GameType.GT_VS_FRIEND:
-                                    case GameType.GT_MERCENARIES_PVP:
+                                    // case GameType.GT_MERCENARIES_PVE:
+                                    // case GameType.GT_MERCENARIES_PVP:
                                     case GameType.GT_MERCENARIES_PVE_COOP:
-
+                                    case GameType.GT_PVPDR_CASUAL:
+                                    // case GameType.GT_LETTUCE:
+                                        // case GameType.GT_VS_AI:
+                                        // case GameType.GT_VS_FRIEND:
+                                        // case GameType.GT_TUTORIAL:
+                                        // case GameType.GT_ARENA:
+                                        // case GameType.GT_RANKED:
+                                        // case GameType.GT_CASUAL:    
+                                        // case GameType.GT_UNDERGROUND_ARENA:
                                         {
                                             if (gameState == null || !gameState.IsGameOver())
                                             {
@@ -1615,7 +1622,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                                             }
                                             else
                                             {
-                                                await ClientRandomClick(string.Format("[炉石兄弟全局] {0}", mode), 2500);
+                                                await ClientRandomClick(string.Format("[炉石兄弟全局] {0} {1}", mode, gameType), 2500);
                                             }
                                         }
                                         break;
@@ -1684,14 +1691,14 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     ilog_0.ErrorFormat("SetResolution An exception occurred: {0}.", e);
                 }
             }
-            try
-            {
-                TimeScaleMgr.Get().SetGameTimeScale(DefaultBotSettings.Instance.SliderShopSpeedRatio);
-            }
-            catch (Exception e)
-            {
-                ilog_0.ErrorFormat("SetGameTimeScale An exception occurred: {0}.", e);
-            }
+            // try
+            // {
+            //     TimeScaleMgr.Get().SetGameTimeScale(DefaultBotSettings.Instance.SliderShopSpeedRatio);
+            // }
+            // catch (Exception e)
+            // {
+            //     ilog_0.ErrorFormat("SetGameTimeScale An exception occurred: {0}.", e);
+            // }
 
             PluginManager.Start();
             RoutineManager.Start();
