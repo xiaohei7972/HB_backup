@@ -7,8 +7,8 @@ namespace HREngine.Bots
 	//附魔 中立 费用：0
 	//Element: Fire
 	//元素：火焰
-	//Attack doubled.
-	//攻击力翻倍。
+	//Attack set to {0}.
+	//攻击力变为{0}。
 	class Sim_BG22_HERO_001p_t2e : SimTemplate
 	{
 		

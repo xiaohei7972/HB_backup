@@ -12,6 +12,6 @@ namespace HREngine.Bots
 	class Sim_DAL_062e : SimTemplate
 	{
 		
-	 
+		
 	}
 }

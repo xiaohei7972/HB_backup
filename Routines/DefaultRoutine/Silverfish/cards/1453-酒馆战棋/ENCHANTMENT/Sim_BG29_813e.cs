@@ -7,7 +7,7 @@ namespace HREngine.Bots
 	//附魔 中立 费用：0
 	//Persistent Poet Player Enchant [DNT]
 	//
-	//Adjacent Dragons to a Persistent Poet permanently keep your enchantments from combat.
+	//Adjacent Minions to a Persistent Poet permanently keep your enchantments from combat.
 	//
 	class Sim_BG29_813e : SimTemplate
 	{

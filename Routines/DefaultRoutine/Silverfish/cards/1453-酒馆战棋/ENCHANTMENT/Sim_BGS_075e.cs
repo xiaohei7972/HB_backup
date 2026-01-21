@@ -7,8 +7,8 @@ namespace HREngine.Bots
 	//附魔 中立 费用：0
 	//Rabid
 	//狂暴
-	//+1/+2.
-	//+1/+2。
+	//+{0}/+{1}.
+	//+{0}/+{1}。
 	class Sim_BGS_075e : SimTemplate
 	{
 		
