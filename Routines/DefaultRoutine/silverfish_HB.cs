@@ -1020,7 +1020,7 @@ namespace HREngine.Bots
                 m.handcard.card.TAG_SCRIPT_DATA_NUM_4 = c.TAG_SCRIPT_DATA_NUM_4;//标签脚本数据编号4，用于记录伤害、召唤数量、衍生物攻击力、衍生物血量、注能数量、法力渴求
                 m.handcard.card.DECK_ACTION_COST = c.DECK_ACTION_COST;//卡组操作消耗法力值
                 m.handcard.card.Dredge = c.Dredge;//探底
-                m.CooldownTurn = c.CooldownTurn;//地标冷却回合
+                // m.CooldownTurn = c.CooldownTurn;//地标冷却回合
                 m.handcard.card.Infuse = c.Infuse;//注能
                 m.handcard.card.Infused = c.Infused;//已注能
                 m.handcard.card.InfuseNum = c.InfuseNum;//注能数量

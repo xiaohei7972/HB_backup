@@ -1042,6 +1042,13 @@ def Execute():
                 return;
             }
 
+            //处于主操作模式
+            if (GameState.Get().IsInMainOptionMode())
+            {
+                Log.Info("处于主操作模式...");
+
+                goto actions;
+            }
             // 检查行为模式是否已更改
             if (this.behave.BehaviorName() != DefaultRoutineSettings.Instance.DefaultBehavior)
             {
@@ -1049,20 +1056,18 @@ def Execute():
                 Silverfish.Instance.lastpf = null;
             }
             // 如果在目标或选择模式，等待
-            if (this.learnmode && (GameState.Get().IsInTargetMode() || GameState.Get().IsInChoiceMode()))
+            if (this.learnmode && (GameState.Get().IsInTargetMode() || GameState.Get().IsInChoiceMode() || GameState.Get().IsInSubOptionMode()))
             {
                 await Coroutine.Sleep(50);
                 return;
             }
 
-            //处于主操作模式
-            if (GameState.Get().IsInMainOptionMode())
-            {
-                goto actions;
-            }
+
             //处于目标模式
-            else if (GameState.Get().IsInTargetMode())
+            if (GameState.Get().IsInTargetMode())
             {
+                Log.Info("处于目标模式...");
+
                 if (dirtytarget >= 0)
                 {
                     Log.Info("瞄准中...");
@@ -1093,9 +1098,10 @@ def Execute():
                 return;
 
             }
-            //处于选择模式
-            else if (GameState.Get().IsInChoiceMode())
+            //处于选择模式或者抉择模式
+            else if (GameState.Get().IsInChoiceMode() || GameState.Get().IsInSubOptionMode())
             {
+                Log.Info("处于选择模式...");
                 await Coroutine.Sleep(555 + makeChoice());
                 switch (dirtychoice)
                 {
@@ -1115,82 +1121,83 @@ def Execute():
                 await TitanAbilityUseOnTagets();
                 return;
             }
-            // switch (responseMode)
-            // {
 
-            //     case GameState.Get().ResponseMode.OPTION_TARGET:
-            //         // case GameState.Get().ResponseMode.OPTION_REVERSE_TARGET:
-            //         {
-            //             // Log.DebugFormat("选择：{0}", responseMode);
-
-            //             if (dirtytarget >= 0)
-            //             {
-            //                 Log.Info("瞄准中...");
-            //                 HSCard source = dirtyTargetSource == 9000 ? TritonHs.OurHeroPowerCard : getEntityWithNumber(dirtyTargetSource);
-            //                 HSCard target = getEntityWithNumber(dirtytarget);
-
-            //                 if (target == null)
-            //                 {
-            //                     Log.Error("目标为空...");
-            //                     TritonHs.CancelTargetingMode();
-            //                     return;
-            //                 }
-
-            //                 dirtytarget = -1;
-            //                 dirtyTargetSource = -1;
-
-            //                 if (source == null)
-            //                     await TritonHs.DoTarget(target);
-            //                 else
-            //                     await source.DoTarget(target);
-
-            //                 // await Coroutine.Sleep(555);
-            //                 await Coroutine.Sleep(20);
-            //                 return;
-            //             }
-
-            //             Log.Error("目标丢失...");
-            //             TritonHs.CancelTargetingMode();
-            //             return;
-            //         }
-            //     case GameState.Get().ResponseMode.SUB_OPTION:
-            //     case GameState.Get().ResponseMode.CHOICE:
-            //         // Log.DebugFormat("选择：{0}", responseMode);
-            //         {
-            //             await Coroutine.Sleep(20 + makeChoice());
-            //             switch (dirtychoice)
-            //             {
-            //                 case 0:
-            //                     TritonHs.ChooseOneClickMiddle();
-            //                     break;
-            //                 case 1:
-            //                     TritonHs.ChooseOneClickLeft();
-            //                     break;
-            //                 case 2:
-            //                     TritonHs.ChooseOneClickRight();
-            //                     break;
-            //             }
-
-            //             dirtychoice = -1;
-            //             await Coroutine.Sleep(20);
-            //             // 指向泰坦技能的使用目标
-            //             await TitanAbilityUseOnTagets();
-            //             return;
-            //         }
-            //     // case GameState.Get().ResponseMode.OPTION:
-            //     default:
-            //         {
-            //             Log.DebugFormat("当前responseModeL:{0}", responseMode);
-            //         }
-            //         break;
-            // }
             // 处理目标模式
             // 如果在目标或选择模式，等待
-            // if (this.learnmode && (TritonHs.IsInTargetMode() || TritonHs.IsInChoiceMode()))
-            // {
-            //     await Coroutine.Sleep(30);
-            //     return;
-            // }
+            // switch case版本，根据Response的值继续
+            /*  if (this.learnmode && (GameState.Get().IsInTargetMode() || GameState.Get().IsInChoiceMode() || GameState.Get().IsInSubOptionMode()))
+             {
+                 await Coroutine.Sleep(30);
+                 return;
+             }
+
+             switch (GameState.Get().GetResponseMode())
+             {
+
+                 case GameState.ResponseMode.OPTION_TARGET:
+                     // case GameState.Get().ResponseMode.OPTION_REVERSE_TARGET:
+                     {
+                         if (dirtytarget >= 0)
+                         {
+                             Log.Info("瞄准中...");
+                             HSCard source = dirtyTargetSource == 9000 ? TritonHs.OurHeroPowerCard : getEntityWithNumber(dirtyTargetSource);
+                             HSCard target = getEntityWithNumber(dirtytarget);
+
+                             if (target == null)
+                             {
+                                 Log.Error("目标为空...");
+                                 TritonHs.CancelTargetingMode();
+                                 return;
+                             }
+
+                             dirtytarget = -1;
+                             dirtyTargetSource = -1;
+
+                             if (source == null)
+                                 await TritonHs.DoTarget(target);
+                             else
+                                 await source.DoTarget(target);
+
+                             await Coroutine.Sleep(555);
+                             return;
+                         }
+
+                         Log.Error("目标丢失...");
+                         TritonHs.CancelTargetingMode();
+                         return;
+                     }
+                 case GameState.ResponseMode.SUB_OPTION:
+                 case GameState.ResponseMode.CHOICE:
+                     // Log.DebugFormat("选择：{0}", responseMode);
+                     {
+                         await Coroutine.Sleep(555 + makeChoice());
+                         switch (dirtychoice)
+                         {
+                             case 0:
+                                 TritonHs.ChooseOneClickMiddle();
+                                 break;
+                             case 1:
+                                 TritonHs.ChooseOneClickLeft();
+                                 break;
+                             case 2:
+                                 TritonHs.ChooseOneClickRight();
+                                 break;
+                         }
+
+                         dirtychoice = -1;
+                         await Coroutine.Sleep(555);
+                         // 指向泰坦技能的使用目标
+                         await TitanAbilityUseOnTagets();
+                         return;
+                     }
+                 // case GameState.Get().ResponseMode.OPTION:
+                 default:
+                     {
+                         Log.DebugFormat("当前responseModeL:{0}", "option");
+                     }
+                     break;
+             } */
+
 
 
 
