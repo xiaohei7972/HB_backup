@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+    //* 正义圣契 Libram of Justice
+    //Equip a 1/4 weapon. Change the Health of all enemy minions to 1.
+    //装备一把1/4的武器。将所有敌方随从的生命值变为1。
+    class Sim_BT_011 : SimTemplate
+    {
+
+        CardDB.Card w = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_091);
+
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
+        {
+            p.equipWeapon(w, ownplay);
+            foreach (Minion m in p.enemyMinions)
+            {
+                p.minionSetHealthtoX(m, 1);
+            }
+           
+        }
+
+
+    }
+}

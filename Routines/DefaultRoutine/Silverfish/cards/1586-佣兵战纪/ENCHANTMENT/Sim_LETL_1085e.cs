@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 无效的 费用：0
+	//Strength of Wrynn
+	//乌瑞恩之力
+	//+@ Holy Damage.
+	//+@神圣伤害。
+	class Sim_LETL_1085e : SimTemplate
+	{
+		
+		
+	}
+}

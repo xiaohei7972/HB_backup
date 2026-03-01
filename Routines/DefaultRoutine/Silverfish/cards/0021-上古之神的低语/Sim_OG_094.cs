@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+    //* 真言术：触 Power Word: Tentacles
+    //Give a minion +2/+6.
+    //使一个随从获得+2/+6。
+    class Sim_OG_094 : SimTemplate
+    {
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
+        {
+            if (target != null)
+            {
+                p.minionGetBuffed(target, 2, 6);
+            }
+        }
+
+        public override PlayReq[] GetPlayReqs()
+        {
+            return new PlayReq[] {
+                new PlayReq(CardDB.ErrorType2.REQ_TARGET_TO_PLAY),
+                new PlayReq(CardDB.ErrorType2.REQ_MINION_TARGET),
+            };
+        }
+    }
+}

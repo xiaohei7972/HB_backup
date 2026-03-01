@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Heroic PvE C'Thun enchantment
+	//
+	//
+	//
+	class Sim_LT24_810e2 : SimTemplate
+	{
+		
+		
+	}
+}

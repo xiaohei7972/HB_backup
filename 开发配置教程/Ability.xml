@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>   
+<Ability>
+    <Version>1.0.0</Version>
+    <Date>2024-10-31</Date>
+    <DownLoad>https://gitee.com/UniverseString/Hearthstone-myAccount/releases/download/V1.0.1/HearthStudy_V1.0.1.exe</DownLoad>
+    <Describe>1、学习账号&#10;2、好好学习&#10;3、天天向上</Describe>
+    <Must>1</Must>
+    <Auth>1</Auth>
+    <Enable>1</Enable>
+    <Reason>我在学习，你瞅啥呢？</Reason>
+</Ability>

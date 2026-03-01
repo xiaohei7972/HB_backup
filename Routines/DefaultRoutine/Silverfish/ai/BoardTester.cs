@@ -1,0 +1,1847 @@
+namespace HREngine.Bots
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using IronPython.Runtime.Operations;
+
+    /// <summary>
+    /// 牌面测试类，用于从测试文件中读取游戏状态并构建牌面
+    /// 每一个牌面txt文件会new出一个新的BoardTester对象，不用担心变量复用和初始化问题
+    /// </summary>
+public class BoardTester
+    {
+        /// <summary>
+        /// 机器人行为模式
+        /// </summary>
+        public string botBehavior = "None";
+        /// <summary>
+        /// 最大搜索宽度
+        /// </summary>
+        int maxwide = 3000;
+        /// <summary>
+        /// 两回合模拟深度
+        /// </summary>
+        int twoturnsim = 256;
+        /// <summary>
+        /// 防奥秘概率1
+        /// </summary>
+        int pprob1 = 50;
+        /// <summary>
+        /// 防奥秘概率2
+        /// </summary>
+        int pprob2 = 80;
+        /// <summary>
+        /// 是否防奥秘
+        /// </summary>
+        bool playaround = false;
+
+        /// <summary>
+        /// 我方玩家ID
+        /// </summary>
+        int ownPlayer = 1;
+        /// <summary>
+        /// 敌方最大法力值
+        /// </summary>
+        int enemmaxman = 0; // enemy Max mana
+
+        /// <summary>
+        /// 我方英雄
+        /// </summary>
+        Minion ownHero;
+        /// <summary>
+        /// 敌方英雄
+        /// </summary>
+        Minion enemyHero;
+
+        /// <summary>
+        /// 我方武器
+        /// </summary>
+        Weapon ownWeapon = new Weapon();
+        /// <summary>
+        /// 敌方武器
+        /// </summary>
+        Weapon enemyWeapon = new Weapon();
+
+        /// <summary>
+        /// 我方英雄实体ID
+        /// </summary>
+        int ownHEntity = 0;
+        /// <summary>
+        /// 敌方英雄实体ID
+        /// </summary>
+        int enemyHEntity = 1;
+        /// <summary>
+        /// 敌方英雄是否潜行
+        /// </summary>
+        bool enemyHeroStealth = false;
+
+        /// <summary>
+        /// 我方英雄增益效果
+        /// </summary>
+        List<CardDB.cardIDEnum> ownHeroEnchs = new List<CardDB.cardIDEnum>();
+        /// <summary>
+        /// 敌方英雄增益效果
+        /// </summary>
+        List<CardDB.cardIDEnum> enemyHeroEnchs = new List<CardDB.cardIDEnum>();
+
+        /// <summary>
+        /// 当前回合数
+        /// </summary>
+        int gTurn = 0;
+        /// <summary>
+        /// 当前回合步骤
+        /// </summary>
+        int gTurnStep = 0;
+        /// <summary>
+        /// 当前法力值
+        /// </summary>
+        int mana = 0;
+        /// <summary>
+        /// 最大法力值
+        /// </summary>
+        int maxmana = 0;
+        /// <summary>
+        /// 我方英雄名称
+        /// </summary>
+        string ownheroname = "";
+        /// <summary>
+        /// 我方英雄生命值
+        /// </summary>
+        int ownherohp = 0;
+        /// <summary>
+        /// 我方英雄最大生命值
+        /// </summary>
+        int ownheromaxhp = 30;
+        /// <summary>
+        /// 敌方英雄最大生命值
+        /// </summary>
+        int enemyheromaxhp = 30;
+        /// <summary>
+        /// 我方英雄护甲
+        /// </summary>
+        int ownherodefence = 0;
+        /// <summary>
+        /// 我方英雄是否准备就绪
+        /// </summary>
+        bool ownheroready = false;
+        /// <summary>
+        /// 我方英雄攻击时是否免疫
+        /// </summary>
+        bool ownHeroimmunewhileattacking = false;
+        /// <summary>
+        /// 我方英雄本回合攻击次数
+        /// </summary>
+        int ownheroattacksThisRound = 0;
+        /// <summary>
+        /// 我方英雄攻击力
+        /// </summary>
+        int ownHeroAttack = 0;
+        /// <summary>
+        /// 我方英雄临时攻击力
+        /// </summary>
+        int ownHeroTempAttack = 0;
+        /// <summary>
+        /// 我方英雄是否潜行
+        /// </summary>
+        bool ownHeroStealth = false;
+        /// <summary>
+        /// 本回合已使用的选项数
+        /// </summary>
+        int numOptionPlayedThisTurn = 0;
+        /// <summary>
+        /// 本回合已 played 的随从数
+        /// </summary>
+        int numMinionsPlayedThisTurn = 0;
+        /// <summary>
+        /// 本回合已 played 的卡牌数
+        /// </summary>
+        int cardsPlayedThisTurn = 0;
+        /// <summary>
+        /// 过载
+        /// </summary>
+        int overload = 0;
+        /// <summary>
+        /// 被锁定的法力值
+        /// </summary>
+        int lockedMana = 0;
+
+        /// <summary>
+        /// 我方克苏恩生命值加成
+        /// </summary>
+        int anzOgOwnCThunHpBonus = 0;
+        /// <summary>
+        /// 我方克苏恩攻击力加成
+        /// </summary>
+        int anzOgOwnCThunAngrBonus = 0;
+        /// <summary>
+        /// 我方克苏恩嘲讽状态
+        /// </summary>
+        int anzOgOwnCThunTaunt = 0;
+        /// <summary>
+        /// 我方青玉魔像等级
+        /// </summary>
+        int anzOwnJadeGolem = 0;
+        /// <summary>
+        /// 敌方青玉魔像等级
+        /// </summary>
+        int anzEnemyJadeGolem = 0;
+        /// <summary>
+        /// 本回合我方元素数量
+        /// </summary>
+        int anzOwnElementalsThisTurn = 0;
+        /// <summary>
+        /// 上回合我方元素数量
+        /// </summary>
+        int anzOwnElementalsLastTurn = 0;
+        /// <summary>
+        /// 我方元素是否具有吸血
+        /// </summary>
+        int ownElementalsHaveLifesteal = 0;
+        /// <summary>
+        /// 我方水晶核心状态
+        /// </summary>
+        int ownCrystalCore = 0;
+        /// <summary>
+        /// 我方牌库中随从是否0费
+        /// </summary>
+        bool ownMinionsInDeckCost0 = false;
+        /// <summary>
+        /// 塔姆辛状态
+        /// </summary>
+        bool anzTamsin = false;
+
+        /// <summary>
+        /// 我方牌库大小
+        /// </summary>
+        int ownDecksize = 30;
+        /// <summary>
+        /// 敌方牌库大小
+        /// </summary>
+        int enemyDecksize = 30;
+        /// <summary>
+        /// 我方疲劳值
+        /// </summary>
+        int ownFatigue = 0;
+        /// <summary>
+        /// 敌方疲劳值
+        /// </summary>
+        int enemyFatigue = 0;
+
+        /// <summary>
+        /// 我方英雄是否免疫
+        /// </summary>
+        bool heroImmune = false;
+        /// <summary>
+        /// 敌方英雄是否免疫
+        /// </summary>
+        bool enemyHeroImmune = false;
+
+        /// <summary>
+        /// 我方英雄技能费用
+        /// </summary>
+        int ownHeroPowerCost = 2;
+        /// <summary>
+        /// 敌方英雄技能费用
+        /// </summary>
+        int enemyHeroPowerCost = 2;
+
+        /// <summary>
+        /// 敌方奥秘数量
+        /// </summary>
+        int enemySecretAmount = 0;
+        /// <summary>
+        /// 敌方奥秘列表
+        /// </summary>
+        List<SecretItem> enemySecrets = new List<SecretItem>();
+
+        /// <summary>
+        /// 我方英雄是否被冻结
+        /// </summary>
+        bool ownHeroFrozen = false;
+
+        /// <summary>
+        /// 我方奥秘列表
+        /// </summary>
+        List<string> ownsecretlist = new List<string>();
+        /// <summary>
+        /// 敌方英雄名称
+        /// </summary>
+        string enemyheroname = "";
+        /// <summary>
+        /// 敌方英雄生命值
+        /// </summary>
+        int enemyherohp = 0;
+        /// <summary>
+        /// 敌方英雄护甲
+        /// </summary>
+        int enemyherodefence = 0;
+        /// <summary>
+        /// 敌方英雄是否被冻结
+        /// </summary>
+        bool enemyFrozen = false;
+        /// <summary>
+        /// 是否首次运行
+        /// </summary>
+        bool fistRun = true;
+        /// <summary>
+        /// 敌方手牌数量
+        /// </summary>
+        int enemyNumberHand = 5;
+
+        /// <summary>
+        /// 我方随从列表
+        /// </summary>
+        List<Minion> ownminions = new List<Minion>();
+        /// <summary>
+        /// 敌方随从列表
+        /// </summary>
+        List<Minion> enemyminions = new List<Minion>();
+        /// <summary>
+        /// 手牌列表
+        /// </summary>
+        List<Handmanager.Handcard> handcards = new List<Handmanager.Handcard>();
+        /// <summary>
+        /// 敌方卡牌列表
+        /// </summary>
+        List<CardDB.cardIDEnum> enemycards = new List<CardDB.cardIDEnum>();
+        /// <summary>
+        /// 本回合坟场
+        /// </summary>
+        List<GraveYardItem> turnGraveYard = new List<GraveYardItem>();
+        /// <summary>
+        /// 所有坟场
+        /// </summary>
+        List<GraveYardItem> turnGraveYardAll = new List<GraveYardItem>();
+        /// <summary>
+        /// 发现卡牌列表
+        /// </summary>
+        List<string> discover = new List<string>();
+        /// <summary>
+        /// 潜伏者数据库
+        /// </summary>
+        Dictionary<int, IDEnumOwner> LurkersDB = new Dictionary<int, IDEnumOwner>();
+        /// <summary>
+        /// 我方坟场
+        /// </summary>
+        Dictionary<CardDB.cardIDEnum, int> og = new Dictionary<CardDB.cardIDEnum, int>();
+        /// <summary>
+        /// 敌方坟场
+        /// </summary>
+        Dictionary<CardDB.cardIDEnum, int> eg = new Dictionary<CardDB.cardIDEnum, int>();
+        /// <summary>
+        /// 我方牌库
+        /// </summary>
+        public Dictionary<CardDB.cardIDEnum, int> od = new Dictionary<CardDB.cardIDEnum, int>();
+
+        /// <summary>
+        /// 费尔根是否死亡
+        /// </summary>
+        bool feugendead = false;
+        /// <summary>
+        /// 斯塔拉格是否死亡
+        /// </summary>
+        bool stalaggdead = false;
+        /// <summary>
+        /// 数据是否读取完成
+        /// </summary>
+        public bool datareaded = false;
+
+
+        /// <summary>
+        /// 武器只攻击随从直到敌方英雄生命值
+        /// </summary>
+        int weaponOnlyAttackMobsUntilEnfacehp = 0;
+        /// <summary>
+        /// 如果能在下一回合结束游戏则狂暴
+        /// </summary>
+        int berserkIfCanFinishNextTour = 0;
+        /// <summary>
+        /// 面部生命值
+        /// </summary>
+        int facehp = 27;
+        /// <summary>
+        /// 放置位置
+        /// </summary>
+        int placement = 0;
+
+        /// <summary>
+        /// 敌方回合最大宽度
+        /// </summary>
+        int ets = 20;
+        /// <summary>
+        /// 敌方回合最大宽度第二步
+        /// </summary>
+        int ets2 = 200;
+
+        /// <summary>
+        /// 下一回合最大宽度
+        /// </summary>
+        int ntssw = 10;
+        /// <summary>
+        /// 下一回合深度
+        /// </summary>
+        int ntssd = 6;
+        /// <summary>
+        /// 下一回合总牌面数
+        /// </summary>
+        int ntssm = 50;
+
+        /// <summary>
+        /// 迭代次数
+        /// </summary>
+        int iC = 0;
+        /// <summary>
+        /// 加速等级
+        /// </summary>
+        int speedup = 0;
+        /// <summary>
+        /// 调整行动
+        /// </summary>
+        int adjustActions = 0;
+        /// <summary>
+        /// 认输模式
+        /// </summary>
+        int concedeMode = 0;
+
+        /// <summary>
+        /// 权重
+        /// </summary>
+        int alpha = 50;
+
+        /// <summary>
+        /// 是否使用奥秘
+        /// </summary>
+        bool dosecrets = false;
+        /// <summary>
+        /// 技能是否准备就绪
+        /// </summary>
+        bool abilityReady = true;
+        /// <summary>
+        /// 我方英雄技能
+        /// </summary>
+        CardDB.Card heroability = null;
+        /// <summary>
+        /// 敌方英雄技能
+        /// </summary>
+        CardDB.Card enemyability = null;
+
+        /// <summary>
+        /// 构造函数，用于从测试数据中初始化牌面
+        /// </summary>
+        /// <param name="data">测试数据字符串，如果为空则从test.txt文件读取</param>
+        public BoardTester(string data = "")
+        {
+            og.Clear();
+            eg.Clear();
+
+            Settings.Instance.placement = 0;
+            Hrtprozis.Instance.clearAllNewGame();
+            Handmanager.Instance.clearAllRecalc();
+            string[] lines = new string[0] { };
+            int type = 0; // 牌面文件类型：0：原始日志类型 1：中文类型，可读性好，方便构造修改
+            if (data == "")
+            {
+                this.datareaded = false;
+                try
+                {
+                    string path = Settings.Instance.path;
+                    lines = System.IO.File.ReadAllLines(path + "test.txt");
+                    this.datareaded = true;
+                }
+                catch
+                {
+                    this.datareaded = false;
+                    Helpfunctions.Instance.logg("cant find test.txt");
+                    Helpfunctions.Instance.ErrorLog("cant find test.txt");
+                    return;
+                }
+            }
+            else
+            {
+                this.datareaded = true;
+                lines = data.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length <= 20)  // Todo:这里要找到一个不容易被破坏的特征，随着日志变化，可以更新成别的
+                    type = 1;
+            }
+            setupPf(lines, type);
+
+            //Set default settings for behaviour
+            Settings.Instance.setSettings(this.botBehavior);
+            Settings.Instance.test = true;
+
+            //Apply settings from this UILogg  以下值都已经在前面类成员处初始化
+            Hrtprozis.Instance.setAttackFaceHP(facehp);
+            ComboBreaker.Instance.attackFaceHP = facehp;
+            Settings.Instance.enfacehp = facehp;
+            Settings.Instance.weaponOnlyAttackMobsUntilEnfacehp = weaponOnlyAttackMobsUntilEnfacehp;
+            Settings.Instance.berserkIfCanFinishNextTour = berserkIfCanFinishNextTour;
+            Settings.Instance.concedeMode = concedeMode;
+            Settings.Instance.enemyTurnMaxWide = ets;
+            Settings.Instance.enemyTurnMaxWideSecondStep = ets2;
+            Settings.Instance.placement = placement;
+            Settings.Instance.nextTurnDeep = ntssd;
+            Settings.Instance.nextTurnMaxWide = ntssw;
+            Settings.Instance.nextTurnTotalBoards = ntssm;
+            Settings.Instance.speedupLevel = speedup;
+            Settings.Instance.adjustActions = adjustActions;
+            Settings.Instance.useSecretsPlayAround = dosecrets;
+            Settings.Instance.setWeights(alpha);
+            Settings.Instance.playaround = this.playaround;
+            Settings.Instance.playaroundprob = this.pprob1;
+            Settings.Instance.playaroundprob2 = this.pprob2;
+
+
+            //set Simulation stuff
+            //Ai.Instance.botBase = Silverfish.Instance.getBehaviorByName(this.botBehavior); Todo:为了本地运行通过
+            //RulesEngine.Instance.setCardIdRulesGame(heroNametoClass(this.ownheroname), heroNametoClass(this.enemyheroname));
+            //RulesEngine.Instance.setRulesTurn((gTurn + 1) / 2);   奥秘法没用到规则引擎
+            Ai.Instance.setMaxWide(this.maxwide);
+            Ai.Instance.setTwoTurnSimulation(false, this.twoturnsim);
+            Ai.Instance.setPlayAround();
+
+
+            Hrtprozis.Instance.setOwnPlayer(ownPlayer);
+            Handmanager.Instance.setOwnPlayer(ownPlayer);
+
+            this.numOptionPlayedThisTurn = 0;
+            this.numOptionPlayedThisTurn += this.cardsPlayedThisTurn + ownheroattacksThisRound;
+            foreach (Minion m in this.ownminions)
+            {
+                this.numOptionPlayedThisTurn += m.numAttacksThisTurn;
+            }
+
+            Hrtprozis.Instance.updateTurnInfo(this.gTurn, this.gTurnStep);
+            Hrtprozis.Instance.anzTamsin = anzTamsin;
+            Hrtprozis.Instance.updatePlayer(this.maxmana, this.mana, this.cardsPlayedThisTurn, this.numMinionsPlayedThisTurn, this.numOptionPlayedThisTurn, this.overload, this.lockedMana, ownHEntity, enemyHEntity);
+            Hrtprozis.Instance.updateSecretStuff(this.ownsecretlist, enemySecretAmount);
+            Hrtprozis.Instance.updateCThunInfo(this.anzOgOwnCThunAngrBonus, this.anzOgOwnCThunHpBonus, this.anzOgOwnCThunTaunt);
+            Hrtprozis.Instance.updateJadeGolemsInfo(this.anzOwnJadeGolem, this.anzEnemyJadeGolem);
+            Hrtprozis.Instance.updateElementals(this.anzOwnElementalsThisTurn, this.anzOwnElementalsLastTurn, this.ownElementalsHaveLifesteal);
+            Hrtprozis.Instance.updateCrystalCore(this.ownCrystalCore);
+            Hrtprozis.Instance.updateOwnMinionsInDeckCost0(this.ownMinionsInDeckCost0);
+            Hrtprozis.Instance.updateDiscoverCards(this.discover);
+
+            bool herowindfury = false;
+            if (this.ownWeapon != null)
+            {
+                if (this.ownWeapon.windfury) herowindfury = true;
+            }
+
+            //create heros:
+
+            this.ownHero = new Minion();
+            this.enemyHero = new Minion();
+            this.ownHero.isHero = true;
+            this.enemyHero.isHero = true;
+            this.ownHero.own = true;
+            this.enemyHero.own = false;
+            this.ownHero.maxHp = this.ownheromaxhp;
+            this.enemyHero.maxHp = this.enemyheromaxhp;
+            this.ownHero.entitiyID = ownHEntity;
+            this.enemyHero.entitiyID = enemyHEntity;
+            this.ownHero.cardClass = heroNametoClass(this.ownheroname);
+            this.enemyHero.cardClass = heroNametoClass(this.enemyheroname);
+            //heroability = getHeroAbility(ownHero.cardClass);
+            enemyability = getHeroAbility(enemyHero.cardClass);
+
+            Probabilitymaker.Instance.updateSecretGuess(enemySecrets, enemyHero.cardClass); // 更新下敌人可能的奥秘类型
+
+            this.ownHero.Angr = ownHeroAttack;
+            this.ownHero.Hp = ownherohp;
+            this.ownHero.armor = ownherodefence;
+            this.ownHero.frozen = ownHeroFrozen;
+            this.ownHero.immuneWhileAttacking = ownHeroimmunewhileattacking;
+            this.ownHero.immune = heroImmune;
+            this.ownHero.numAttacksThisTurn = ownheroattacksThisRound;
+            this.ownHero.windfury = herowindfury;
+            this.ownHero.stealth = ownHeroStealth;
+            this.ownHero.enchs = ownHeroEnchs;
+            this.enemyHero.Angr = (enemyWeapon == null) ? 0 : enemyWeapon.Angr;
+            this.enemyHero.Hp = enemyherohp;
+            this.enemyHero.frozen = enemyFrozen;
+            this.enemyHero.armor = enemyherodefence;
+            this.enemyHero.immune = enemyHeroImmune;
+            this.enemyHero.stealth = enemyHeroStealth;
+            this.enemyHero.Ready = false;
+            this.enemyHero.enchs = enemyHeroEnchs;
+
+            this.ownHero.updateReadyness();
+
+            if (heroability == null)
+            {
+                heroability = getHeroAbility(ownHero.cardClass);
+            }
+            else
+            {
+                if (heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bp2 || heroability.cardIDenum == CardDB.cardIDEnum.HERO_10bbp)
+                {
+                    ownHeroPowerCost = 1;
+                }
+            }
+
+            //save data
+            Hrtprozis.Instance.updateHero(this.ownWeapon, this.ownheroname, heroability, abilityReady, this.ownHeroPowerCost, this.ownHero);
+            Hrtprozis.Instance.updateHero(this.enemyWeapon, this.enemyheroname, enemyability, false, this.enemyHeroPowerCost, this.enemyHero, enemmaxman);
+            Hrtprozis.Instance.updateHeroStartClass(heroNametoClass(this.ownheroname), heroNametoClass(this.enemyheroname));
+
+            Hrtprozis.Instance.updateMinions(this.ownminions, this.enemyminions);
+            Hrtprozis.Instance.updateLurkersDB(this.LurkersDB);
+
+            Hrtprozis.Instance.updateFatigueStats(this.ownDecksize, this.ownFatigue, this.enemyDecksize, this.enemyFatigue);
+
+            Handmanager.Instance.setHandcards(this.handcards, this.handcards.Count, enemyNumberHand);
+
+            Probabilitymaker.Instance.setEnemySecretData(enemySecrets);
+            //Probabilitymaker.Instance.setEnemySecretGuesses();//猜测对手奥秘
+
+
+            Probabilitymaker.Instance.setTurnGraveYard(this.turnGraveYard, this.turnGraveYardAll);
+            Probabilitymaker.Instance.stalaggDead = this.stalaggdead;
+            Probabilitymaker.Instance.feugenDead = this.feugendead;
+
+            // 坟场
+            Probabilitymaker.Instance.ownGraveyard = og;
+            Probabilitymaker.Instance.enemyGraveyard = eg;
+        }
+
+        /// <summary>
+        /// 获取英雄技能
+        /// </summary>
+        /// <param name="tc">英雄职业枚举</param>
+        /// <returns>英雄技能卡片对象</returns>
+        private CardDB.Card getHeroAbility(TAG_CLASS tc)  //默认英雄技能  Todo:待补充其他英雄技能
+        {
+            // 考虑升级后的英雄技能
+            switch (tc)
+            {
+                case TAG_CLASS.WARRIOR: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_01bp);
+                case TAG_CLASS.SHAMAN: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_02bp);
+                case TAG_CLASS.ROGUE: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_03bp);
+                case TAG_CLASS.PALADIN: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_04bp);
+                case TAG_CLASS.HUNTER: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_05bp);
+                case TAG_CLASS.DREAM: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_06bp);
+                case TAG_CLASS.WARLOCK: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_07bp);
+                case TAG_CLASS.MAGE: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_08bp);
+                case TAG_CLASS.PRIEST: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_09bp);
+                case TAG_CLASS.DEMONHUNTER: return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_10bp);
+            }
+            return CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.HERO_08bp); //null或者unknown会导致一些运行时空指针报错
+        }
+
+        /// <summary>
+        /// 创建新的手牌对象
+        /// </summary>
+        /// <param name="hc">卡片名称</param>
+        /// <param name="attack">攻击力</param>
+        /// <param name="hp">生命值</param>
+        /// <param name="mana_cost">法力值消耗，-1表示使用默认值</param>
+        /// <returns>手牌对象</returns>
+        private Handmanager.Handcard createNewHandCard(string hc, int attack, int hp, int mana_cost = -1)
+        {
+            CardDB.Card c = CardDB.Instance.chnNameToCard(hc);
+            Handmanager.Handcard tmp = new Handmanager.Handcard(c);
+            if (mana_cost != -1)
+                tmp.manacost = mana_cost;
+            else
+                tmp.manacost = c.cost;
+            tmp.addattack = attack - c.Attack;
+            tmp.addHp = hp - c.Health;
+            return tmp;
+        }
+
+        /// <summary>
+        /// 创建新的随从对象
+        /// </summary>
+        /// <param name="name">随从名称</param>
+        /// <param name="attack">攻击力</param>
+        /// <param name="hp">生命值</param>
+        /// <param name="zonepos">位置</param>
+        /// <param name="own">是否为我方</param>
+        /// <returns>随从对象</returns>
+        private Minion createNewMinion(string name, int attack, int hp, int zonepos, bool own)
+        {
+            return createNewMinion(createNewHandCard(name, attack, hp), zonepos, own);
+        }
+
+
+        /// <summary>
+        /// 创建新的随从对象
+        /// </summary>
+        /// <param name="hc">手牌对象</param>
+        /// <param name="zonepos">位置</param>
+        /// <param name="own">是否为我方</param>
+        /// <returns>随从对象</returns>
+        private Minion createNewMinion(Handmanager.Handcard hc, int zonepos, bool own)
+        {
+            Minion m = new Minion
+            {
+                handcard = new Handmanager.Handcard(hc),
+                zonepos = zonepos,
+                entitiyID = hc.entity,
+                Angr = hc.card.Attack,
+                Hp = hc.card.Health,
+                maxHp = hc.card.Health,
+                name = hc.card.nameEN,
+                nameCN = hc.card.nameCN,
+                playedThisTurn = true,
+                numAttacksThisTurn = 0
+            };
+
+            m.own = own;
+            m.isHero = false;
+            m.entitiyID = hc.entity;
+            m.playedThisTurn = true;
+            m.numAttacksThisTurn = 0;
+            m.windfury = hc.card.windfury;
+            m.megaWindfury = hc.card.megaWindfury;
+            m.taunt = hc.card.tank;
+            m.charge = (hc.card.Charge) ? 1 : 0;
+            m.divineshild = hc.card.Shield;
+            m.poisonous = hc.card.poisonous;
+            m.lifesteal = hc.card.lifesteal;
+            m.reborn = hc.card.reborn;
+            m.stealth = hc.card.Stealth;
+
+            if (own) m.synergy = PenalityManager.Instance.getClassRacePriorityPenality(heroNametoClass(this.ownheroname), (TAG_RACE)hc.card.race);
+            else m.synergy = PenalityManager.Instance.getClassRacePriorityPenality(heroNametoClass(this.enemyheroname), (TAG_RACE)hc.card.race);
+            if (m.synergy > 0 && hc.card.Stealth) m.synergy++;
+
+            m.updateReadyness();
+
+            if (m.name == CardDB.cardNameEN.lightspawn)
+            {
+                m.Angr = m.Hp;
+            }
+            return m;
+        }
+
+
+        /// <summary>
+        /// 将英雄名称转换为职业枚举
+        /// </summary>
+        /// <param name="s">英雄名称</param>
+        /// <returns>职业枚举</returns>
+        public TAG_CLASS heroNametoClass(string s)
+        {
+            switch (s)
+            {
+                case "hunter": return TAG_CLASS.HUNTER;
+                case "priest": return TAG_CLASS.PRIEST;
+                case "druid": return TAG_CLASS.DRUID;
+                case "warlock": return TAG_CLASS.WARLOCK;
+                case "thief": return TAG_CLASS.ROGUE;
+                case "pala": return TAG_CLASS.PALADIN;
+                case "warrior": return TAG_CLASS.WARRIOR;
+                case "shaman": return TAG_CLASS.SHAMAN;
+                case "demonhunter": return TAG_CLASS.DEMONHUNTER;
+                case "mage": return TAG_CLASS.MAGE;
+                case "法师": return TAG_CLASS.MAGE;
+                case "Illidanstormrage": return TAG_CLASS.DEMONHUNTER;
+                case "deathknight": return TAG_CLASS.DEATHKNIGHT;
+                default:
+                    if (s.EndsWith("吉安娜"))
+                        return TAG_CLASS.MAGE;
+                    else if (s.EndsWith("雷克萨"))
+                        return TAG_CLASS.HUNTER;
+                    Helpfunctions.Instance.logg("异常，heroNametoClass 不认识敌方英雄: " + s);
+                    return TAG_CLASS.INVALID;
+            }
+        }
+
+        /// <summary>
+        /// 从中文格式的牌面文件中读取游戏状态
+        /// </summary>
+        /// <param name="lines">文件行数组</param>
+        private void setupFromChnFile(string[] lines) // 读取中文牌面信息  Todo: 需要增加武器等额外信息
+        {
+            foreach (string sss in lines)
+            {
+                string s = sss + " ";
+                if (s.StartsWith("##"))
+                    continue;
+                if (s.StartsWith("水晶： "))
+                {
+                    // 比如： 水晶： 3 / 3 [我方英雄] 法师 生命值:( 30 + 0 奥秘数: 1 ) [敌方英雄] 法师 生命值:( 25 + 0 奥秘数: 1) 
+                    string[] tmp = s.Split(' ');
+                    mana = Convert.ToInt32(tmp[1]);
+                    maxmana = Convert.ToInt32(tmp[3]);
+                    enemmaxman = maxmana;  // 近似处理，敌方和我方水晶相同
+
+                    ownheroname = tmp[5];
+                    ownherohp = Convert.ToInt32(tmp[7]);
+                    ownherodefence = Convert.ToInt32(tmp[9]);
+
+                    int ownSecretNum = Convert.ToInt32(tmp[11]);
+                    for (int i = 0; i < ownSecretNum; i++)
+                    {
+                        ownsecretlist.Add("00000000000000000000000"); //Todo: 防奥秘，待更新
+                    }
+
+                    enemyheroname = tmp[14];
+                    enemyherohp = Convert.ToInt32(tmp[16]);
+                    enemyherodefence = Convert.ToInt32(tmp[18]);
+
+                    enemySecretAmount = Convert.ToInt32(tmp[20]);
+                    for (int i = 0; i < enemySecretAmount; i++)
+                    {
+                        SecretItem si = new SecretItem();
+                        si.entityId = (i + 1) * 10; //因为下面场面不会有9个随从，所以id不会冲突
+                        enemySecrets.Add(si);
+
+                    }
+                    continue;
+                }
+
+                //[敌方场面] 肯瑞托法师 ( 4 / 3 ) 
+                if (s.StartsWith("[敌方场面]"))
+                {
+                    string[] tmp = s.Split(' ');
+                    int enemyNum = (tmp.Length - 1) / 6;
+                    for (int i = 0; i < enemyNum; i++)
+                    {
+                        string emi = tmp[1 + i * 6];
+                        int cur_attack = Convert.ToInt32(tmp[3 + i * 6]);
+                        int cur_hp = Convert.ToInt32(tmp[5 + i * 6]);
+                        Minion mi = createNewMinion(emi, cur_attack, cur_hp, i + 1, false);
+                        mi.playedThisTurn = false;
+                        mi.Ready = true;
+                        mi.entitiyID = (i + 1) * 100 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
+                        enemyminions.Add(mi); // 随从位置从1开始
+                    }
+                    continue;
+                }
+
+                // [我方场面] 暗金教侍从 ( 2 / 1 ) 肯瑞托法师 ( 4 / 3) 
+                if (s.StartsWith("[我方场面]"))
+                {
+                    string[] tmp = s.Split(' ');
+                    int ownNum = (tmp.Length - 1) / 6;
+                    for (int i = 0; i < ownNum; i++)
+                    {
+                        string omi = tmp[1 + i * 6];
+                        int cur_attack = Convert.ToInt32(tmp[3 + i * 6]);
+                        int cur_hp = Convert.ToInt32(tmp[5 + i * 6]);
+                        Minion mi = createNewMinion(omi, cur_attack, cur_hp, i + 1, true);
+                        mi.playedThisTurn = false;
+                        mi.Ready = true;
+                        mi.entitiyID = (i + 1) * 10 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
+                        ownminions.Add(mi);// 随从位置从1开始
+                    }
+                    continue;
+                }
+
+                //[我方手牌] 低调的游客 (费用：3 ；2 / 2 ) 奥秘吞噬者(费用：4；2 / 4) 对空奥术法师(费用：2；3 / 2)
+                if (s.StartsWith("[我方手牌]"))
+                {
+                    string[] tmp = s.Split(' ');
+                    int handCardNum = (tmp.Length - 1) / 8;
+                    for (int i = 0; i < handCardNum; i++)
+                    {
+                        string ohc = tmp[1 + i * 8];
+                        int mana_cost = Convert.ToInt32(tmp[3 + i * 8]);
+                        int cur_attack = Convert.ToInt32(tmp[5 + i * 8]);
+                        int cur_hp = Convert.ToInt32(tmp[7 + i * 8]);
+                        Handmanager.Handcard hc = createNewHandCard(ohc, cur_attack, cur_hp, mana_cost);
+                        hc.position = i + 1;
+                        hc.entity = (i + 1) * 1000 + i + 1;// 设置id
+                        handcards.Add(hc);
+
+                    }
+                    continue;
+                }
+            }
+        }
+        /// <summary>
+        /// 从文件行中读取游戏状态并构建牌面
+        /// </summary>
+        /// <param name="lines">文件行数组</param>
+        /// <param name="type">文件类型：0：原始日志类型，1：中文类型</param>
+        private void setupPf(string[] lines, int type = 0) // 读取lines，提取构造牌面的重要信息，Type: 0: 默认文本类型，来自运行日志，可读性较差;  1:中文随从，可读性较好
+        {
+            if (type == 1)
+            {
+                try
+                {
+                    setupFromChnFile(lines);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("文件内容空格位置不对，注意以空格隔开要解析的关键参数，请从.result类文件中复制头部中文信息修改");
+                    Helpfunctions.Instance.logg("文件内容无法正确解析，异常: " + e.Message);
+                    Environment.Exit(0); // 主动退出
+                }
+                return;
+            }
+            int readstate = 0;
+            int counter = 0;
+
+            int j = 0;
+            foreach (string sss in lines)
+            {
+                string s = sss + " ";
+                //Helpfunctions.Instance.logg(s);
+
+                if (s.StartsWith("ailoop") || s.StartsWith("deep ") || s.StartsWith("cut to len"))
+                {
+                    continue;
+                }
+
+                if (s.StartsWith("####"))
+                {
+                    continue;
+                }
+
+                if (s.StartsWith("mana changed"))
+                {
+                    continue;
+                }
+
+                if (s.StartsWith("开始计算, 已花费时间"))
+                {
+                    if (!fistRun) break;
+                    fistRun = false;
+
+                    Ai.Instance.currentCalculatedBoard = s.Split(' ')[2].Split(' ')[0];
+
+                    //this.botBehavior = s.Split(' ')[4].Split(' ')[0];  //Todo 基于test.txt格式
+                    this.botBehavior = s.Split(' ')[4];
+
+                    this.maxwide = Convert.ToInt32(s.Split(' ')[5]);
+
+                    //following params are optional
+                    this.twoturnsim = 0;
+                    if (s.Contains("twoturnsim ")) this.twoturnsim = Convert.ToInt32(s.Split(new string[] { "twoturnsim " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+
+                    if (s.Contains(" face "))
+                    {
+                        string tmp = s.Split(new string[] { "face " }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        facehp = Convert.ToInt32(tmp);
+                    }
+
+                    if (s.Contains(" womob:"))
+                    {
+                        string tmp = s.Split(new string[] { " womob:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        weaponOnlyAttackMobsUntilEnfacehp = Convert.ToInt32(tmp);
+                    }
+
+                    if (s.Contains(" berserk:"))
+                    {
+                        string tmp = s.Split(new string[] { " berserk:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        berserkIfCanFinishNextTour = Convert.ToInt32(tmp);
+                    }
+
+                    if (s.Contains(" cede:"))
+                    {
+                        string tmp = s.Split(new string[] { " cede:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        concedeMode = Convert.ToInt32(tmp);
+                    }
+
+                    this.playaround = false;
+                    if (s.Contains("playaround "))
+                    {
+                        string probs = s.Split(new string[] { "playaround " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        this.playaround = true;
+                        this.pprob1 = Convert.ToInt32(probs.Split(' ')[0]);
+                        this.pprob2 = Convert.ToInt32(probs.Split(' ')[1]);
+                    }
+
+                    if (s.Contains(" ets "))
+                    {
+                        string eturnsim = s.Split(new string[] { " ets " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ets = Convert.ToInt32(eturnsim.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ets2 "))
+                    {
+                        string eturnsim2 = s.Split(new string[] { " ets2 " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ets2 = Convert.ToInt32(eturnsim2.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" ntss "))
+                    {
+                        string ss = s.Split(new string[] { " ntss " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        ntssd = Convert.ToInt32(ss.Split(' ')[0]);
+                        ntssw = Convert.ToInt32(ss.Split(' ')[1]);
+                        ntssm = Convert.ToInt32(ss.Split(' ')[2]);
+                    }
+
+                    if (s.Contains(" iC "))
+                    {
+                        string ss = s.Split(new string[] { " iC " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        iC = Convert.ToInt32(ss.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" speedup "))
+                    {
+                        string ss = s.Split(new string[] { " speedup " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        speedup = Convert.ToInt32(ss.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" aA "))
+                    {
+                        string ss = s.Split(new string[] { " aA " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        adjustActions = Convert.ToInt32(ss.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" secret")) dosecrets = true;
+
+                    if (s.Contains(" weight "))
+                    {
+                        string alphaval = s.Split(new string[] { " weight " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        alpha = Convert.ToInt32(alphaval.Split(' ')[0]);
+                    }
+
+                    if (s.Contains(" plcmnt:"))
+                    {
+                        string tmp = s.Split(new string[] { " plcmnt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0];
+                        placement = Convert.ToInt32(tmp);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("enemy secretsCount:"))
+                {
+                    this.enemySecretAmount = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemySecrets.Clear();
+                    if (this.enemySecretAmount >= 1 && s.Contains(";"))
+                    {
+                        string secretstuff = s.Split(';')[1];
+                        foreach (string sec in secretstuff.Split(','))
+                        {
+                            //if (sec == "" || sec == String.Empty || sec == " ") continue;
+                            if (this.enemySecrets.Count == this.enemySecretAmount)
+                                break;
+                            this.enemySecrets.Add(new SecretItem(sec));
+                        }
+
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("turn "))
+                {
+                    string ss = s.Replace("turn ", "");
+                    gTurn = Convert.ToInt32(ss.Split('/')[0]);
+                    gTurnStep = Convert.ToInt32(ss.Split('/')[1]);
+                }
+
+                if (s.StartsWith("mana "))
+                {
+                    string ss = s.Replace("mana ", "");
+                    mana = Convert.ToInt32(ss.Split('/')[0]);
+                    maxmana = Convert.ToInt32(ss.Split('/')[1]);
+                }
+
+                if (s.StartsWith("emana "))
+                {
+                    string ss = s.Replace("emana ", "");
+                    enemmaxman = Convert.ToInt32(ss);
+                }
+
+                if (s.StartsWith("anzTamsin "))
+                {
+                    string ss = s.Replace("anzTamsin ", "");
+                    anzTamsin = Convert.ToBoolean(ss);
+                }
+
+                if (s.StartsWith("Enemy cards: "))
+                {
+                    enemyNumberHand = Convert.ToInt32(s.Split(' ')[2]);
+                    readstate = 0;
+                    continue;
+                }
+
+                if (s.StartsWith("GraveYard:"))
+                {
+                    if (s.Contains("fgn")) this.feugendead = true;
+                    if (s.Contains("stlgg")) this.stalaggdead = true;
+                    continue;
+                }
+
+                if (s.StartsWith("osecrets: "))
+                {
+                    string secs = s.Replace("osecrets: ", "");
+                    foreach (string sec in secs.Split(' '))
+                    {
+                        if (sec.Length <= 2) continue;
+                        this.ownsecretlist.Add(sec);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("cthunbonus: "))
+                {
+                    String[] ss = s.Split(' ');
+                    anzOgOwnCThunAngrBonus = Convert.ToInt32(ss[1]);
+                    anzOgOwnCThunHpBonus = Convert.ToInt32(ss[2]);
+                    anzOgOwnCThunTaunt = Convert.ToInt32(ss[3]);
+                }
+
+                if (s.StartsWith("jadegolems: "))
+                {
+                    String[] ss = s.Split(' ');
+                    anzOwnJadeGolem = Convert.ToInt32(ss[1]);
+                    anzEnemyJadeGolem = Convert.ToInt32(ss[2]);
+                }
+
+                if (s.StartsWith("elementals: "))
+                {
+                    String[] ss = s.Split(' ');
+                    anzOwnElementalsThisTurn = Convert.ToInt32(ss[1]);
+                    anzOwnElementalsLastTurn = Convert.ToInt32(ss[2]);
+                    if (ss.Length > 3) ownElementalsHaveLifesteal = (ss[3] == "1") ? 1 : 0;
+                }
+
+
+                // if (s.StartsWith("[本回合使用种族类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[本回合使用种族类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string race = str.Split(' ')[0];
+                //         if (race.Length > 1)
+                //         playedRacesThisTurn.Add(CardDB.Instance.raceNameStringToEnum(race));
+                //     }
+                // }
+
+                // if (s.StartsWith("[上回合使用种族类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[上回合使用种族类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string race = str.Split(' ')[0];
+                //         if (race.Length > 1)
+                //         playedRacesLastTurn.Add(CardDB.Instance.raceNameStringToEnum(race));
+                //     }
+                // }
+
+                // if (s.StartsWith("[本回合使用法术类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[本回合使用法术类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string spellSchool = str.Split(' ')[0];
+                //         if (spellSchool.Length > 1)
+                //         playedSpellSchoolThisTurn.Add(CardDB.Instance.spellSchoolNameStringToEnum(spellSchool));
+                //     }
+                // }
+                // if (s.StartsWith("[上回合使用法术类型]: "))
+                // {
+                //     string temp = "";
+                //     temp = s.Replace("[上回合使用法术类型]:", "");
+                //     foreach (string str in temp.Split(';'))
+                //     {
+                //         string spellSchool = str.Split(' ')[0];
+                //         if (spellSchool.Length > 1)
+                //         playedSpellSchoolLastTurn.Add(CardDB.Instance.spellSchoolNameStringToEnum(spellSchool));
+                //     }
+                // }
+
+                if (s.StartsWith("quests: "))
+                {
+                    String[] ss = s.Split(' ');
+                    Questmanager.Instance.updateQuestStuff(ss[1], Convert.ToInt32(ss[2]), Convert.ToInt32(ss[3]), true);
+                    Questmanager.Instance.updateQuestStuff(ss[4], Convert.ToInt32(ss[5]), Convert.ToInt32(ss[6]), false);
+                    if (ss.Length > 8)
+                    {
+                        Questmanager.Instance.updateQuestStuff(ss[7], Convert.ToInt32(ss[8]), Convert.ToInt32(ss[9]), true, true);
+                    }
+                    else
+                    {
+                        Questmanager.Instance.sideQuest.Reset();
+                    }
+                }
+
+                if (s.StartsWith("advanced: "))
+                {
+                    String[] ss = s.Split(' ');
+                    this.ownCrystalCore = Convert.ToInt32(ss[1]);
+                    this.ownMinionsInDeckCost0 = Convert.ToInt32(ss[2]) == 1 ? true : false;
+                }
+
+                if (s.StartsWith("ownDiedMinions: "))
+                {
+                    string temp = "";
+                    temp = s.Replace("ownDiedMinions: ", "");
+
+                    foreach (string str in temp.Split(';'))
+                    {
+                        if (str.Length <= 2) continue;  // "\r " 或者空
+                        string id = str.Split(',')[0];
+                        string ent = str.Split(',')[1];
+                        GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), true, GraveYardItem.EnumGraveyardStatus.Died);
+                        this.turnGraveYard.Add(gyi);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("enemyDiedMinions: "))
+                {
+                    string temp = "";
+                    temp = s.Replace("enemyDiedMinions: ", "");
+
+                    foreach (string str in temp.Split(';'))
+                    {
+                        if (str.Length <= 2) continue;
+                        string id = str.Split(',')[0];
+                        string ent = str.Split(',')[1];
+                        GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), false, GraveYardItem.EnumGraveyardStatus.Died);
+                        this.turnGraveYard.Add(gyi);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("otg: "))
+                {
+                    string temp = "";
+                    temp = s.Replace("otg: ", "");
+
+                    foreach (string str in temp.Split(';'))
+                    {
+                        if (str.Length <= 2) continue;
+                        string id = str.Split(',')[0];
+                        string ent = str.Split(',')[1];
+                        GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), true, GraveYardItem.EnumGraveyardStatus.Died);
+                        this.turnGraveYardAll.Add(gyi);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("etg: "))
+                {
+                    string temp = "";
+                    temp = s.Replace("etg: ", "");
+
+                    foreach (string str in temp.Split(';'))
+                    {
+                        if (str.Length <= 2) continue;
+                        string id = str.Split(',')[0];
+                        string ent = str.Split(',')[1];
+                        GraveYardItem gyi = new GraveYardItem(CardDB.Instance.cardIdstringToEnum(id), Convert.ToInt32(ent), false, GraveYardItem.EnumGraveyardStatus.Died);
+                        this.turnGraveYardAll.Add(gyi);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("og:"))
+                {
+                    string temp = s.Replace("og: ", "");
+                    foreach (string tmp in temp.Split(';'))
+                    {
+                        if (tmp.Length <= 2 || tmp.Split(',').Length < 2) continue;
+                        string id = tmp.Split(',')[0];
+                        int anz = Convert.ToInt32(tmp.Split(',')[1]);
+                        CardDB.cardIDEnum cide = CardDB.Instance.cardIdstringToEnum(id);
+                        this.og.Add(cide, anz);
+                    }
+                    continue;
+                }
+                if (s.StartsWith("eg:"))
+                {
+                    string temp = s.Replace("eg: ", "");
+                    foreach (string tmp in temp.Split(';'))
+                    {
+                        if (tmp.Length <= 2 || tmp.Split(',').Length < 2) continue;
+                        string id = tmp.Split(',')[0];
+                        int anz = Convert.ToInt32(tmp.Split(',')[1]);
+                        CardDB.cardIDEnum cide = CardDB.Instance.cardIdstringToEnum(id);
+                        this.eg.Add(cide, anz);
+                    }
+                    continue;
+                }
+
+                if (s.StartsWith("od:"))
+                {
+                    string temp = s.Replace("od: ", "");
+                    foreach (string tmp in temp.Split(';'))
+                    {
+                        if (tmp.Length <= 2 || tmp.Split(',').Length < 2) continue;
+                        string id = tmp.Split(',')[0];
+                        int anz = Convert.ToInt32(tmp.Split(',')[1]);
+                        CardDB.cardIDEnum cide = CardDB.Instance.cardIdstringToEnum(id);
+                        this.od.Add(cide, anz);
+                    }
+                    continue;
+                }
+
+                // 发现牌
+                if (s.StartsWith("discover card:"))
+                {
+                    this.discover.Add(s.Split(' ')[2]);
+                    this.discover.Add(s.Split(' ')[3]);
+                    this.discover.Add(s.Split(' ')[4]);
+                    this.discover.Add(s.Split(' ')[5]);
+                    continue;
+                }
+
+                if (readstate == 42 && counter == 1) // player
+                {
+                    String[] ss = s.Split(' ');
+                    this.numMinionsPlayedThisTurn = Convert.ToInt32(ss[0]);
+                    this.cardsPlayedThisTurn = Convert.ToInt32(ss[1]);
+                    this.overload = Convert.ToInt32(ss[2]);
+                    if (ss.Length == 5) this.ownPlayer = Convert.ToInt32(ss[3]);
+                    else
+                    {
+                        this.lockedMana = Convert.ToInt32(ss[3]);
+                        this.ownPlayer = Convert.ToInt32(ss[4]);
+                    }
+                }
+
+                if (readstate == 1 && counter == 1) // class + hp + defence + immunewhile attacking + immune
+                {
+                    String[] h = s.Split(' ');
+                    if (h.Length < 14)
+                    {
+                        s = "UNKOWN " + s;
+                        h = s.Split(' ');
+                    }
+                    ownheroname = h[0];
+                    ownherohp = Convert.ToInt32(h[1]);
+                    ownheromaxhp = Convert.ToInt32(h[2]);
+                    ownherodefence = Convert.ToInt32(h[3]);
+                    this.ownHeroimmunewhileattacking = (h[4] == "True") ? true : false;
+                    this.heroImmune = (h[5] == "True") ? true : false;
+                    ownHEntity = Convert.ToInt32(h[6]);
+                    ownheroready = (h[7] == "True") ? true : false;
+                    ownheroattacksThisRound = Convert.ToInt32(h[8]);
+                    ownHeroFrozen = (h[9] == "True") ? true : false;
+                    ownHeroAttack = Convert.ToInt32(h[10]);
+                    ownHeroTempAttack = Convert.ToInt32(h[11]);
+                    if (h.Length > 12) ownHeroStealth = (h[12] == "True") ? true : false;
+
+                    if (s.Contains(" 附魔:"))
+                    {
+                        foreach (string ench in s.Substring(s.IndexOf("附魔:")).split(" "))
+                        {
+                            ownHeroEnchs.Add(CardDB.Instance.cardIdstringToEnum(ench));
+                        }
+                    }
+
+                }
+
+                if (readstate == 1 && counter == 2) // own hero weapon
+                {
+                    String[] w = s.Split(' ');
+
+                    ownWeapon = new Weapon();
+                    int d = Convert.ToInt32(w[2]);
+                    if (d > 0)
+                    {
+                        if (w.Length > 5)
+                        {
+                            ownWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(w[4])));
+                            if (w.Length > 6) ownWeapon.poisonous = (w[5] == "1") ? true : false;
+                            if (w.Length > 7) ownWeapon.lifesteal = (w[6] == "1") ? true : false;
+                            if (w.Length > 8) ownWeapon.scriptNum1 = Convert.ToInt32(w[7]);
+                        }
+                        else ownWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(w[3])));
+                    }
+                    ownWeapon.Angr = Convert.ToInt32(w[1]);
+                    ownWeapon.Durability = Convert.ToInt32(w[2]);
+                }
+
+                if (readstate == 1 && counter == 3) // ability + abilityready
+                {
+                    abilityReady = (s.Split(' ')[1] == "True");
+                    heroability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
+                }
+
+                if (readstate == 1 && counter >= 5) // secrets
+                {
+                    if (!(s.StartsWith("enemyhero:") || s.StartsWith("cthunbonus:") || s.StartsWith("jadegolems:") || s.StartsWith("elementals:") || s.StartsWith("quests:") || s.StartsWith("advanced:")))
+                    {
+                        ownsecretlist.Add(s.Replace(" ", ""));
+                    }
+                }
+
+                if (readstate == 2 && counter == 1) // class + hp + defence + frozen + immune
+                {
+                    String[] h = s.Split(' ');
+                    if (h.Length == 8)
+                    {
+                        s = "UNKOWN " + s;
+                    }
+                    h = s.Split(' ');
+                    enemyheroname = h[0];
+                    enemyherohp = Convert.ToInt32(h[1]);
+                    enemyheromaxhp = Convert.ToInt32(h[2]);
+                    enemyherodefence = Convert.ToInt32(h[3]);
+                    enemyFrozen = (h[4] == "True") ? true : false;
+                    enemyHeroImmune = (h[5] == "True") ? true : false;
+                    enemyHEntity = Convert.ToInt32(h[6]);
+                    if (h.Length > 7) enemyHeroStealth = (h[7] == "True") ? true : false;
+
+                    if (s.Contains(" 附魔:"))
+                    {
+                        foreach (string ench in s.Substring(s.IndexOf("附魔:")).split(" "))
+                        {
+                            enemyHeroEnchs.Add(CardDB.Instance.cardIdstringToEnum(ench));
+                        }
+                    }
+                }
+
+                if (readstate == 2 && counter == 2) // weapon + stuff
+                {
+                    String[] w = s.Split(' ');
+
+                    enemyWeapon = new Weapon();
+                    int d = Convert.ToInt32(w[2]);
+                    if (d > 0)
+                    {
+                        if (w.Length > 5)
+                        {
+                            enemyWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(w[4])));
+                            if (w.Length > 6) enemyWeapon.poisonous = (w[5] == "1") ? true : false;
+                            if (w.Length > 7) enemyWeapon.lifesteal = (w[6] == "1") ? true : false;
+                            if (w.Length > 8) enemyWeapon.scriptNum1 = Convert.ToInt32(w[7]);
+                        }
+                        else enemyWeapon.equip(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(w[3])));
+                    }
+                    enemyWeapon.Angr = Convert.ToInt32(w[1]);
+                    enemyWeapon.Durability = Convert.ToInt32(w[2]);
+                }
+                if (readstate == 2 && counter == 3) // ability
+                {
+                    enemyability = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(' ')[2]));
+                }
+                if (readstate == 2 && counter == 4) // fatigue
+                {
+                    this.ownDecksize = Convert.ToInt32(s.Split(' ')[1]);
+                    this.enemyDecksize = Convert.ToInt32(s.Split(' ')[3]);
+                    this.ownFatigue = Convert.ToInt32(s.Split(' ')[2]);
+                    this.enemyFatigue = Convert.ToInt32(s.Split(' ')[4]);
+                }
+                Minion tempminion = new Minion();
+                if (readstate == 3) // minion + enchantment
+                {
+                    if (s.Contains(" zp:"))
+                    {
+
+                        string minionname = s.Split(' ')[0];
+                        string minionid = s.Split(' ')[1];
+                        int zp = Convert.ToInt32(s.Split(new string[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int ent = 1000 + j;
+                        if (s.Contains(" e:")) ent = Convert.ToInt32(s.Split(new string[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int attack = Convert.ToInt32(s.Split(new string[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True";
+                        //int CooldownTurn = Convert.ToInt32(s.Split(new string[] { " cooldownTurn:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        if (s.Contains(" respawn:"))
+                        {
+                            string[] tmp = s.Split(new string[] { " respawn:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0].Split(':');
+                            LurkersDB.Add(ent, new IDEnumOwner() { IDEnum = CardDB.Instance.cardIdstringToEnum(tmp[0]), own = (tmp[1] == "True" ? true : false) });
+                        }
+                        int natt = 0;
+                        if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hChoice = 0;//hidden choice
+                        if (s.Contains(" hChoice:")) hChoice = Convert.ToInt32(s.Split(new string[] { " hChoice:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+
+                        // optional params (bools)
+                        bool ex = s.Contains(" ex");
+                        bool taunt = s.Contains(" tnt");
+                        bool frzn = s.Contains(" frz");
+                        bool silenced = s.Contains(" silenced");
+                        bool Spellburst = s.Contains(" 法术迸发");
+                        bool divshield = s.Contains(" divshield");
+                        bool ptt = s.Contains(" ptt");
+                        bool wndfry = s.Contains(" wndfr");
+                        bool megaWindfury = s.Contains(" megaWindfury");
+                        bool stl = s.Contains(" stlth");
+                        bool pois = s.Contains(" poi");
+                        bool lfst = s.Contains(" lfst");
+                        bool immn = s.Contains(" imm");
+                        bool untch = s.Contains(" untch");
+                        bool cncdl = s.Contains(" cncdl");
+                        bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
+                        bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
+                        bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
+                        bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
+                        bool shadowmadnessed = s.Contains(" shdwmdnssd");
+                        bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cbtBySpells = s.Contains(" cbtBySpells");
+                        //optional params (ints)
+
+                        int rush = 0;//rush
+                        if (s.Contains(" rush(")) rush = Convert.ToInt32(s.Split(new string[] { " rush(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int chrg = 0;//charge
+                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int adjadmg = 0;//adjadmg
+                        if (s.Contains(" adjaattk(")) adjadmg = Convert.ToInt32(s.Split(new string[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int tmpdmg = 0;//adjadmg
+                        if (s.Contains(" tmpattck(")) tmpdmg = Convert.ToInt32(s.Split(new string[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int spllpwr = 0;//adjadmg
+                        if (s.Contains(" spllpwr(")) spllpwr = Convert.ToInt32(s.Split(new string[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ancestralspirit = 0;//adjadmg
+                        if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int desperatestand = 0;//adjadmg
+                        if (s.Contains(" despStand(")) desperatestand = Convert.ToInt32(s.Split(new string[] { " despStand(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ownBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int enemyBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" enemyBlssng(")) enemyBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ownPowerWordGlory = 0;//adjadmg
+                        if (s.Contains(" ownGlory(")) ownPowerWordGlory = Convert.ToInt32(s.Split(new string[] { " ownGlory(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int enemyPowerWordGlory = 0;//adjadmg
+                        if (s.Contains(" enemyGlory(")) enemyPowerWordGlory = Convert.ToInt32(s.Split(new string[] { " enemyGlory(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int souloftheforest = 0;//adjadmg
+                        if (s.Contains(" souloffrst(")) souloftheforest = Convert.ToInt32(s.Split(new string[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int stegodon = 0;//adjadmg
+                        if (s.Contains(" stegodon(")) stegodon = Convert.ToInt32(s.Split(new string[] { " stegodon(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int livingspores = 0;//adjadmg
+                        if (s.Contains(" lspores(")) livingspores = Convert.ToInt32(s.Split(new string[] { " lspores(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int explorershat = 0;//adjadmg
+                        if (s.Contains(" explHat(")) explorershat = Convert.ToInt32(s.Split(new string[] { " explHat(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int returnToHand = 0;//adjadmg
+                        if (s.Contains(" retHand(")) returnToHand = Convert.ToInt32(s.Split(new string[] { " retHand(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int infest = 0;//adjadmg
+                        if (s.Contains(" infest(")) infest = Convert.ToInt32(s.Split(new string[] { " infest(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        string enchs = "";
+                        if (s.Contains(" 附魔:")) enchs = s.Substring(s.IndexOf("附魔:"));
+
+                        CardDB.Card deathrattle2 = null;
+                        if (s.Contains(" dethrl(")) deathrattle2 = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(new string[] { " dethrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]));
+
+                        tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
+                        tempminion.own = true;
+                        tempminion.Spellburst = Spellburst;
+                        tempminion.entitiyID = ent;
+                        tempminion.handcard.entity = ent;
+                        tempminion.Angr = attack;
+                        tempminion.Hp = hp;
+                        tempminion.maxHp = maxhp;
+                        tempminion.Ready = ready;
+                        tempminion.rush = rush;
+                        tempminion.numAttacksThisTurn = natt;
+                        tempminion.exhausted = ex;
+                        tempminion.taunt = taunt;
+                        tempminion.frozen = frzn;
+                        tempminion.silenced = silenced;
+                        tempminion.divineshild = divshield;
+                        tempminion.playedThisTurn = ptt;
+                        tempminion.windfury = wndfry;
+                        tempminion.megaWindfury = megaWindfury;
+                        tempminion.stealth = stl;
+                        tempminion.poisonous = pois;
+                        tempminion.lifesteal = lfst;
+                        tempminion.immune = immn;
+                        tempminion.untouchable = untch;
+                        tempminion.conceal = cncdl;
+                        tempminion.destroyOnOwnTurnStart = destroyOnOwnTurnStart;
+                        tempminion.destroyOnOwnTurnEnd = destroyOnOwnTurnEnd;
+                        tempminion.destroyOnEnemyTurnStart = destroyOnEnemyTurnStart;
+                        tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
+                        tempminion.shadowmadnessed = shadowmadnessed;
+                        tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cbtBySpells;
+
+                        tempminion.charge = chrg;
+                        tempminion.hChoice = hChoice;
+                        tempminion.AdjacentAngr = adjadmg;
+                        tempminion.tempAttack = tmpdmg;
+                        tempminion.spellpower = spllpwr;
+
+                        tempminion.ancestralspirit = ancestralspirit;
+                        tempminion.desperatestand = desperatestand;
+                        tempminion.ownBlessingOfWisdom = ownBlessingOfWisdom;
+                        tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
+                        tempminion.ownPowerWordGlory = ownPowerWordGlory;
+                        tempminion.enemyPowerWordGlory = enemyPowerWordGlory;
+                        tempminion.souloftheforest = souloftheforest;
+                        tempminion.stegodon = stegodon;
+                        tempminion.livingspores = livingspores;
+                        tempminion.explorershat = explorershat;
+                        tempminion.returnToHand = returnToHand;
+                        tempminion.infest = infest;
+                        tempminion.deathrattle2 = deathrattle2;
+                        foreach (string ench in enchs.split(" "))
+                        {
+                            tempminion.enchs.Add(CardDB.Instance.cardIdstringToEnum(ench));
+                        }
+                        //tempminion.CooldownTurn = CooldownTurn;
+
+                        if (maxhp > hp) tempminion.wounded = true;
+                        tempminion.updateReadyness();
+                        this.ownminions.Add(tempminion);
+
+
+
+                    }
+
+                }
+
+                if (readstate == 4) // minion or enchantment
+                {
+                    if (s.Contains(" zp:"))
+                    {
+
+                        string minionname = s.Split(' ')[0];
+                        string minionid = s.Split(' ')[1];
+                        int zp = Convert.ToInt32(s.Split(new string[] { " zp:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int ent = 1000 + j;
+                        if (s.Contains(" e:")) ent = Convert.ToInt32(s.Split(new string[] { " e:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int attack = Convert.ToInt32(s.Split(new string[] { " A:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hp = Convert.ToInt32(s.Split(new string[] { " H:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int maxhp = Convert.ToInt32(s.Split(new string[] { " mH:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        bool ready = s.Split(new string[] { " rdy:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0] == "True" ? true : false;
+                        int natt = 0;
+                        //if (s.Contains(" natt:")) natt = Convert.ToInt32(s.Split(new string[] { " natt:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+                        int hChoice = 0;//hidden choice
+                        if (s.Contains(" hChoice:")) hChoice = Convert.ToInt32(s.Split(new string[] { " hChoice:" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(' ')[0]);
+
+                        // optional params (bools)
+                        bool Spellburst = s.Contains(" 法术迸发");
+
+                        bool ex = s.Contains(" ex");
+                        bool taunt = s.Contains(" tnt");
+                        bool frzn = s.Contains(" frz");
+                        bool silenced = s.Contains(" silenced");
+                        bool divshield = s.Contains(" divshield");
+                        bool ptt = s.Contains(" ptt");
+                        bool wndfry = s.Contains(" wndfr");
+                        bool megaWindfury = s.Contains(" megaWindfury");
+                        bool stl = s.Contains(" stlth");
+                        bool pois = s.Contains(" poi");
+                        bool lfst = s.Contains(" lfst");
+                        bool immn = s.Contains(" imm");
+                        bool untch = s.Contains(" untch");
+                        bool cncdl = s.Contains(" cncdl");
+                        bool destroyOnOwnTurnStart = s.Contains(" dstrOwnTrnStrt");
+                        bool destroyOnOwnTurnEnd = s.Contains(" dstrOwnTrnnd");
+                        bool destroyOnEnemyTurnStart = s.Contains(" dstrEnmTrnStrt");
+                        bool destroyOnEnemyTurnEnd = s.Contains(" dstrEnmTrnnd");
+                        bool shadowmadnessed = s.Contains(" shdwmdnssd");
+                        bool cntlower = s.Contains(" cantLowerHpBelowOne");
+                        bool cbtBySpells = s.Contains(" cbtBySpells");
+                        //optional params (ints)
+
+
+                        int chrg = 0;//charge
+                        if (s.Contains(" chrg(")) chrg = Convert.ToInt32(s.Split(new string[] { " chrg(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int adjadmg = 0;//adjadmg
+                        if (s.Contains(" adjaattk(")) adjadmg = Convert.ToInt32(s.Split(new string[] { " adjaattk(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int tmpdmg = 0;//adjadmg
+                        if (s.Contains(" tmpattck(")) tmpdmg = Convert.ToInt32(s.Split(new string[] { " tmpattck(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int spllpwr = 0;//adjadmg
+                        if (s.Contains(" spllpwr(")) spllpwr = Convert.ToInt32(s.Split(new string[] { " spllpwr(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ancestralspirit = 0;//adjadmg
+                        if (s.Contains(" ancstrl(")) ancestralspirit = Convert.ToInt32(s.Split(new string[] { " ancstrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int desperatestand = 0;//adjadmg
+                        if (s.Contains(" despStand(")) desperatestand = Convert.ToInt32(s.Split(new string[] { " despStand(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ownBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" ownBlssng(")) ownBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " ownBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int enemyBlessingOfWisdom = 0;//adjadmg
+                        if (s.Contains(" enemyBlssng(")) enemyBlessingOfWisdom = Convert.ToInt32(s.Split(new string[] { " enemyBlssng(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int ownPowerWordGlory = 0;//adjadmg
+                        if (s.Contains(" ownGlory(")) ownPowerWordGlory = Convert.ToInt32(s.Split(new string[] { " ownGlory(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int enemyPowerWordGlory = 0;//adjadmg
+                        if (s.Contains(" enemyGlory(")) enemyPowerWordGlory = Convert.ToInt32(s.Split(new string[] { " enemyGlory(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int souloftheforest = 0;//adjadmg
+                        if (s.Contains(" souloffrst(")) souloftheforest = Convert.ToInt32(s.Split(new string[] { " souloffrst(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int stegodon = 0;//adjadmg
+                        if (s.Contains(" stegodon(")) stegodon = Convert.ToInt32(s.Split(new string[] { " stegodon(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int livingspores = 0;//adjadmg
+                        if (s.Contains(" lspores(")) livingspores = Convert.ToInt32(s.Split(new string[] { " lspores(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int explorershat = 0;//adjadmg
+                        if (s.Contains(" explHat(")) explorershat = Convert.ToInt32(s.Split(new string[] { " explHat(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int returnToHand = 0;//adjadmg
+                        if (s.Contains(" retHand(")) returnToHand = Convert.ToInt32(s.Split(new string[] { " retHand(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        int infest = 0;//adjadmg
+                        if (s.Contains(" infest(")) infest = Convert.ToInt32(s.Split(new string[] { " infest(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]);
+
+                        string enchs = "";
+                        if (s.Contains(" 附魔:")) enchs = s.Substring(s.IndexOf("附魔:"));
+
+                        CardDB.Card deathrattle2 = null;
+                        if (s.Contains(" dethrl(")) deathrattle2 = CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(s.Split(new string[] { " dethrl(" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(')')[0]));
+
+
+                        tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
+                        tempminion.own = false;
+                        tempminion.Spellburst = Spellburst;
+                        tempminion.entitiyID = ent;
+                        tempminion.handcard.entity = ent;
+                        tempminion.Angr = attack;
+                        tempminion.Hp = hp;
+                        tempminion.maxHp = maxhp;
+                        tempminion.Ready = ready;
+                        tempminion.numAttacksThisTurn = natt;
+                        tempminion.exhausted = ex;
+                        tempminion.taunt = taunt;
+                        tempminion.frozen = frzn;
+                        tempminion.silenced = silenced;
+                        tempminion.divineshild = divshield;
+                        tempminion.playedThisTurn = ptt;
+                        tempminion.windfury = wndfry;
+                        tempminion.megaWindfury = megaWindfury;
+                        tempminion.stealth = stl;
+                        tempminion.poisonous = pois;
+                        tempminion.lifesteal = lfst;
+                        tempminion.immune = immn;
+                        tempminion.untouchable = untch;
+                        tempminion.conceal = cncdl;
+                        tempminion.destroyOnOwnTurnStart = destroyOnOwnTurnStart;
+                        tempminion.destroyOnOwnTurnEnd = destroyOnOwnTurnEnd;
+                        tempminion.destroyOnEnemyTurnStart = destroyOnEnemyTurnStart;
+                        tempminion.destroyOnEnemyTurnEnd = destroyOnEnemyTurnEnd;
+                        tempminion.shadowmadnessed = shadowmadnessed;
+                        tempminion.cantLowerHPbelowONE = cntlower;
+                        tempminion.cantBeTargetedBySpellsOrHeroPowers = cbtBySpells;
+
+                        tempminion.charge = chrg;
+                        tempminion.hChoice = hChoice;
+                        tempminion.AdjacentAngr = adjadmg;
+                        tempminion.tempAttack = tmpdmg;
+                        tempminion.spellpower = spllpwr;
+
+                        tempminion.ancestralspirit = ancestralspirit;
+                        tempminion.desperatestand = desperatestand;
+                        tempminion.ownBlessingOfWisdom = ownBlessingOfWisdom;
+                        tempminion.enemyBlessingOfWisdom = enemyBlessingOfWisdom;
+                        tempminion.ownPowerWordGlory = ownPowerWordGlory;
+                        tempminion.enemyPowerWordGlory = enemyPowerWordGlory;
+                        tempminion.souloftheforest = souloftheforest;
+                        tempminion.stegodon = stegodon;
+                        tempminion.livingspores = livingspores;
+                        tempminion.explorershat = explorershat;
+                        tempminion.returnToHand = returnToHand;
+                        tempminion.infest = infest;
+                        tempminion.deathrattle2 = deathrattle2;
+                        foreach (string ench in enchs.split(" "))
+                        {
+                            tempminion.enchs.Add(CardDB.Instance.cardIdstringToEnum(ench));
+                        }
+
+                        if (maxhp > hp) tempminion.wounded = true;
+                        tempminion.updateReadyness();
+                        this.enemyminions.Add(tempminion);
+
+
+                    }
+
+
+                }
+
+                if (readstate == 5) // minion or enchantment 手牌
+                {
+
+                    Handmanager.Handcard card = new Handmanager.Handcard();
+
+                    String[] hc = s.Split(' ');
+                    card.position = Convert.ToInt32(hc[1]);
+                    string minionname = hc[2];
+                    card.manacost = Convert.ToInt32(hc[3]);
+                    card.entity = Convert.ToInt32(hc[5]);
+                    //获取cardIDEnum
+                    CardDB.cardIDEnum cardIDEnum = CardDB.Instance.cardIdstringToEnum(hc[6]);
+                    card.card = CardDB.Instance.getCardDataFromID(cardIDEnum);
+                    //获取增加的攻击力
+                    if (hc.Length > 8) card.addattack = Convert.ToInt32(hc[7]);
+                    //获取增加的血量
+                    if (hc.Length > 9) card.addHp = Convert.ToInt32(hc[8]);
+                    //获取是否高亮
+                    if (hc.Length > 10) card.poweredUp = Convert.ToInt32(hc[9]);
+                    if (hc.Length > 11) card.poweredUp = Convert.ToInt32(hc[9]);
+                    //获取模块1Dbfid
+                    card.MODULAR_ENTITY_PART_1 = Convert.ToInt32(hc[10]);
+                    //获取模块2Dbfid
+                    card.MODULAR_ENTITY_PART_2 = Convert.ToInt32(hc[11]);
+                    //将手牌里的模块1和模块2传如CardDB.card
+                    card.card.MODULAR_ENTITY_PART_1 = card.MODULAR_ENTITY_PART_1;
+                    card.card.MODULAR_ENTITY_PART_2 = card.MODULAR_ENTITY_PART_2;
+                    if (card.card.MODULAR_ENTITY_PART_1 != 0 && card.card.MODULAR_ENTITY_PART_2 != 0)
+                        card.card.updateDIYCard();
+
+                    if (hc.Length > 14)
+                    {
+                        for (int i = 10; i < hc.Length; i++)
+                        {
+                            card.enchs.Add(CardDB.Instance.cardIdstringToEnum(hc[i]));
+                        }
+                    }
+                    handcards.Add(card);
+                }
+
+
+                if (s.StartsWith("ownhero:"))
+                {
+                    readstate = 1;
+                    counter = 0;
+                }
+
+                if (s.StartsWith("enemyhero:"))
+                {
+                    readstate = 2;
+                    counter = 0;
+                }
+
+                if (s.StartsWith("OwnMinions:"))
+                {
+                    readstate = 3;
+                    counter = 0;
+                }
+
+                if (s.StartsWith("EnemyMinions:"))
+                {
+                    readstate = 4;
+                    counter = 0;
+                }
+
+                if (s.StartsWith("Own Handcards:"))
+                {
+                    readstate = 5;
+                    counter = 0;
+                }
+
+                if (s.StartsWith("player:"))
+                {
+                    readstate = 42;
+                    counter = 0;
+                }
+
+
+
+                counter++;
+                j++;
+            }
+        }
+    }
+
+}

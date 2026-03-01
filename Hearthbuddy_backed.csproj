@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion> -->
+    <!-- 隐式全局using -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- 可空引用类型 -->
+    <Nullable>enable</Nullable>
+    <!-- 平台 -->
+    <Platforms>AnyCPU;x86</Platforms>
+    <!-- 平台目标 -->
+    <PlatformTarget>x86</PlatformTarget>
+
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+
+    <Reference Include="GreyMagic">
+      <HintPath>lib\GreyMagic.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Hearthbuddy">
+      <HintPath>Hearthbuddy.exe</HintPath>
+    </Reference>
+
+    <Reference Include="IronPython">
+      <HintPath>lib\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>lib\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>lib\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>lib\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>lib\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>lib\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Udis86Net">
+      <HintPath>lib\Udis86Net.dll</HintPath>
+    </Reference>
+    <Reference Include="XamlAnimatedGif">
+      <HintPath>lib\XamlAnimatedGif.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="HelperErrorLogs\" />
+    <Folder Include="MercStraLogs\" />
+  </ItemGroup>
+
+</Project>

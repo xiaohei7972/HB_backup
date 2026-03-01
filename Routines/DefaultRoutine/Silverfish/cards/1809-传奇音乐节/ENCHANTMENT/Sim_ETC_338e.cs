@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 潜行者 费用：0
+	//Synchronized
+	//同步协调
+	//+1/+2.
+	//+1/+2。
+	class Sim_ETC_338e : SimTemplate
+	{
+		
+		
+	}
+}

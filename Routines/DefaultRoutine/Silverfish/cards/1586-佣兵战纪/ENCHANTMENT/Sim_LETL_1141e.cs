@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Frenzied Spirit
+	//狂暴之灵
+	//+@ Attack and <b>Windfury</b>.
+	//+@攻击力及<b>风怒</b>。
+	class Sim_LETL_1141e : SimTemplate
+	{
+		
+		
+	}
+}

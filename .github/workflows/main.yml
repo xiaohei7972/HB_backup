@@ -1,0 +1,21 @@
+name: dotnet package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '3.1.x', '6.0.x' ]
+
+    steps:
+      - name: Setup .NET 6.x
+      uses: actions/setup-dotnet@v4
+      with:
+        # Semantic version range syntax or exact version of a dotnet version
+        dotnet-version: '4.7.2'
+      # You can test your matrix by printing the current dotnet version
+      - name: Display dotnet version
+        run: dotnet --version

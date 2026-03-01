@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Unity
+	//团结一致
+	//+2/+2
+	//+2/+2
+	class Sim_TB_CoOpv3_104e : SimTemplate
+	{
+		
+		
+	}
+}

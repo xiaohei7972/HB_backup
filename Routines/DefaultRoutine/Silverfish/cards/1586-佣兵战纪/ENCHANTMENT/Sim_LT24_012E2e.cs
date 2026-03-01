@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Extra Bone
+	//强化骨骼
+	//+{0}/+{1}.
+	//+{0}/+{1}。
+	class Sim_LT24_012E2e : SimTemplate
+	{
+		
+		
+	}
+}

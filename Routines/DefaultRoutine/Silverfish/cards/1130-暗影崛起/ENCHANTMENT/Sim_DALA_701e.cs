@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Sifting
+	//变形
+	//Transforming into random treasures.
+	//随机变成一张宝藏牌。
+	class Sim_DALA_701e : SimTemplate
+	{
+		
+		
+	}
+}

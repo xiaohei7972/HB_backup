@@ -1,0 +1,35 @@
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myMercPython
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myHsMod
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myMercBepInEx
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myBuddy
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myHelper
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myHearthStudy
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myRoutines
+
+Git pull https://gitee.com/UniverseString/Hearthstone-myAccount
+
+
+git config --global user.name "XXX"
+git config --global user.email "XXX@qq.com"
+
+git config --global core.autocrlf false
+git config --global core.filemode false
+git config --global core.safecrlf true
+
+
+1.执行命令 pip install pyinstaller
+
+2.切换到stoneMain.py所在目录，执行 pyinstaller -F -w stoneMain.py --paths="cv2库所在目录（例如 D:\Python310\lib\site-packages\cv2）"
+
+3.将生成的dist文件夹下的exe文件复制到stoneMain.py所在目录，执行exe，OK！
+
+pyinstaller -F -w stoneMain.py --noconsole --paths="C:\Users\xxxx\AppData\Roaming\Python\Python310\site-packages\cv2"
+
+

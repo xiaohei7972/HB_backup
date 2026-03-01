@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Dreadlord's Embrace
+	//恐惧魔王之拥
+	//+{0}/+{1}.
+	//+{0}/+{1}。
+	class Sim_BG26_523e : SimTemplate
+	{
+		
+		
+	}
+}

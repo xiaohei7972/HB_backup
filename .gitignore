@@ -1,0 +1,51 @@
+# 无用文件
+.vs/
+.vscode/
+bin/
+obj/
+
+Routines/.vs
+Routines/.vscode
+Routines/.bin
+Routines/.obj
+
+# Routines/DefaultRoutine/Silverfish/Test/Data/对局记录/
+Routines/DefaultRoutine/Silverfish/UltimateLogs/
+Routines/DefaultRoutine/Silverfish/Test/Data/
+Logs/
+
+#  编译后dll
+CompiledAssemblies/*
+# CompiledAssemblies/*.dll
+# Hearthbuddy_backed.csproj.user
+myLog.txt
+
+
+Settings/
+# Settings/CustomDecks/
+
+
+# 教程文件夹
+dll/
+Data/
+UltimateLogs/
+# 用户配置教程/
+开发配置教程/.idea
+开发配置教程/CardDefs.xml
+
+炉石中控.2.exe
+blizzard.bgsclient.dll
+Blizzard.T5.Core.dll
+炉石中控2.exe
+
+# 忽略炉石兄弟运行后的其他文件
+# 炉石兄弟.exe
+# Hearthbuddy.exe
+yqdiqeuhya.exe
+opcpitmhbx.exe
+
+过去的主程序/
+Routines/DefaultRoutine/Silverfish/Test/AiTest.cs
+Routines/DefaultRoutine/Silverfish/Test/AutoJudge.cs
+fatal-removal.txt
+fatal-rename.txt

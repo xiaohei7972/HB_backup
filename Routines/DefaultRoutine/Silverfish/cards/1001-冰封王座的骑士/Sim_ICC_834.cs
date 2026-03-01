@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+    //* 天灾领主加尔鲁什 Scourgelord Garrosh
+    //<b>Battlecry</b>: Equip a 4/3_Shadowmourne that also damages adjacent minions.
+    //<b>战吼：</b>装备一把4/3的影之哀伤，影之哀伤同时对其攻击目标相邻的随从造成伤害。 
+    class Sim_ICC_834 : SimTemplate
+    {
+
+
+        CardDB.Card waepon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.ICC_834w);
+
+        public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
+        {
+            p.equipWeapon(waepon, ownplay);
+        }
+    }
+}

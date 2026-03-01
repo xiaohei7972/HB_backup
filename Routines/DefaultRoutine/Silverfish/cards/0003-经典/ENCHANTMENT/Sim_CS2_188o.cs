@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//'Inspired'
+	//“深受鼓舞”
+	//This minion has +2 Attack this turn.
+	//在本回合中，本随从拥有+2攻击力。
+	class Sim_CS2_188o : SimTemplate
+	{
+		
+		
+	}
+}

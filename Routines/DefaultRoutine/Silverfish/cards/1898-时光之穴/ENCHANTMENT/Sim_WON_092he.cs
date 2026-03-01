@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 萨满祭司 费用：0
+	//Winds of Time
+	//时光之风
+	//+3 Attack and <b>Windfury</b>.
+	//+3攻击力及<b>风怒</b>。
+	class Sim_WON_092he : SimTemplate
+	{
+		
+		
+	}
+}

@@ -1,0 +1,1 @@
+需要先将CompiledAssemblies/下的DefaultRoutine.dll删除，重启炉石兄弟才能重新编译生效

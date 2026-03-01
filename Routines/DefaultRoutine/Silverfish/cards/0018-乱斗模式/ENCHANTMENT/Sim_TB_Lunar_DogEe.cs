@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Blessing of the Dog
+	//瑞犬赐福
+	//<b>Deathrattle:</b> Summon a 1/1 Mastiff.
+	//<b>亡语：</b>召唤一只1/1的獒犬。
+	class Sim_TB_Lunar_DogEe : SimTemplate
+	{
+		
+		
+	}
+}

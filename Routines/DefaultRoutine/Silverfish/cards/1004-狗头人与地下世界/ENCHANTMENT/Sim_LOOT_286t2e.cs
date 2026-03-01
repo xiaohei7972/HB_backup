@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Sacred Blessing
+	//神圣赐福
+	//<b>Taunt</b>.
+	//<b>嘲讽</b>
+	class Sim_LOOT_286t2e : SimTemplate
+	{
+		
+		
+	}
+}

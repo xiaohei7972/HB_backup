@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HREngine.Bots
+{
+	//附魔 中立 费用：0
+	//Loud Noise
+	//吵闹噪音
+	//Costs (2) more.
+	//法力值消耗增加（2）点。
+	class Sim_JAM_034e2 : SimTemplate
+	{
+		
+		
+	}
+}
