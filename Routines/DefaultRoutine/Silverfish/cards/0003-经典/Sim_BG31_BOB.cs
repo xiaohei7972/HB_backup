@@ -36,7 +36,7 @@ namespace HREngine.Bots
 				p.drawACard(CardDB.cardIDEnum.None, own.own, true);
 				if (own.own)
 				{
-					p.mana = Math.Max(p.ownMaxMana, p.mana += 3);
+					p.mana = Math.Min(p.ownMaxMana, p.mana + 3);
 				}
 				else
 				{

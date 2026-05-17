@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +21,7 @@ namespace HREngine.Bots
             //     int mpos = 0;
             //     foreach (Minion temp in tmep.enemyMinions)
             //     {
-            //         if (temp.entitiyID == m.entitiyID)
+            //         if (temp.entityID == m.entityID)
             //         {
             //             if (temp.Hp > 0)
             //                 findm = true;

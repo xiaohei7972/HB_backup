@@ -1,6 +1,6 @@
-﻿﻿﻿using System;
+﻿using System;
 using System.IO;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -332,26 +332,23 @@ namespace Quest
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    Log.ErrorFormat("[任务插件] 异常: {0}", ex.Message);
                 }
             }
         }
 
-        private void updateGui(object bSleep)
+        private async void UpdateGui(bool bSleep)
         {
-            if ((bool)bSleep) Thread.Sleep(5000);
+            if (bSleep)
+            {
+                await Task.Delay(5000);
+            }
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 RefreshQuestData();
             });
-        }
-
-        private void UpdateGui(bool bSleep)
-        {
-            Thread t = new Thread(new ParameterizedThreadStart(updateGui));
-            t.Start(bSleep);
         }
 
         private void GameEventManagerOnGameOver(object sender, GameOverEventArgs gameOverEventArgs)
@@ -469,9 +466,9 @@ namespace Quest
 
                 UpdateGui(bSleep);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Log.ErrorFormat("[任务插件] 异常: {0}", ex.Message);
             }
         }
     }

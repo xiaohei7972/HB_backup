@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -81,12 +81,9 @@ namespace HREngine.Bots
         private int anzOgOwnCThunHpBonus = 0;//克苏恩血量
         private int anzOgOwnCThunAngrBonus = 0;//克苏恩攻击
         private int anzOgOwnCThunTaunt = 0;//克苏恩嘲讽
-        private static Silverfish instance;
+        private static readonly System.Lazy<Silverfish> instance = new System.Lazy<Silverfish>(() => new Silverfish());
 
-        public static Silverfish Instance
-        {
-            get { return instance ?? (instance = new Silverfish()); }
-        }
+        public static Silverfish Instance => instance.Value;
 
         private Silverfish()
         {
@@ -111,6 +108,10 @@ namespace HREngine.Bots
             setBehavior();
             getAllCards = Extensions.GetAllCards;
 
+            Helpfunctions.Instance.ErrorLog("开始预热AI对象池(Playfield=500, Minion=2000, Handcard=1000)...");
+            PlayfieldPool.Prewarm(500);
+            MinionPool.Prewarm(2000);
+            HandcardPool.Prewarm(1000);
         }
 
         /// <summary>
@@ -360,7 +361,7 @@ namespace HREngine.Bots
                             if (Ai.Instance.nextMoveGuess.ownMinions[i].Ready != p.ownMinions[i].Ready && !p.ownMinions[i].Ready)
                             {
                                 sleepRetry = true;
-                                Helpfunctions.Instance.ErrorLog("[AI] 随从的准备状态 = " + p.ownMinions[i].Ready + " (" + p.ownMinions[i].entitiyID + " " + p.ownMinions[i].handcard.card.cardIDenum + " " + p.ownMinions[i].name + "). 再次尝试....");
+                                Helpfunctions.Instance.ErrorLog("[AI] 随从的准备状态 = " + p.ownMinions[i].Ready + " (" + p.ownMinions[i].entityID + " " + p.ownMinions[i].handcard.card.cardIDenum + " " + p.ownMinions[i].name + "). 再次尝试....");
                                 Ai.Instance.nextMoveGuess = new Playfield { mana = -100 };
                                 return false;
                             }
@@ -617,7 +618,7 @@ namespace HREngine.Bots
             if (m.megaWindfury) minionStr.Append("[超级风怒]");
             if (m.taunt) minionStr.Append("[嘲讽]");
             if (m.rush > 0) minionStr.Append("[突袭]");
-            if (m.divineshild) minionStr.Append("[圣盾]");
+            if (m.divineShield) minionStr.Append("[圣盾]");
             if (m.lifesteal) minionStr.Append("[吸血]");
             if (m.poisonous) minionStr.Append("[剧毒]");
             if (m.reborn) minionStr.Append("[复生]");
@@ -676,7 +677,7 @@ namespace HREngine.Bots
                 // myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 // myVal.Append(m.taunt ? "[嘲讽]" : "");
                 // myVal.Append(m.rush > 0 ? "[突袭]" : "");
-                // myVal.Append(m.divineshild ? "[圣盾]" : "");
+                // myVal.Append(m.divineShield ? "[圣盾]" : "");
                 // myVal.Append(m.lifesteal ? "[吸血]" : "");
                 // myVal.Append(m.poisonous ? "[剧毒]" : "");
                 // myVal.Append(m.reborn ? "[复生]" : "");
@@ -701,7 +702,7 @@ namespace HREngine.Bots
                 // enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 // enemyVal.Append(m.taunt ? "[嘲讽]" : "");
                 // enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
-                // enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                // enemyVal.Append(m.divineShield ? "[圣盾]" : "");
                 // enemyVal.Append(m.lifesteal ? "[吸血]" : "");
                 // enemyVal.Append(m.poisonous ? "[剧毒]" : "");
                 // enemyVal.Append(m.reborn ? "[复生]" : "");
@@ -810,7 +811,7 @@ namespace HREngine.Bots
             Entity hero = player.GetHero();
             if (ControlledByFriendly)
             {
-                this.ownHero.entitiyID = hero.GetEntityId();
+                this.ownHero.entityID = hero.GetEntityId();
                 this.ownHero.own = true;
                 this.ownHero.isHero = true;
                 this.ownHero.handcard.card.type = CardDB.cardtype.HERO;
@@ -836,7 +837,7 @@ namespace HREngine.Bots
             }
             else
             {
-                this.enemyHero.entitiyID = hero.GetEntityId();
+                this.enemyHero.entityID = hero.GetEntityId();
                 this.enemyHero.own = false;
                 this.enemyHero.isHero = true;
                 this.enemyHero.handcard.card.type = CardDB.cardtype.HERO;
@@ -1003,12 +1004,12 @@ namespace HREngine.Bots
                     m.handcard.card = c;
 
                     m.zonepos = zp;//棋盘上的位置
-                                   // tagMap.TryGetValue(53, out m.entitiyID);//实体id
+                                   // tagMap.TryGetValue(53, out m.entityID);//实体id
                                    // tagMap.TryGetValue(47,out m.Angr);//攻击力
                                    // tagMap.TryGetValue(45, out m.maxHp);//最大生命值
                                    // tagMap.TryGetValue(44, out m.Damage);//最大生命值
                                    // m.Hp = m.maxHp - m.Damage;
-                    m.entitiyID = entity.GetEntityId();//实体id
+                    m.entityID = entity.GetEntityId();//实体id
                     m.Angr = entity.m_realTimeAttack;
                     m.maxHp = entity.m_realTimeHealth;
                     m.Hp = entity.m_realTimeHealth - entity.m_realTimeDamage;
@@ -1030,7 +1031,7 @@ namespace HREngine.Bots
                     m.taunt = entity.HasTaunt();//嘲讽
                     m.windfury = entity.HasWindfury();//风怒
                     m.megaWindfury = entity.GetTag(GAME_TAG.WINDFURY) == 3;//超级风怒
-                    m.divineshild = entity.m_realTimeDivineShield;//圣盾
+                    m.divineShield = entity.m_realTimeDivineShield;//圣盾
                     m.stealth = entity.IsStealthed();//潜行
                     m.poisonous = entity.m_realTimeIsPoisonous;//剧毒
                     m.lifesteal = entity.HasLifesteal();//吸血

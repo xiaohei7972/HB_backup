@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
 			if (p.anzOwnElementalsLastTurn > 0 && own.own)
 			{
-				own.divineshild = true;
+				own.divineShield = true;
 				own.taunt = true;
                 p.anzOwnTaunt++;
 			}

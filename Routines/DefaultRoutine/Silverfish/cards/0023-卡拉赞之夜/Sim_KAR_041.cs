@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,18 +12,18 @@ namespace HREngine.Bots
         {
             if (target != null)
             {
-                p.LurkersDB.Add(own.entitiyID, new IDEnumOwner() { IDEnum = target.handcard.card.cardIDenum, own = target.own });
+                p.LurkersDB.Add(own.entityID, new IDEnumOwner() { IDEnum = target.handcard.card.cardIDenum, own = target.own });
                 p.minionGetDestroyed(target);
             }
         }
         
         public override void onDeathrattle(Playfield p, Minion m)
         {
-            if (p.LurkersDB.ContainsKey(m.entitiyID))
+            if (p.LurkersDB.ContainsKey(m.entityID))
             {
-                bool own = p.LurkersDB[m.entitiyID].own;
+                bool own = p.LurkersDB[m.entityID].own;
                 int pos = own ? p.ownMinions.Count : p.enemyMinions.Count;
-                p.callKid(CardDB.Instance.getCardDataFromID(p.LurkersDB[m.entitiyID].IDEnum), pos, own);
+                p.callKid(CardDB.Instance.getCardDataFromID(p.LurkersDB[m.entityID].IDEnum), pos, own);
             }
         }
 

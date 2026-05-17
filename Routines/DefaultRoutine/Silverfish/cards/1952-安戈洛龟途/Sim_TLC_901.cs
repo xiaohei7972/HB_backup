@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,14 +20,14 @@ namespace HREngine.Bots
 				p.minionGetDamageOrHeal(target, damage);
 				foreach (Minion m in p.ownMinions)
 				{
-					if (m.entitiyID == target.entitiyID) continue;
+					if (m.entityID == target.entityID) continue;
 					if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), races))
 						p.minionGetDamageOrHeal(target, damage);
 				}
 
 				foreach (Minion m in p.enemyMinions)
 				{
-					if (m.entitiyID == target.entitiyID) continue;
+					if (m.entityID == target.entityID) continue;
 					if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), races))
 						p.minionGetDamageOrHeal(target, damage);
 				}

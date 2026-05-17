@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -64,9 +64,11 @@ namespace HREngine.Bots
             if (rootfield.bestEnemyPlay == null)
             {
                 bool havedonesomething = true;
+                // 归还旧场面的 Playfield 对象到池中
+                foreach (var oldPf in posmoves) PlayfieldPool.Return(oldPf);
                 posmoves.Clear();
 
-                posmoves.Add(new Playfield(rootfield));
+                posmoves.Add(PlayfieldPool.Rent(rootfield));
                 posmoves[0].isLethalCheck = false; 
                 posmoves[0].startTurn();
                 rootfield.guessingHeroHP = posmoves[0].guessingHeroHP;
@@ -90,8 +92,10 @@ namespace HREngine.Bots
                     posmoves[0].triggerCardsChanged(false);
                     if (oldval < newval)
                     {
+                        // 归还旧场面的 Playfield 对象到池中
+                        foreach (var oldPf in posmoves) PlayfieldPool.Return(oldPf);
                         posmoves.Clear();
-                        posmoves.Add(new Playfield(rootfield));
+                        posmoves.Add(PlayfieldPool.Rent(rootfield));
                         posmoves[0].startTurn();
                     }
                 }
@@ -101,6 +105,9 @@ namespace HREngine.Bots
                     if (posmoves[0].value >= -2000000) rootfield.value -= 2000000;
                     else rootfield.value = -2000000;
 
+                    // 归还当前租用的 Playfield
+                    PlayfieldPool.Return(posmoves[0]);
+                    posmoves.Clear();
                     return;
                 }
 
@@ -114,7 +121,7 @@ namespace HREngine.Bots
                     foreach (Minion trgt in trgts)
                     {
                         Action a = new Action(actionEnum.useHeroPower, posmoves[0].enemyHeroAblility, null, 0, trgt, abilityPenality, 0);
-                        Playfield pf = new Playfield(posmoves[0]);
+                        Playfield pf = PlayfieldPool.Rent(posmoves[0]);
                         pf.doAction(a);
                         posmoves.Add(pf);
                     }
@@ -149,11 +156,12 @@ namespace HREngine.Bots
                         foreach (Action a in actions)
                         {
                             havedonesomething = true;
-                            Playfield pf = new Playfield(p);
+                            Playfield pf = PlayfieldPool.Rent(p);
                             pf.doAction(a);
                             posmoves.Add(pf);
                             boardcount++;
                         }
+                        ActionListPool.Return(actions);
 
                         p.endTurn();
                         p.complete = true;
@@ -225,7 +233,7 @@ namespace HREngine.Bots
 
                 if (twotsamount > 0 || (rootfield.isLethalCheck && berserkIfCanFinishNextTour > 0))
                 {
-                    rootfield.bestEnemyPlay = new Playfield(bestplay);
+                    rootfield.bestEnemyPlay = PlayfieldPool.Rent(bestplay);
                     rootfield.bestEnemyPlay.value = bestval;
                 }
             }
@@ -484,7 +492,7 @@ namespace HREngine.Bots
                         if (p.enemyAnzCards >= 2) p.drawACard(CardDB.cardNameEN.unknown, false);
                         continue;
                     case CardDB.cardNameEN.cobaltguardian:
-                        if (p.enemyAnzCards >= 2) m.divineshild = true;
+                        if (p.enemyAnzCards >= 2) m.divineShield = true;
                         continue;
                     case CardDB.cardNameEN.knifejuggler:
                         anz = Math.Min(p.enemyAnzCards, (int)p.enemyMaxMana/2);

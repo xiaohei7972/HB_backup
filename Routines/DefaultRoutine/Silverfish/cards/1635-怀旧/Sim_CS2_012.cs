@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,14 +20,14 @@ namespace HREngine.Bots
                 p.minionGetDamageOrHeal(target, dmg);
                 foreach (Minion m in temp)
                 {
-                    if (m.entitiyID != target.entitiyID)
+                    if (m.entityID != target.entityID)
                     {
                         m.getDamageOrHeal(dmg1, p, true, false); // isMinionAttack=true because it is extra damage (we calc clear lostDamage)
                     }
                 }
                 if (ownplay)
                 {
-                    if (p.enemyHero.entitiyID != target.entitiyID)
+                    if (p.enemyHero.entityID != target.entityID)
                     {
                         p.minionGetDamageOrHeal(p.enemyHero, dmg1);
                     }
@@ -35,7 +35,7 @@ namespace HREngine.Bots
                 }
                 else
                 {
-                    if (p.ownHero.entitiyID != target.entitiyID)
+                    if (p.ownHero.entityID != target.entityID)
                     {
                         p.minionGetDamageOrHeal(p.ownHero, dmg1);
                     }

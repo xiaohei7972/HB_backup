@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -438,7 +438,7 @@ namespace HREngine.Bots
                 {
                     places[i] = 0;
                     tempval = m.maxHp * 2 + m.Angr;
-                    if (m.divineshild) tempval = tempval * 3 / 2;
+                    if (m.divineShield) tempval = tempval * 3 / 2;
                     if (!m.silenced) tempval += prozis.penman.getValueOfUsefulNeedKeepPriority(m.handcard.card.nameEN);
                     places[i] = tempval;
                     i++;
@@ -605,9 +605,9 @@ namespace HREngine.Bots
                     return 4; // 返回嘲讽效果
                 }
                 // 如果随从已经有嘲讽，但没有圣盾，赋予圣盾效果
-                else if (!m.divineshild)
+                else if (!m.divineShield)
                 {
-                    m.divineshild = true;
+                    m.divineShield = true;
                     return 5; // 返回圣盾效果
                 }
                 // 如果随从已经有嘲讽和圣盾，但没有剧毒，赋予剧毒效果

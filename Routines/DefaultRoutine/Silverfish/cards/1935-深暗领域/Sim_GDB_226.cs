@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,17 +13,17 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			p.allMinionsGetDamage(2, own.entitiyID);
+			p.allMinionsGetDamage(2, own.entityID);
 		}
 
 		public override void OnSpellburst(Playfield p, Minion m, Handmanager.Handcard hc)
 		{
-			p.allMinionsGetDamage(2, m.entitiyID);
+			p.allMinionsGetDamage(2, m.entityID);
 		}
 
         public override void onDeathrattle(Playfield p, Minion m)
         {
-			p.allMinionsGetDamage(2, m.entitiyID);
+			p.allMinionsGetDamage(2, m.entityID);
         }
 		
 	}

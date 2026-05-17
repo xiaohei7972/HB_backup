@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 using log4net;
@@ -546,8 +546,8 @@ namespace HREngine.Bots
             if (m.silenced) return retval;
 
             if (m.taunt) retval += 2;
-            if (m.divineshild) retval += m.Angr * 2;
-            if (m.divineshild && m.taunt) retval += 5;
+            if (m.divineShield) retval += m.Angr * 2;
+            if (m.divineShield && m.taunt) retval += 5;
             if (m.stealth) retval += 2;
 
             // 鱼人
@@ -673,13 +673,13 @@ namespace HREngine.Bots
             // 风怒价值
             if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1) && m.windfury) retval += m.Angr;
             // 圣盾价值
-            if (m.divineshild) retval += m.Angr * 3;
+            if (m.divineShield) retval += m.Angr * 3;
             // 潜行价值
             if (m.stealth) retval += m.Angr / 2 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 2 + 1;
             // 圣盾嘲讽
-            if (m.divineshild && m.taunt) retval += 4;
+            if (m.divineShield && m.taunt) retval += 4;
 
             int bonus = 4;
             switch (m.handcard.card.nameCN)

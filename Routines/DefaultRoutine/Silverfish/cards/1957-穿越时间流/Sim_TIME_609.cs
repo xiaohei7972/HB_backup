@@ -11,10 +11,9 @@ namespace HREngine.Bots
 	//<b>奇闻</b><b>战吼：</b>对所有敌人造成2点伤害。如果你使用过奥蕾莉亚或温蕾萨，每使用过一位，重复一次。
 	class Sim_TIME_609 : SimTemplate
 	{
-        public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
-            p.allCharsOfASideGetDamage(!own.own,2);
-        }
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			p.allCharsOfASideGetDamage(!own.own, 2);
+		}
 	}
 }

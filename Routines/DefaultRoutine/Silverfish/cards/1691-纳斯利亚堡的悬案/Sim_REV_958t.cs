@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,13 +18,13 @@ namespace HREngine.Bots
 			if (m1 != null)
 			{
 				m1.Angr += 2;
-				m1.divineshild = true;
+				m1.divineShield = true;
 			}
 			Minion m2 = p.callKidAndReturn(kid, own.zonepos, own.own);
 			if (m2 != null)
 			{
 				m2.Angr += 2;
-				m2.divineshild = true;
+				m2.divineShield = true;
 			}
 		}
 

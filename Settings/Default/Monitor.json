@@ -1,0 +1,23 @@
+{
+  "Wins": 0,
+  "Losses": 0,
+  "Concedes": 0,
+  "Level": 0,
+  "Xp": 0,
+  "XpNeeded": 0,
+  "AllXp": 0,
+  "AllXpNeeded": 602200,
+  "AllRunTime": 0,
+  "AllRunTimeText": "0.0",
+  "AllGetXp": 0,
+  "PerHourXp": 500,
+  "PerHourXpStr": "500/小时",
+  "FullXpNeeded": 602200,
+  "FullTimeNeeded": "50天4小时",
+  "Collection": "未知",
+  "PassportEnd": "3.26-7.26 已过416天15小时15分 还剩-294天",
+  "ClassicInfo": "未知",
+  "StandardInfo": "未知",
+  "WildInfo": "未知",
+  "TwistInfo": "未知"
+}

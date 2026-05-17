@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC && m.entitiyID != own.entitiyID)
+                if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MURLOC && m.entityID != own.entityID)
                 {
 					p.minionGetBuffed(own, 1, 1);
                     break;

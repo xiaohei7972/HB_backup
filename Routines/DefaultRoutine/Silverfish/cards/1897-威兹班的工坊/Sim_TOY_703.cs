@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion minion in p.ownMinions.ToArray())
                 {
-                    if (minion.entitiyID != own.entitiyID)
+                    if (minion.entityID != own.entityID)
                     {
                         p.minionTransform(minion, lastDrawnCard.card);
                     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void onMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
         {
-            if (triggerEffectMinion.entitiyID != attacker.entitiyID && attacker.own)
+            if (triggerEffectMinion.entityID != attacker.entityID && attacker.own)
             {
                 p.minionSetHealthtoX(attacker,triggerEffectMinion.Hp);
             }

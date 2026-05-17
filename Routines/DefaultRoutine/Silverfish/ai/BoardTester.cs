@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -540,8 +540,8 @@ public class BoardTester
             this.enemyHero.own = false;
             this.ownHero.maxHp = this.ownheromaxhp;
             this.enemyHero.maxHp = this.enemyheromaxhp;
-            this.ownHero.entitiyID = ownHEntity;
-            this.enemyHero.entitiyID = enemyHEntity;
+            this.ownHero.entityID = ownHEntity;
+            this.enemyHero.entityID = enemyHEntity;
             this.ownHero.cardClass = heroNametoClass(this.ownheroname);
             this.enemyHero.cardClass = heroNametoClass(this.enemyheroname);
             //heroability = getHeroAbility(ownHero.cardClass);
@@ -680,7 +680,7 @@ public class BoardTester
             {
                 handcard = new Handmanager.Handcard(hc),
                 zonepos = zonepos,
-                entitiyID = hc.entity,
+                entityID = hc.entity,
                 Angr = hc.card.Attack,
                 Hp = hc.card.Health,
                 maxHp = hc.card.Health,
@@ -692,14 +692,14 @@ public class BoardTester
 
             m.own = own;
             m.isHero = false;
-            m.entitiyID = hc.entity;
+            m.entityID = hc.entity;
             m.playedThisTurn = true;
             m.numAttacksThisTurn = 0;
             m.windfury = hc.card.windfury;
             m.megaWindfury = hc.card.megaWindfury;
             m.taunt = hc.card.tank;
             m.charge = (hc.card.Charge) ? 1 : 0;
-            m.divineshild = hc.card.Shield;
+            m.divineShield = hc.card.Shield;
             m.poisonous = hc.card.poisonous;
             m.lifesteal = hc.card.lifesteal;
             m.reborn = hc.card.reborn;
@@ -808,7 +808,7 @@ public class BoardTester
                         Minion mi = createNewMinion(emi, cur_attack, cur_hp, i + 1, false);
                         mi.playedThisTurn = false;
                         mi.Ready = true;
-                        mi.entitiyID = (i + 1) * 100 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
+                        mi.entityID = (i + 1) * 100 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
                         enemyminions.Add(mi); // 随从位置从1开始
                     }
                     continue;
@@ -827,7 +827,7 @@ public class BoardTester
                         Minion mi = createNewMinion(omi, cur_attack, cur_hp, i + 1, true);
                         mi.playedThisTurn = false;
                         mi.Ready = true;
-                        mi.entitiyID = (i + 1) * 10 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
+                        mi.entityID = (i + 1) * 10 + i + 1; // 一定要设置id，否则会导致打分去重牌面出错
                         ownminions.Add(mi);// 随从位置从1开始
                     }
                     continue;
@@ -1529,7 +1529,7 @@ public class BoardTester
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, true);
                         tempminion.own = true;
                         tempminion.Spellburst = Spellburst;
-                        tempminion.entitiyID = ent;
+                        tempminion.entityID = ent;
                         tempminion.handcard.entity = ent;
                         tempminion.Angr = attack;
                         tempminion.Hp = hp;
@@ -1541,7 +1541,7 @@ public class BoardTester
                         tempminion.taunt = taunt;
                         tempminion.frozen = frzn;
                         tempminion.silenced = silenced;
-                        tempminion.divineshild = divshield;
+                        tempminion.divineShield = divshield;
                         tempminion.playedThisTurn = ptt;
                         tempminion.windfury = wndfry;
                         tempminion.megaWindfury = megaWindfury;
@@ -1698,7 +1698,7 @@ public class BoardTester
                         tempminion = createNewMinion(new Handmanager.Handcard(CardDB.Instance.getCardDataFromID(CardDB.Instance.cardIdstringToEnum(minionid))), zp, false);
                         tempminion.own = false;
                         tempminion.Spellburst = Spellburst;
-                        tempminion.entitiyID = ent;
+                        tempminion.entityID = ent;
                         tempminion.handcard.entity = ent;
                         tempminion.Angr = attack;
                         tempminion.Hp = hp;
@@ -1709,7 +1709,7 @@ public class BoardTester
                         tempminion.taunt = taunt;
                         tempminion.frozen = frzn;
                         tempminion.silenced = silenced;
-                        tempminion.divineshild = divshield;
+                        tempminion.divineShield = divshield;
                         tempminion.playedThisTurn = ptt;
                         tempminion.windfury = wndfry;
                         tempminion.megaWindfury = megaWindfury;

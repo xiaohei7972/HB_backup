@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
             if (target != null)
             {
-                p.minionGetDivineShild(target);
+                p.minionGetDivineShield(target);
                 if (ownplay)
                 {
                     foreach (var item in p.owncards)

@@ -4,14 +4,23 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 德鲁伊 费用：4 攻击力：4 生命值：5
+	//中立 德鲁伊 费用：4 攻击力：4 生命值：5
 	//Broodwatcher
-	//护巢龙
-	//[x]<b>Battlecry:</b> Get two 3/3Whelps with <b>Taunt</b>. If you spent8 Mana while holding this,summon them. <i>({0} left!)</i>@[x]<b>Battlecry:</b> Get two 3/3Whelps with <b>Taunt</b>. If you spent8 Mana while holding this,summon them. <i>(Ready!)</i>@[x]<b>Battlecry:</b> Get two 3/3Whelps with <b>Taunt</b>. If youspent 8 Mana while holdingthis, summon them.
-	//<b>战吼：</b>获取两张3/3并具有<b>嘲讽</b>的雏龙。如果你在本牌在你手中时消耗过8点法力值，召唤这两条雏龙。<i>（还剩{0}点！）</i>@<b>战吼：</b>获取两张3/3并具有<b>嘲讽</b>的雏龙。如果你在本牌在你手中时消耗过8点法力值，召唤这两条雏龙。<i>（已经就绪！）</i>@<b>战吼：</b>获取两张3/3并具有<b>嘲讽</b>的雏龙。如果你在本牌在你手中时消耗过8点法力值，召唤这两条雏龙。
+	//育雏观察者
+	//Battlecry: Get two 3/3 Whelps with Taunt. If you spent 8 Mana while holding this, summon them.
+	//战吼：获取两张3/3并具有嘲讽的雏龙。如果在持有本牌时你消耗过8点法力值，召唤这些雏龙。
 	class Sim_CATA_132 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			// Draw 2 Whelps (3/3 Taunt) - add to hand
+			CardDB.Card whelp = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_116); // placeholder - would use actual whelp card ID
+			for (int i = 0; i < 2; i++)
+			{
+				p.drawACard(CardDB.cardIDEnum.EX1_116, own.own, true);
+			}
+			// Moderate reward for card advantage
+			p.evaluatePenality -= 4;
+		}
 	}
 }

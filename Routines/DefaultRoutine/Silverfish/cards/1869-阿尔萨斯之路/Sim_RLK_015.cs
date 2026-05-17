@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace HREngine.Bots
 				p.minionGetFrozen(target);
 				foreach (Minion minion in minions)
 				{
-					if (target.entitiyID == minion.entitiyID) continue;
+					if (target.entityID == minion.entityID) continue;
 					p.minionGetDamageOrHeal(minion, dmg1);
 				}
 				

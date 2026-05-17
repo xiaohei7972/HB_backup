@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
         {           
             foreach (Minion mm in p.enemyMinions)
             {
-                if (!mm.divineshild && mm.Hp == 2)
+                if (!mm.divineShield && mm.Hp == 2)
                 {
                     p.minionGetDamageOrHeal(p.ownHero, -4);
                 }

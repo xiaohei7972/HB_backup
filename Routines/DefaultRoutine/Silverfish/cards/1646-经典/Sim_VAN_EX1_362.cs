@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +10,7 @@ namespace HREngine.Bots
 		//<b>战吼：</b>使一个其他友方随从获得<b>圣盾</b>。
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-            if (target != null) target.divineshild = true;
+            if (target != null) target.divineShield = true;
 		}
 
 

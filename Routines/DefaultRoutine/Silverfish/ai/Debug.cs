@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,7 +39,7 @@ namespace HREngine.Bots
             //                 //奥秘法的目标不会是己方随从，所以这里无需增加ownMinions判断，但是其他策略需要增加
             //                 for (int j = 0; j < tmp.enemyMinions.Count; j++)
             //                 {
-            //                     if (a.target.entitiyID == tmp.enemyMinions[j].entitiyID)
+            //                     if (a.target.entityID == tmp.enemyMinions[j].entityID)
             //                     {
             //                         tar = tmp.enemyMinions[j];
             //                         break;
@@ -47,7 +47,7 @@ namespace HREngine.Bots
             //                 }
             //                 for(int j = 0; j < tmp.ownMinions.Count; j++)
             //                 {
-            //                     if (a.target.entitiyID == tmp.ownMinions[j].entitiyID)
+            //                     if (a.target.entityID == tmp.ownMinions[j].entityID)
             //                     {
             //                         tar = tmp.enemyMinions[j];
             //                         break;

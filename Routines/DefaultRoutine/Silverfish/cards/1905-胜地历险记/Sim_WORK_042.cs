@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Triton.Game;
@@ -19,7 +19,7 @@ namespace HREngine.Bots
 			{
 				kid = target.handcard.card;
 				p.minionGetDestroyed(target);
-				// own.handcard.card.TAG_SCRIPT_DATA_NUM_1 = target.entitiyID;
+				// own.handcard.card.TAG_SCRIPT_DATA_NUM_1 = target.entityID;
 			}
 		}
 

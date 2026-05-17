@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
                     own.taunt = true;
                     p.anzOwnTaunt++;
                 }
-                if (p.prozis.numDeckCardsByTag(GAME_TAGs.DIVINE_SHIELD) > 0) own.divineshild = true;
+                if (p.prozis.numDeckCardsByTag(GAME_TAGs.DIVINE_SHIELD) > 0) own.divineShield = true;
                 if (p.prozis.numDeckCardsByTag(GAME_TAGs.LIFESTEAL) > 0) own.lifesteal = true;
                 if (p.prozis.numDeckCardsByTag(GAME_TAGs.WINDFURY) > 0) own.windfury = true;
             }

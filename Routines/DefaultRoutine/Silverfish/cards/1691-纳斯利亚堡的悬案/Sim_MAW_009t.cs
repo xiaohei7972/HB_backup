@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 		{
 			foreach (Minion minion in attacker.own ? p.ownMinions : p.enemyMinions)
 			{
-				if (RaceUtils.IsRaceOrAll(minion.handcard.card.race, CardDB.Race.PET) && minion.entitiyID != attacker.entitiyID)
+				if (RaceUtils.IsRaceOrAll(minion.handcard.card.race, CardDB.Race.PET) && minion.entityID != attacker.entityID)
 				{
 					p.minionGetBuffed(minion, 2, 2);
 				}

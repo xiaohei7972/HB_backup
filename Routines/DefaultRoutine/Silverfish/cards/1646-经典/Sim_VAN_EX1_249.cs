@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (turnEndOfOwner == triggerEffectMinion.own)
             {
-                p.allCharsGetDamage(2, triggerEffectMinion.entitiyID);
+                p.allCharsGetDamage(2, triggerEffectMinion.entityID);
             }
         }
 	}

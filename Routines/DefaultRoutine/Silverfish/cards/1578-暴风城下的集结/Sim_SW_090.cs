@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,7 @@ namespace HREngine.Bots
         {
             if (p.ownHero.Hp >= 4) p.evaluatePenality += 20;
             int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            if (dmg >= target.Hp && !target.divineshild && !target.immune)
+            if (dmg >= target.Hp && !target.divineShield && !target.immune)
             {
                 p.minionGetDamageOrHeal(p.ownHero, -3);
             }

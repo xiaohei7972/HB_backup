@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,12 +16,12 @@ namespace HREngine.Bots
 			Minion hero = ownplay ? p.ownHero : p.enemyHero;
 			if (target != null)
 			{
-				target.divineshild = true;
-				hero.divineshild = true;
+				target.divineShield = true;
+				hero.divineShield = true;
 			}
 			else
 			{
-				hero.divineshild = true;
+				hero.divineShield = true;
 			}
 		}
 		public override PlayReq[] GetPlayReqs()

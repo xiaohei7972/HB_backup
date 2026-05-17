@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,7 +32,7 @@ namespace HREngine.Bots
                 {
                     foreach (Minion minion in p.ownMinions)
                     {
-                        if (minion.Angr < m.Angr && minion.entitiyID != m.entitiyID)
+                        if (minion.Angr < m.Angr && minion.entityID != m.entityID)
                         {
                             targetToDestroy = minion;
                             break;

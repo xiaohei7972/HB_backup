@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 
         public override void onCardIsGoingToBePlayed(Playfield p, Handmanager.Handcard hc, bool wasOwnCard, Minion triggerEffectMinion)
         {
-            if (hc.card.type == CardDB.cardtype.SPELL && hc.target != null && hc.target.entitiyID == triggerEffectMinion.entitiyID)
+            if (hc.card.type == CardDB.cardtype.SPELL && hc.target != null && hc.target.entityID == triggerEffectMinion.entityID)
             {
                 List<Minion> tmp = triggerEffectMinion.own ? p.ownMinions : p.enemyMinions;
 

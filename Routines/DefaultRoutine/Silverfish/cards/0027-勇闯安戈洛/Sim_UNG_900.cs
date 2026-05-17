@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
     {
         public override void onMinionWasSummoned(Playfield p, Minion m, Minion summonedMinion)
         {
-            if (m.entitiyID != summonedMinion.entitiyID && m.own == summonedMinion.own && summonedMinion.handcard.card.deathrattle)
+            if (m.entityID != summonedMinion.entityID && m.own == summonedMinion.own && summonedMinion.handcard.card.deathrattle)
             {
                 p.doDeathrattles(new List<Minion>() { summonedMinion });
             }

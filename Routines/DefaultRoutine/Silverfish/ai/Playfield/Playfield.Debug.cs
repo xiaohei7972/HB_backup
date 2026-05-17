@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -75,8 +75,8 @@ namespace HREngine.Bots
 
             foreach (Minion m in this.ownMinions)
             {
-                ownMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entitiyID);
-                // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
+                ownMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entityID);
+                // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entityID);
             }
             Helpfunctions.Instance.logg(ownMinionsStr.ToString());
 
@@ -89,8 +89,8 @@ namespace HREngine.Bots
 
                 foreach (Minion m in this.enemyMinions)
                 {
-                    enemyMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entitiyID);
-                    // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entitiyID);
+                    enemyMinionsStr.AppendFormat("{0}({1},{2}/{3}){4}号位 ID：{5}\n", m.handcard.card.nameCN.ToString(), m.Angr, m.Hp, m.maxHp, m.zonepos, m.entityID);
+                    // Helpfunctions.Instance.logg(m.handcard.card.nameCN.ToString() + "(" + m.Angr + "," + m.Hp + "/" + m.maxHp + ")" + m.zonepos + "号位 ID：" + m.entityID);
                 }
                 Helpfunctions.Instance.logg(enemyMinionsStr.ToString());
             }
@@ -160,7 +160,7 @@ namespace HREngine.Bots
             for (int i = 0; i < this.ownMinions.Count; i++)
             {
                 Minion m = this.ownMinions[i];
-                retval += "\r\n" + (i + 1) + " OWN MINION\t" + m.zonepos + " " + m.entitiyID + ":" + m.name + " " + m.Angr + " " + m.Hp;
+                retval += "\r\n" + (i + 1) + " OWN MINION\t" + m.zonepos + " " + m.entityID + ":" + m.name + " " + m.Angr + " " + m.Hp;
             }
 
             if (this.enemyMinions.Count > 0)
@@ -169,7 +169,7 @@ namespace HREngine.Bots
                 for (int i = 0; i < this.enemyMinions.Count; i++)
                 {
                     Minion m = this.enemyMinions[i];
-                    retval += "\r\n" + (i + 1) + " ENEMY MINION\t" + m.zonepos + " " + m.entitiyID + ":" + m.name + " " + m.Angr + " " + m.Hp;
+                    retval += "\r\n" + (i + 1) + " ENEMY MINION\t" + m.zonepos + " " + m.entityID + ":" + m.name + " " + m.Angr + " " + m.Hp;
                 }
             }
 
@@ -201,18 +201,18 @@ namespace HREngine.Bots
         {
             StringBuilder hero = new StringBuilder(20);
             StringBuilder ehero = new StringBuilder(20);
-            hero.AppendFormat("hero {0} {1} {2}", this.ownHero.Hp, this.ownHero.armor, this.ownHero.entitiyID);
-            ehero.AppendFormat("ehero {0} {1} {2}", this.enemyHero.Hp, this.enemyHero.armor, this.enemyHero.entitiyID);
+            hero.AppendFormat("hero {0} {1} {2}", this.ownHero.Hp, this.ownHero.armor, this.ownHero.entityID);
+            ehero.AppendFormat("ehero {0} {1} {2}", this.enemyHero.Hp, this.enemyHero.armor, this.enemyHero.entityID);
             Helpfunctions.Instance.logg(hero.ToString());
             Helpfunctions.Instance.logg(ehero.ToString());
             foreach (Minion m in ownMinions)
             {
-                Helpfunctions.Instance.logg(m.name + "m.entitiyID");
+                Helpfunctions.Instance.logg(m.name + "m.entityID");
             }
             Helpfunctions.Instance.logg("-");
             foreach (Minion m in enemyMinions)
             {
-                Helpfunctions.Instance.logg(m.name + " m.entitiyID");
+                Helpfunctions.Instance.logg(m.name + " m.entityID");
             }
             Helpfunctions.Instance.logg("-");
             foreach (Handmanager.Handcard hc in this.owncards)

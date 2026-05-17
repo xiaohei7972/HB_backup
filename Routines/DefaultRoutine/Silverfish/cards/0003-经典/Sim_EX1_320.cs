@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
 
                 bool summondemon = false;
 
-                if (!target.isHero && dmg >= target.Hp && !target.divineshild && !target.immune)
+                if (!target.isHero && dmg >= target.Hp && !target.divineShield && !target.immune)
                 {
                     summondemon = true;
                 }

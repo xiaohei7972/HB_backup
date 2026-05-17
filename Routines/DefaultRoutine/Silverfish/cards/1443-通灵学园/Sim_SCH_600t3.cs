@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +9,7 @@ namespace HREngine.Bots
 
         public override void onMinionWasSummoned(Playfield p, Minion m, Minion summonedMinion)
         {
-            if (summonedMinion.own == m.own && m.entitiyID != summonedMinion.entitiyID)
+            if (summonedMinion.own == m.own && m.entityID != summonedMinion.entityID)
             {
                 p.minionGetBuffed(summonedMinion, 1, 0);
             }
@@ -23,14 +23,14 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
 
@@ -42,14 +42,14 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
         }

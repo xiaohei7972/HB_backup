@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
 		
 		public override void onEnrageStart(Playfield p, Minion m)
         {
-            m.divineshild = true;
+            m.divineShield = true;
         }		
 		
 	}

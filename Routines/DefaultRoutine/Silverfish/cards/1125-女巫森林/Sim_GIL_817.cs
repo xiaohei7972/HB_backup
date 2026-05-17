@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace HREngine.Bots
         {
 			if (charsGotHealed != 0 )
 			{	
-                triggerEffectMinion.divineshild = true;
+                triggerEffectMinion.divineShield = true;
 			}
         }
 	}

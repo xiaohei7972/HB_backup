@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
                 // 提示：赋予目标随从各种能力
                 target.rush = 1;            // 突袭
                 target.windfury = true;        // 风怒
-                target.divineshild = true;     // 圣盾
+                target.divineShield = true;     // 圣盾
                 target.lifesteal = true;       // 吸血
                 target.poisonous = true;       // 剧毒
                 target.taunt = true;           // 嘲讽

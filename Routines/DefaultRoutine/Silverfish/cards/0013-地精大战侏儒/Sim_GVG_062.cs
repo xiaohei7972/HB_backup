@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,9 +11,9 @@ namespace HREngine.Bots
     {
         public override void onMinionIsSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
-            if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own && RaceUtils.IsRaceOrAll(summonedMinion.handcard.card.race, CardDB.Race.UNDEAD))
+            if (triggerEffectMinion.entityID != summonedMinion.entityID && triggerEffectMinion.own == summonedMinion.own && RaceUtils.IsRaceOrAll(summonedMinion.handcard.card.race, CardDB.Race.UNDEAD))
             {
-                triggerEffectMinion.divineshild = true;
+                triggerEffectMinion.divineShield = true;
             }
         }
 

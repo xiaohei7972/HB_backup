@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
                 if (m.handcard.card.SilverHandRecruit)
                 {
                     p.minionGetBuffed(m, 1, 0);
-                    m.divineshild = true;
+                    m.divineShield = true;
                 }
             }
         }

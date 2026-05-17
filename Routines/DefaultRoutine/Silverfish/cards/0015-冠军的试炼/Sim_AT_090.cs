@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
 				List<Minion> temp = (own) ? p.ownMinions : p.enemyMinions;
 				foreach (Minion mnn in temp)
 				{
-                    if (m.entitiyID == mnn.entitiyID) continue;
+                    if (m.entityID == mnn.entityID) continue;
 					p.minionGetBuffed(mnn, 1, 1);
 				}
 			}

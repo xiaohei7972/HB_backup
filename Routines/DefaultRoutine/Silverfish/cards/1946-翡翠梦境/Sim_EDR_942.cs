@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 		{
 			if (triggerEffectMinion.own == turnEndOfOwner)
 			{
-				p.ownHero.divineshild = true;
+				p.ownHero.divineShield = true;
 			}
 
 		}

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
 				if(p.anyRaceCardInHand(CardDB.Race.DRAGON))
 				{
 					own.taunt = true;
-                    own.divineshild = true;
+                    own.divineShield = true;
 					p.anzOwnTaunt++;
 
                 }
@@ -27,7 +27,7 @@ namespace HREngine.Bots
 			{
 				if (p.enemyAnzCards >= 2)
 				{
-					own.divineshild = true;
+					own.divineShield = true;
 					own.taunt = true;
                     p.anzEnemyTaunt++;
                 }					

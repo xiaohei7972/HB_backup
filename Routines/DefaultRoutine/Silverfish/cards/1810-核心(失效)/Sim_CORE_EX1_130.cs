@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +21,7 @@ namespace HREngine.Bots
                 {
                     if (p.ownMinions[p.ownMinions.Count - 1].name == CardDB.cardNameEN.defender)
                     {
-                        number = p.ownMinions[p.ownMinions.Count - 1].entitiyID;
+                        number = p.ownMinions[p.ownMinions.Count - 1].entityID;
                     }
                 }
             }
@@ -34,7 +34,7 @@ namespace HREngine.Bots
                 {
                     if (p.enemyMinions[p.enemyMinions.Count - 1].name == CardDB.cardNameEN.defender)
                     {
-                        number = p.enemyMinions[p.enemyMinions.Count - 1].entitiyID;
+                        number = p.enemyMinions[p.enemyMinions.Count - 1].entityID;
                     }
                 }
             }

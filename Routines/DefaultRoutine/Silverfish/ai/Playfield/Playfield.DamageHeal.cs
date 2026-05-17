@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -295,9 +295,9 @@ namespace HREngine.Bots
             for (int pos = 0; pos < temp.Count; pos++)
             {
                 Minion m = temp[pos];
-                if (m.divineshild)
+                if (m.divineShield)
                 {
-                    m.divineshild = false; // 移除圣盾
+                    m.divineShield = false; // 移除圣盾
                     times--;
                     if (times < 1) break;
                 }
@@ -393,9 +393,9 @@ namespace HREngine.Bots
             for (int pos = 0; pos < temp.Count; pos++)
             {
                 Minion m = temp[pos];
-                if (m.divineshild)
+                if (m.divineShield)
                 {
-                    m.divineshild = false; // 移除圣盾
+                    m.divineShield = false; // 移除圣盾
                     times--;
                     if (times < 1) break;
                 }
@@ -451,7 +451,7 @@ namespace HREngine.Bots
             // 对己方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.ownMinions)
             {
-                if (m.entitiyID != exceptID)
+                if (m.entityID != exceptID)
                 {
                     minionGetDamageOrHeal(m, damages, true);
                 }
@@ -459,7 +459,7 @@ namespace HREngine.Bots
             // 对敌方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.enemyMinions)
             {
-                if (m.entitiyID != exceptID)
+                if (m.entityID != exceptID)
                 {
                     minionGetDamageOrHeal(m, damages, true);
                 }
@@ -480,10 +480,10 @@ namespace HREngine.Bots
             // 对己方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.ownMinions.ToArray())
             {
-                if (m.entitiyID == exceptID) continue;
+                if (m.entityID == exceptID) continue;
                 minionGetDamageOrHeal(m, damages, true);
 
-                // if (m.entitiyID != exceptID)
+                // if (m.entityID != exceptID)
                 // {
                 //     minionGetDamageOrHeal(m, damages, true);
                 // }
@@ -491,10 +491,10 @@ namespace HREngine.Bots
             // 对敌方所有随从造成伤害，排除exceptID的实体
             foreach (Minion m in this.enemyMinions.ToArray())
             {
-                if (m.entitiyID == exceptID) continue;
+                if (m.entityID == exceptID) continue;
                 minionGetDamageOrHeal(m, damages, true);
 
-                // if (m.entitiyID != exceptID)
+                // if (m.entityID != exceptID)
                 // {
                 //     minionGetDamageOrHeal(m, damages, true);
                 // }

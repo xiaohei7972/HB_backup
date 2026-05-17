@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -844,14 +844,14 @@ namespace HREngine.Bots
                 // 如果己方英雄能力为洛瑟玛的力量，并且召唤的是银色黎明新兵，则为其添加圣盾
                 if (this.LothraxionsPower && mnn.name == CardDB.cardNameEN.silverhandrecruit)
                 {
-                    mnn.divineshild = true;
+                    mnn.divineShield = true;
                 }
 
                 // 遍历己方随从，触发每个随从的"随从被召唤"效果
                 foreach (Minion m in this.ownMinions.ToArray())
                 {
                     // 跳过被沉默的随从和刚刚被召唤的随从自身
-                    if (m.silenced || m.entitiyID == mnn.entitiyID) continue;
+                    if (m.silenced || m.entityID == mnn.entityID) continue;
                     // 触发随从的 onMinionWasSummoned 事件
                     m.handcard.card.sim_card.onMinionWasSummoned(this, m, mnn);
                 }
@@ -883,7 +883,7 @@ namespace HREngine.Bots
                 foreach (Minion m in this.enemyMinions.ToArray())
                 {
                     // 跳过被沉默的随从和刚刚被召唤的随从自身
-                    if (m.silenced || m.entitiyID == mnn.entitiyID) continue;
+                    if (m.silenced || m.entityID == mnn.entityID) continue;
                     // 触发随从的 onMinionWasSummoned 事件
                     m.handcard.card.sim_card.onMinionWasSummoned(this, m, mnn);
                 }

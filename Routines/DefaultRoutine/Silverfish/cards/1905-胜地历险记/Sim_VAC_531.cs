@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void onMinionWasSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
 		{
-			if (p.isOwnTurn && triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == !summonedMinion.own)
+			if (p.isOwnTurn && triggerEffectMinion.entityID != summonedMinion.entityID && triggerEffectMinion.own == !summonedMinion.own)
 			{
 				p.minionGetSilenced(summonedMinion);
 				p.minionGetDestroyed(summonedMinion);

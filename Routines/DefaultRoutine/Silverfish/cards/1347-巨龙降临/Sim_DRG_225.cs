@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
 	class Sim_DRG_225 : SimTemplate //* 空中飞爪 Sky Claw
 	{
@@ -17,7 +17,7 @@ namespace HREngine.Bots
                 p.anzOwnSouthseacaptain++;
                 foreach (Minion m in p.ownMinions)
                 {
-                    if((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
             else
@@ -25,7 +25,7 @@ namespace HREngine.Bots
                 p.anzEnemySouthseacaptain++;
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
 
@@ -38,7 +38,7 @@ namespace HREngine.Bots
                 p.anzOwnSouthseacaptain--;
                 foreach (Minion m in p.ownMinions)
                 {
-                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
             else
@@ -46,7 +46,7 @@ namespace HREngine.Bots
                 p.anzEnemySouthseacaptain--;
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if ((TAG_RACE)m.handcard.card.race == TAG_RACE.MECHANICAL && own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
         }

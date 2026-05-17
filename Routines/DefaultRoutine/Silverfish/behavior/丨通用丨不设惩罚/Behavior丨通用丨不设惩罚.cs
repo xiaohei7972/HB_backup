@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -167,9 +167,9 @@ namespace HREngine.Bots
             //嘲讽
             if (m.taunt) retval += 2;
             //圣盾
-            if (m.divineshild) retval += m.Angr * 2;
+            if (m.divineShield) retval += m.Angr * 2;
             //圣盾嘲讽
-            if (m.divineshild && m.taunt) retval += 5;
+            if (m.divineShield && m.taunt) retval += 5;
             //潜行
             if (m.stealth) retval += 2;
             //扰魔
@@ -233,20 +233,20 @@ namespace HREngine.Bots
             if (m.Hp <= 0) return 0;
             retval += m.Hp * bonus_mine;
             retval += m.Angr * bonus_mine;
-            if (m.Hp <= 1 && !m.divineshild) retval -= (m.Angr - 1) * (bonus_mine - 1);
+            if (m.Hp <= 1 && !m.divineShield) retval -= (m.Angr - 1) * (bonus_mine - 1);
             // 高攻低血是垃圾
             if (m.Angr > m.Hp + 4) retval -= (m.Angr - m.Hp) * (bonus_mine - 1);
             // 风怒价值
             if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1) && m.windfury) retval += m.Angr;
             // 圣盾价值
-            if (m.divineshild) retval += m.Angr * 3;
+            if (m.divineShield) retval += m.Angr * 3;
             // 潜行价值
             if (m.stealth) retval += m.Angr / 2 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 2 + 1;
 
             // 圣盾嘲讽
-            if (m.divineshild && m.taunt) retval += 4;
+            if (m.divineShield && m.taunt) retval += 4;
             //扰魔
             if (m.Elusive) retval += 5;
             //复生
@@ -278,8 +278,6 @@ namespace HREngine.Bots
 
         public override int getSirFinleyPriority(List<Handmanager.Handcard> discoverCards)
         {
-
-            return -1; //comment out or remove this to set manual priority
             int sirFinleyChoice = -1;
             int tmp = int.MinValue;
             for (int i = 0; i < discoverCards.Count; i++)

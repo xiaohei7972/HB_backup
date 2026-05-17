@@ -14,7 +14,7 @@ namespace HREngine.Bots
             int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             p.minionGetDamageOrHeal(target, dmg);
             int dmg_ = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
-            p.allMinionsGetDamage(dmg_, target.entitiyID);
+            p.allMinionsGetDamage(dmg_, target.entityID);
         }
 
         public override PlayReq[] GetPlayReqs()

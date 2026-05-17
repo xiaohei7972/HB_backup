@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
 	//* 英勇狂热者 Brazen Zealot
 	//Whenever you summon a minion, gain +1 Attack.
@@ -7,7 +7,7 @@ namespace HREngine.Bots
 	{
 		public override void onMinionWasSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
 		{
-			if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own)
+			if (triggerEffectMinion.entityID != summonedMinion.entityID && triggerEffectMinion.own == summonedMinion.own)
 			{
 				p.minionGetBuffed(triggerEffectMinion, 1, 0);
 			}

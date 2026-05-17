@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +21,7 @@ namespace HREngine.Bots
 				{
 					if (triggerEffectMinion.poisonous)
 					{
-						if (!m.divineshild)
+						if (!m.divineShield)
 						{
 							p.minionGetDestroyed(m);
 						}

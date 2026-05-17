@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
 
             int dmg = (ownplay) ? p.getSpellDamageDamage(2) : p.getEnemySpellDamageDamage(2);
-            if (target.Hp > dmg || target.immune || target.divineshild)
+            if (target.Hp > dmg || target.immune || target.divineShield)
             {
                 //this.owncarddraw++;
                 p.drawACard(CardDB.cardIDEnum.None, ownplay);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
                 foreach (Minion mnn in temp)
                 {
-                    if (mnn.entitiyID != triggerEffectMinion.entitiyID && mnn.handcard.card == triggerEffectMinion.handcard.card)
+                    if (mnn.entityID != triggerEffectMinion.entityID && mnn.handcard.card == triggerEffectMinion.handcard.card)
                     {
                         mnn.setMinionToMinion(triggerEffectMinion); // 复制本随从的所有属性
                         break;

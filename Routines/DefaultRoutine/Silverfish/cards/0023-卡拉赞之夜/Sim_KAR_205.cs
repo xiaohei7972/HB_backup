@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +21,7 @@ namespace HREngine.Bots
             Minion m = temp[temp.Count - 1];
             if (m.name == hc.card.nameEN && m.playedThisTurn)
             {
-                m.entitiyID = hc.entity;
+                m.entityID = hc.entity;
                 m.Angr += hc.addattack;
                 m.Hp += hc.addHp;
             }

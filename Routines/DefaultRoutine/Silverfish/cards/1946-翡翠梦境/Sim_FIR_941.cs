@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace HREngine.Bots
 			Summons.Angr = 8;
 			Summons.Hp = 8;
 			Summons.maxHp = 8;
-			Summons.divineshild = true;
+			Summons.divineShield = true;
 
 		}
 

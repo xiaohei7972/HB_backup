@@ -9,13 +9,13 @@ namespace HREngine.Bots
 {
     public class AutoJudge : TestBase
     {
-        //C:\Users\xiaohei\Desktop\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\Test\Data
-
-        private static string mainPath = @"C:\Users\xiaohei\Desktop\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\"; // 确保此路径正确
-        private static string testPath = @"Test\Data\单卡测试\护园森灵\"; // 需要测试的文件夹 
+        // 自动检测 Silverfish 目录路径（基于程序集位置）
+        private static string mainPath = Path.Combine(
+            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+            "Routines", "DefaultRoutine", "Silverfish") + Path.DirectorySeparatorChar;
+        private static string testPath = Path.Combine("Test", "Data", "单卡测试", "护园森灵") + Path.DirectorySeparatorChar; // 需要测试的文件夹
 
         private static string testFile = null;// 如果只需要测试单个文件，设置该属性为对应文件名
-        //private static string testFile = "6法力水晶 第12回合 第1步操作.txt"; // 如果只需要测试单个文件，设置该属性为对应文件名
 
         private static Ai ai = null;
 

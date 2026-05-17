@@ -1,16 +1,13 @@
 using System;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Buddy.Coroutines;
 using log4net;
@@ -20,10 +17,7 @@ using Triton.Common;
 using Triton.Common.Mvvm;
 using Triton.Game;
 using Logger1 = Triton.Common.LogUtilities.Logger;
-using System.ServiceModel;
-using System.ServiceModel.Description;
 using System.Threading.Tasks;
-using System.Reflection;
 using Triton.Game.Mapping;
 using Triton.Game.Mono;
 using Triton.Bot.Logic.Bots.DefaultBot;
@@ -43,7 +37,7 @@ namespace Monitor
     public class Monitor : IPlugin
     {
         private static readonly ILog Log = Logger1.GetLoggerInstanceForType();
-        Timer _expTimer;
+        private static DateTime _lastGuiUpdate = DateTime.MinValue;
         private bool _enabled;
         Stats oldStats;
         private readonly Stopwatch stopwatch_0 = new Stopwatch();
@@ -210,7 +204,8 @@ namespace Monitor
                 int total = 0;
                 if (oldStats.Level > 130)
                     total = allNeedXp[129] + (oldStats.Level - 130) * 1500 + oldStats.Xp;
-                else total = allNeedXp[oldStats.Level - 1] + oldStats.Xp;
+                else if (oldStats.Level > 0)
+                    total = allNeedXp[oldStats.Level - 1] + oldStats.Xp;
                 MonitorSettings.Instance.AllGetXp += (MonitorSettings.Instance.AllXp - total);
                 oldStats = stats;
             }
@@ -240,6 +235,7 @@ namespace Monitor
             MonitorSettings.Instance.StandardInfo = "未知";
             MonitorSettings.Instance.WildInfo = "未知";
             oldStats = GetStats();
+            if (oldStats == null) return;
             UpdateMainGuiStats();
         }
 
@@ -276,20 +272,23 @@ namespace Monitor
                         show,
                         MonitorSettings.Instance.Concedes);
                 Log.InfoFormat("[监控插件] 合计: {0}", statusBar.RightText);
-                Configuration.Instance.SaveAll();
+                Task.Run(() => Configuration.Instance.SaveAll());
             }));
         }
 
         private void TritonHsOnOnGuiTick(object sender, GuiTickEventArgs guiTickEventArgs)
         {
-            if (IsEnabled)
+            if (!IsEnabled) return;
+
+            // Throttle to once per second
+            if ((DateTime.Now - _lastGuiUpdate).TotalSeconds < 1) return;
+            _lastGuiUpdate = DateTime.Now;
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var statusBar = Triton.Common.Mvvm.ViewModelLocator.GetSingleton<Triton.Common.Mvvm.StatusBarViewModel>();
-                    statusBar.LeftText = string.Format("运行时间: {0}", TritonHs.Runtime.Elapsed.ToString("h'小时 'm'分 's'秒'"));
-                }));
-            }
+                var statusBar = Triton.Common.Mvvm.ViewModelLocator.GetSingleton<Triton.Common.Mvvm.StatusBarViewModel>();
+                statusBar.LeftText = string.Format("运行时间: {0}", TritonHs.Runtime.Elapsed.ToString("h'小时 'm'分 's'秒'"));
+            }));
         }
 
         private string RankNumToString(int num)
@@ -407,7 +406,8 @@ namespace Monitor
                 int total=0;
                 if (stats.Level > 130)
                     total = allNeedXp[129] + (stats.Level - 130) * 1500 + stats.Xp;
-                else total = allNeedXp[stats.Level - 1] + stats.Xp;
+                else if (stats.Level > 0)
+                    total = allNeedXp[stats.Level - 1] + stats.Xp;
                 MonitorSettings.Instance.AllXp = total;
                 MonitorSettings.Instance.FullXpNeeded =
                     MonitorSettings.Instance.AllXpNeeded - MonitorSettings.Instance.AllXp;

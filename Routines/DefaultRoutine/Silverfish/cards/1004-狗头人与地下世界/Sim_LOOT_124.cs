@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 			int mCount = (m.own) ? p.ownMinions.Count : p.enemyMinions.Count;
 			if (mCount < 0) 
 			{
-				m.divineshild = true;
+				m.divineShield = true;
 				m.taunt = true;
 			}
 			

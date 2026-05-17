@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
                 if(m.Angr + m.Hp > maxVal)
                 {
                     maxVal = m.Angr + m.Hp;
-                    objectId = m.entitiyID;
+                    objectId = m.entityID;
                 }
             }
             

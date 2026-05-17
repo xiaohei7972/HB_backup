@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,9 +17,9 @@ namespace HREngine.Bots
             List<Minion> temp = (ownplay) ? p.ownMinions : p.enemyMinions;
 			foreach (Minion m in temp)
 			{
-			   if (!m.divineshild) 	
+			   if (!m.divineShield) 	
 				{	     
-			        m.divineshild =true;
+			        m.divineShield =true;
 			    }  
 			}
         }

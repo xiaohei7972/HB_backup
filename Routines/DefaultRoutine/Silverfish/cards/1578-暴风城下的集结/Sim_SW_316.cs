@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
             if (target != null)
             {
                 p.minionGetBuffed(target, 1, 1);
-                target.divineshild = true;
+                target.divineShield = true;
                 target.enchs.Add(CardDB.cardIDEnum.SW_316e);
             }
         }

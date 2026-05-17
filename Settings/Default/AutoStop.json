@@ -1,0 +1,16 @@
+{
+  "StopAfterXGames": false,
+  "StopAfterXWins": false,
+  "StopAfterXLosses": false,
+  "StopGameCount": 1,
+  "StopWinCount": 1,
+  "StopLossCount": 1,
+  "ConcedeAfterXMinutes": true,
+  "ConcedeMinutesCount": 32,
+  "DynamicFacePenaltyEnabled": false,
+  "DynamicFacePenaltyMinutes": 30,
+  "FacePenaltyBeforeTime": -2000,
+  "FacePenaltyAfterTime": 1000,
+  "Wins": 0,
+  "Losses": 0
+}

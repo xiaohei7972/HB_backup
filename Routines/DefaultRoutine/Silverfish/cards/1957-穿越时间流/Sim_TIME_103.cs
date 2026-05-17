@@ -11,7 +11,21 @@ namespace HREngine.Bots
 	//<b>亡语：</b>抽取你在本局对战中使用过的每张牌的另一张复制。@<i>（抽@张牌）</i>
 	class Sim_TIME_103 : SimTemplate
 	{
-		
-		
+		public override void onDeathrattle(Playfield p, Minion m)
+		{
+			int drawCount = 0;
+			foreach (Handmanager.Handcard hc in p.owncards)
+			{
+				if (hc.card.type == CardDB.cardtype.MOB)
+				{
+					p.drawACard(CardDB.cardIDEnum.None, m.own, true);
+					drawCount++;
+				}
+			}
+			for (int i = drawCount; i < 4; i++)
+			{
+				p.drawACard(CardDB.cardIDEnum.None, m.own, true);
+			}
+		}
 	}
 }

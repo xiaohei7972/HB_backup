@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
             {
                 p.minionGetBuffed(target, 2, 1);
                 target.enchs.Add(CardDB.cardIDEnum.TIME_044t1e);
-                p.minionGetDivineShild(target);
+                p.minionGetDivineShield(target);
             }
 
         }

@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace HREngine.Bots
                 handcard = new Handmanager.Handcard(hc),
                 own = own,
                 isHero = false, //是否为英雄
-                entitiyID = hc.entity,  //实体id
+                entityID = hc.entity,  //实体id
                 playedThisTurn = true,  //从手牌打出
                 numAttacksThisTurn = 0, //这回合攻击过几次
                 extraAttacksThisTurn = 0,//这回合额外攻击次数
@@ -29,7 +29,7 @@ namespace HREngine.Bots
                 name = hc.card.nameEN,  //英文名
                 nameCN = hc.card.nameCN,    //中文名
 
-                divineshild = hc.card.Shield,   //圣盾
+                divineShield = hc.card.Shield,   //圣盾
                 windfury = hc.card.windfury,    //风怒
                 rush = hc.card.Rush ? 1 : 0,    //突袭
                 lifesteal = hc.card.lifesteal,  //吸血
@@ -603,7 +603,7 @@ namespace HREngine.Bots
                 {
                     card = c,
                     position = this.owncards.Count + 1,
-                    entity = m.entitiyID,
+                    entity = m.entityID,
                     manacost = c.calculateManaCost(this) + manachange
                 };
 
@@ -669,7 +669,7 @@ namespace HREngine.Bots
             // 移除当前随从的光环效果
             m.handcard.card.sim_card.onAuraEnds(this, m);
 
-            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = m.entitiyID };
+            Handmanager.Handcard hc = new Handmanager.Handcard(c) { entity = m.entityID };
 
             // 处理随从的嘲讽状态
             if (m.taunt)
@@ -791,7 +791,7 @@ namespace HREngine.Bots
                     // 将mOwn的属性传递给目标机械随从m
                     this.minionGetBuffed(m, mOwn.Angr, mOwn.Hp);
                     if (mOwn.taunt) m.taunt = true;
-                    if (mOwn.divineshild) m.divineshild = true;
+                    if (mOwn.divineShield) m.divineShield = true;
                     if (mOwn.lifesteal) m.lifesteal = true;
                     if (mOwn.poisonous) m.poisonous = true;
                     if (mOwn.rush != 0) this.minionGetRush(m);
@@ -817,10 +817,10 @@ namespace HREngine.Bots
         /// 给随从赋予圣盾效果
         /// </summary>
         /// <param name="m"></param>
-        public void minionGetDivineShild(Minion m)
+        public void minionGetDivineShield(Minion m)
         {
-            if (m.divineshild) return;
-            m.divineshild = true;
+            if (m.divineShield) return;
+            m.divineShield = true;
         }
         /// <summary>
         /// 给随从赋予嘲讽效果
@@ -1053,7 +1053,7 @@ namespace HREngine.Bots
         /// <param name="m">目标随从。</param>
         public void minionLosesDivineShield(Minion m)
         {
-            m.divineshild = false;
+            m.divineShield = false;
             if (m.own) this.tempTrigger.ownMinionLosesDivineShield++;
             else this.tempTrigger.enemyMinionLosesDivineShield++;
         }

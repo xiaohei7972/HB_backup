@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
                 foreach (Minion m in minions)
                 {
                     // 确保不buff自己
-                    if (m.entitiyID == triggerEffectMinion.entitiyID) continue;
+                    if (m.entityID == triggerEffectMinion.entityID) continue;
 
                     p.minionGetBuffed(m, 1, 0); // +1攻击力
 

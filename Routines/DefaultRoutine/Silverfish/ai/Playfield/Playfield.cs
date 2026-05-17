@@ -743,7 +743,7 @@ namespace HREngine.Bots
                         bool another = false;
                         foreach (Minion mnn in this.ownMinions)
                         {
-                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entitiyID != m.entitiyID) another = true;
+                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entityID != m.entityID) another = true;
                         }
                         if (!another) this.ownHeroPowerAllowedQuantity++;
                         continue;
@@ -906,7 +906,7 @@ namespace HREngine.Bots
                         bool another = false;
                         foreach (Minion mnn in this.enemyMinions)
                         {
-                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entitiyID != m.entitiyID) another = true;
+                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entityID != m.entityID) another = true;
                         }
                         if (!another) this.enemyHeroPowerAllowedQuantity++;
                         continue;
@@ -1413,6 +1413,753 @@ namespace HREngine.Bots
             this.lastPlayedCardCost = p.lastPlayedCardCost;
             //在本回合是否打出了元素牌
             this.playedElementalThisTurn = p.playedElementalThisTurn;
+        }
+
+        /// <summary>
+        /// 从源 Playfield 复制所有字段，复用现有的 List/Dictionary 对象以避免分配。
+        /// 逻辑与拷贝构造函数相同，但不会创建新的 List/Dictionary 实例。
+        /// 此方法供 PlayfieldPool.Rent() 使用。
+        /// </summary>
+        public void CopyFrom(Playfield p, bool transToEnemy = false)
+        {
+            this.value = int.MinValue;
+            this.enemyGuessDeck = p.enemyGuessDeck;
+            this.enemyHeroTurnStartedHp = p.enemyHeroTurnStartedHp;
+            this.ownHeroTurnStartedHp = p.ownHeroTurnStartedHp;
+            this.pID = prozis.getPid();
+            if (p.print)
+            {
+                this.print = true;
+                this.pIdHistory.Clear();
+                this.pIdHistory.AddRange(p.pIdHistory);
+                this.pIdHistory.Add(pID);
+                this.doDirtyTts = p.doDirtyTts;
+                this.dirtyTwoTurnSim = p.dirtyTwoTurnSim;
+                this.checkLostAct = p.checkLostAct;
+                this.enemyTurnsCount = p.enemyTurnsCount;
+            }
+            else
+            {
+                this.print = false;
+                this.pIdHistory.Clear();
+            }
+            this.isLethalCheck = p.isLethalCheck;
+            this.nextEntity = p.nextEntity;
+            this.patchesInDeck = p.patchesInDeck;
+            this.anzDark = p.anzDark;
+            this.anzTamsinroame = p.anzTamsinroame;
+            this.healOrDamageTimes = p.healOrDamageTimes;
+            this.healTimes = p.healTimes;
+            this.totalAngr = -1;
+            this.enemyTotalAngr = -1;
+            this.ownMinionsDied = p.ownMinionsDied;
+            this.setMankrik = p.setMankrik;
+            this.anzSolor = p.anzSolor;
+            this.enemyMinionStartCount = p.enemyMinionStartCount;
+            this.deckAngrBuff = p.deckAngrBuff;
+            this.deckHpBuff = p.deckHpBuff;
+            this.isOwnTurn = p.isOwnTurn;
+            this.turnCounter = p.turnCounter;
+            this.gTurn = p.gTurn;
+            this.gTurnStep = p.gTurnStep;
+            this.AnzSoulFragments = p.AnzSoulFragments;
+            this.anzOldWoman = p.anzOldWoman;
+            this.usedUndeadAllies = p.usedUndeadAllies;
+            this.anzTamsin = p.anzTamsin;
+
+            // ownGraveyard: reuse existing Dictionary
+            this.ownGraveyard.Clear();
+            foreach (var item in p.ownGraveyard)
+            {
+                if (!this.ownGraveyard.ContainsKey(item.Key) && CardDB.Instance.getCardDataFromID(item.Key).type == CardDB.cardtype.MOB)
+                {
+                    this.ownGraveyard.Add(item.Key, item.Value);
+                }
+            }
+
+            this.anzOgOwnCThunAngrBonus = p.anzOgOwnCThunAngrBonus;
+            this.anzOgOwnCThunHpBonus = p.anzOgOwnCThunHpBonus;
+            this.anzOgOwnCThunTaunt = p.anzOgOwnCThunTaunt;
+            this.anzOwnJadeGolem = p.anzOwnJadeGolem;
+            this.anzEnemyJadeGolem = p.anzEnemyJadeGolem;
+            this.anzOwnElementalsThisTurn = p.anzOwnElementalsThisTurn;
+            this.anzOwnElementalsLastTurn = p.anzOwnElementalsLastTurn;
+            this.attacked = p.attacked;
+            this.ownController = p.ownController;
+            this.bestEnemyPlay = p.bestEnemyPlay;
+            this.endTurnState = p.endTurnState;
+
+            // ownSecretsIDList: reuse list
+            this.ownSecretsIDList.Clear();
+            this.ownSecretsIDList.AddRange(p.ownSecretsIDList);
+
+            this.evaluatePenality = p.evaluatePenality;
+            this.ruleWeight = p.ruleWeight;
+            this.rulesUsed = p.rulesUsed;
+
+            // enemySecretList: reuse list
+            this.enemySecretList.Clear();
+            if (p.useSecretsPlayAround)
+            {
+                this.useSecretsPlayAround = true;
+                foreach (SecretItem si in p.enemySecretList)
+                {
+                    this.enemySecretList.Add(new SecretItem(si));
+                }
+            }
+            else
+            {
+                this.useSecretsPlayAround = false;
+            }
+
+            this.mana = p.mana;
+            this.manaTurnEnd = p.manaTurnEnd;
+
+            // LurkersDB: reuse Dictionary
+            this.LurkersDB.Clear();
+            if (p.LurkersDB.Count > 0)
+            {
+                foreach (var kvp in p.LurkersDB)
+                {
+                    this.LurkersDB.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            if (transToEnemy)
+            {
+                this.enemyMaxMana = p.ownMaxMana;
+                this.ownMaxMana = p.enemyMaxMana;
+                this.mana = p.enemyMaxMana;
+
+                this.ownMinions.Clear();
+                foreach (var m in prozis.ownMinions)
+                    this.ownMinions.Add(MinionPool.Rent(m));
+                this.enemyMinions.Clear();
+                foreach (var m in prozis.enemyMinions)
+                    this.enemyMinions.Add(MinionPool.Rent(m));
+
+                this.ownHero = new Minion(prozis.enemyHero);
+                this.enemyHero = new Minion(prozis.ownHero);
+                this.ownWeapon = new Weapon(prozis.enemyWeapon);
+                this.enemyWeapon = new Weapon(prozis.ownWeapon);
+
+                this.ownHeroName = prozis.enemyHeroname;
+                this.enemyHeroName = prozis.heroname;
+                this.ownHeroStartClass = prozis.enemyHeroStartClass;
+                this.enemyHeroStartClass = prozis.ownHeroStartClass;
+
+                this.anzTamsin = this.ownHero.enchs.Contains(CardDB.cardIDEnum.SW_091t5);
+
+                this.enemyAnzCards = Handmanager.Instance.anzcards;
+                this.owncarddraw = p.enemycarddraw;
+                this.enemycarddraw = p.owncarddraw;
+
+                this.ownAbilityReady = true;
+                this.enemyHeroAblility = new Handmanager.Handcard { card = prozis.heroAbility, manacost = prozis.ownHeroPowerCost };
+                this.ownHeroAblility = new Handmanager.Handcard { card = prozis.enemyAbility, manacost = prozis.enemyHeroPowerCost };
+                this.enemyAbilityReady = false;
+                this.bestEnemyPlay = null;
+
+                this.enemyQuest.Copy(p.ownQuest);
+                this.ownQuest.Copy(p.enemyQuest);
+
+                this.anzOwnTaunt = p.anzEnemyTaunt;
+                this.anzEnemyTaunt = p.anzOwnTaunt;
+
+                this.enemyspellpower = p.spellpower;
+                this.enemyspellpowerStarted = p.spellpowerStarted;
+                this.spellpower = p.enemyspellpower;
+                this.spellpowerStarted = p.enemyspellpowerStarted;
+
+                if (this.ownHero.enchs.Contains(CardDB.cardIDEnum.SW_450t4e))
+                {
+                    this.spellpower += 3;
+                }
+
+                this.anzDark = 0;
+                this.anzTamsinroame = 0;
+                this.ownHeroPowerExtraDamage = 0;
+                this.ownHero.numAttacksThisTurn = 0;
+
+                this.enemySecretCount = p.ownSecretsIDList.Count;
+
+                // Recalculate own auras from transposed minions
+                foreach (Minion m in p.ownMinions)
+                {
+                    switch (m.handcard.card.nameCN)
+                    {
+                        case CardDB.cardNameCN.黑眼:
+                            anzDark++;
+                            break;
+                        case CardDB.cardNameCN.塔姆辛罗姆:
+                            anzTamsinroame++;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                this.ownMaxMana = p.ownMaxMana;
+                this.enemyMaxMana = p.enemyMaxMana;
+
+                // Reuse ownMinions list: clear and repopulate from pool
+                this.ownMinions.Clear();
+                foreach (var m in p.ownMinions)
+                    this.ownMinions.Add(MinionPool.Rent(m));
+                this.enemyMinions.Clear();
+                foreach (var m in p.enemyMinions)
+                    this.enemyMinions.Add(MinionPool.Rent(m));
+
+                // Reuse owncards list: repopulate from pool
+                this.owncards.Clear();
+                foreach (var hc in p.owncards)
+                    this.owncards.Add(HandcardPool.Rent(hc));
+
+                this.ownHero = new Minion(p.ownHero);
+                this.enemyHero = new Minion(p.enemyHero);
+                this.ownWeapon = new Weapon(p.ownWeapon);
+                this.enemyWeapon = new Weapon(p.enemyWeapon);
+
+                this.ownHeroName = p.ownHeroName;
+                this.enemyHeroName = p.enemyHeroName;
+                this.ownHeroStartClass = p.ownHeroStartClass;
+                this.enemyHeroStartClass = p.enemyHeroStartClass;
+
+                this.owncarddraw = p.owncarddraw;
+                this.enemycarddraw = p.enemycarddraw;
+                this.enemyAnzCards = p.enemyAnzCards;
+
+                this.ownAbilityReady = p.ownAbilityReady;
+                this.enemyAbilityReady = p.enemyAbilityReady;
+                this.ownHeroAblility = new Handmanager.Handcard(p.ownHeroAblility);
+                this.enemyHeroAblility = new Handmanager.Handcard(p.enemyHeroAblility);
+
+                this.ownQuest.Copy(p.ownQuest);
+                this.enemyQuest.Copy(p.enemyQuest);
+                this.sideQuest.Copy(p.sideQuest);
+
+                this.anzEnemyTaunt = p.anzEnemyTaunt;
+                this.anzOwnTaunt = p.anzOwnTaunt;
+
+                this.spellpower = p.spellpower;
+                this.spellpowerStarted = p.spellpowerStarted;
+                this.enemyspellpower = p.enemyspellpower;
+                this.enemyspellpowerStarted = p.enemyspellpowerStarted;
+
+                this.anzDark = p.anzDark;
+                this.anzTamsinroame = p.anzTamsinroame;
+                this.ownHeroPowerExtraDamage = p.ownHeroPowerExtraDamage;
+                this.enemySecretCount = p.enemySecretCount;
+            }
+
+            // playactions: reuse list
+            this.playactions.Clear();
+            this.playactions.AddRange(p.playactions);
+            this.complete = false;
+
+            this.attackFaceHP = p.attackFaceHP;
+            this.lostDamage = p.lostDamage;
+            this.lostWeaponDamage = p.lostWeaponDamage;
+            this.lostHeal = p.lostHeal;
+
+            this.mobsplayedThisTurn = p.mobsplayedThisTurn;
+            this.startedWithMobsPlayedThisTurn = p.startedWithMobsPlayedThisTurn;
+            this.spellsplayedSinceRecalc = p.spellsplayedSinceRecalc;
+            this.secretsplayedSinceRecalc = p.secretsplayedSinceRecalc;
+            this.optionsPlayedThisTurn = p.optionsPlayedThisTurn;
+            this.cardsPlayedThisTurn = p.cardsPlayedThisTurn;
+            this.enemyOptionsDoneThisTurn = p.enemyOptionsDoneThisTurn;
+            this.ueberladung = p.ueberladung;
+            this.lockedMana = p.lockedMana;
+            this.libram = p.libram;
+            this.ownDeckSize = p.ownDeckSize;
+            this.enemyDeckSize = p.enemyDeckSize;
+            this.ownHeroFatigue = p.ownHeroFatigue;
+            this.enemyHeroFatigue = p.enemyHeroFatigue;
+
+            this.LothraxionsPower = p.LothraxionsPower;
+
+            this.ownHeroHpStarted = p.ownHeroHpStarted;
+            this.ownWeaponAttackStarted = p.ownWeaponAttackStarted;
+            this.ownCardsCountStarted = p.ownCardsCountStarted;
+            this.enemyCardsCountStarted = p.enemyCardsCountStarted;
+            this.ownMobsCountStarted = p.ownMobsCountStarted;
+            this.enemyMobsCountStarted = p.enemyMobsCountStarted;
+            this.nextSecretThisTurnCost0 = p.nextSecretThisTurnCost0;
+            this.nextSpellThisTurnCost0 = p.nextSpellThisTurnCost0;
+            this.nextMurlocThisTurnCostHealth = p.nextMurlocThisTurnCostHealth;
+            this.nextAnyCardThisTurnCostEnemyHealth = p.nextAnyCardThisTurnCostEnemyHealth;
+
+            this.blackwaterpirate = p.blackwaterpirate;
+            this.blackwaterpirateStarted = p.blackwaterpirateStarted;
+            this.nextSpellThisTurnCostHealth = p.nextSpellThisTurnCostHealth;
+            this.embracetheshadow = p.embracetheshadow;
+            this.ownCrystalCore = p.ownCrystalCore;
+            this.ownMinionsInDeckCost0 = p.ownMinionsInDeckCost0;
+            this.playedPreparation = p.playedPreparation;
+
+            this.winzigebeschwoererin = p.winzigebeschwoererin;
+            this.startedWithWinzigebeschwoererin = p.startedWithWinzigebeschwoererin;
+            this.winRazormaneBattleguard = p.winRazormaneBattleguard;
+            this.startedRazormaneBattleguard = p.startedRazormaneBattleguard;
+            this.managespenst = p.managespenst;
+            this.startedWithManagespenst = p.startedWithManagespenst;
+            this.ownSpelsCostMore = p.ownSpelsCostMore;
+            this.ownSpelsCostMoreAtStart = p.ownSpelsCostMoreAtStart;
+            this.ownMinionsCostMore = p.ownMinionsCostMore;
+            this.ownMinionsCostMoreAtStart = p.ownMinionsCostMoreAtStart;
+            this.ownDRcardsCostMore = p.ownDRcardsCostMore;
+            this.ownDRcardsCostMoreAtStart = p.ownDRcardsCostMoreAtStart;
+            this.beschwoerungsportal = p.beschwoerungsportal;
+            this.startedWithbeschwoerungsportal = p.startedWithbeschwoerungsportal;
+            this.myCardsCostLess = p.myCardsCostLess;
+            this.startedWithmyCardsCostLess = p.startedWithmyCardsCostLess;
+            this.anzOwnScargil = p.anzOwnScargil;
+            this.anzOwnAviana = p.anzOwnAviana;
+            this.anzOwnCloakedHuntress = p.anzOwnCloakedHuntress;
+            this.anzOwnRazorfenRockstar = p.anzOwnRazorfenRockstar;
+            this.anzOwnXB931Housekeeper = p.anzOwnXB931Housekeeper;
+            this.anzOwnPopGarThePutrid = p.anzOwnPopGarThePutrid;
+
+            this.nerubarweblord = p.nerubarweblord;
+            this.startedWithnerubarweblord = p.startedWithnerubarweblord;
+            this.startedWithDamagedMinions = p.startedWithDamagedMinions;
+            this.loatheb = p.loatheb;
+            this.needGraveyard = p.needGraveyard;
+
+            // diedMinions: only allocate if needed
+            if (p.needGraveyard && p.diedMinions != null)
+            {
+                if (this.diedMinions == null)
+                    this.diedMinions = new List<GraveYardItem>(p.diedMinions);
+                else
+                {
+                    this.diedMinions.Clear();
+                    this.diedMinions.AddRange(p.diedMinions);
+                }
+            }
+            else
+            {
+                this.diedMinions = null;
+            }
+
+            this.OwnLastDiedMinion = p.OwnLastDiedMinion;
+
+            // aura counters
+            this.anzOwnRaidleader = p.anzOwnRaidleader;
+            this.anzEnemyRaidleader = p.anzEnemyRaidleader;
+            this.anzOwnVessina = p.anzOwnVessina;
+            this.anzEnemyVessina = p.anzEnemyVessina;
+            this.anzOwnWarhorseTrainer = p.anzOwnWarhorseTrainer;
+            this.anzEnemyWarhorseTrainer = p.anzEnemyWarhorseTrainer;
+            this.anzOwnMalGanis = p.anzOwnMalGanis;
+            this.anzEnemyMalGanis = p.anzEnemyMalGanis;
+            this.anzOwnBolfRamshield = p.anzOwnBolfRamshield;
+            this.anzEnemyBolfRamshield = p.anzEnemyBolfRamshield;
+            this.anzOwnHorsemen = p.anzOwnHorsemen;
+            this.anzEnemyHorsemen = p.anzEnemyHorsemen;
+            this.anzOwnAnimatedArmor = p.anzOwnAnimatedArmor;
+            this.anzOwnExtraAngrHp = p.anzOwnExtraAngrHp;
+            this.anzEnemyExtraAngrHp = p.anzEnemyExtraAngrHp;
+            this.anzEnemyAnimatedArmor = p.anzEnemyAnimatedArmor;
+            this.anzMoorabi = p.anzMoorabi;
+            this.anzOwnPiratesStarted = p.anzOwnPiratesStarted;
+            this.anzOwnMurlocStarted = p.anzOwnMurlocStarted;
+            this.anzOwnElementStarted = p.anzOwnElementStarted;
+            this.anzOwnDraeneiStarted = p.anzOwnDraeneiStarted;
+            this.anzOwnTreantStarted = p.anzOwnTreantStarted;
+            this.anzOwnStormwindChamps = p.anzOwnStormwindChamps;
+            this.anzEnemyStormwindChamps = p.anzEnemyStormwindChamps;
+            this.anzOwnTundrarhino = p.anzOwnTundrarhino;
+            this.anzEnemyTundrarhino = p.anzEnemyTundrarhino;
+            this.anzOwnMrSmite = p.anzOwnMrSmite;
+            this.anzEnemyMrSmite = p.anzEnemyMrSmite;
+            this.anzOwnTimberWolfs = p.anzOwnTimberWolfs;
+            this.anzEnemyTimberWolfs = p.anzEnemyTimberWolfs;
+            this.anzOwnMurlocWarleader = p.anzOwnMurlocWarleader;
+            this.anzEnemyMurlocWarleader = p.anzEnemyMurlocWarleader;
+            this.anzAcidmaw = p.anzAcidmaw;
+            this.anzOwnGrimscaleOracle = p.anzOwnGrimscaleOracle;
+            this.anzEnemyGrimscaleOracle = p.anzEnemyGrimscaleOracle;
+            this.anzOwnShadowfiend = p.anzOwnShadowfiend;
+            this.anzOwnAuchenaiSoulpriest = p.anzOwnAuchenaiSoulpriest;
+            this.anzEnemyAuchenaiSoulpriest = p.anzEnemyAuchenaiSoulpriest;
+            this.anzOwnSouthseacaptain = p.anzOwnSouthseacaptain;
+            this.anzEnemySouthseacaptain = p.anzEnemySouthseacaptain;
+            this.anzOwnMechwarper = p.anzOwnMechwarper;
+            this.anzOwnMechwarperStarted = p.anzOwnMechwarperStarted;
+            this.anzEnemyMechwarper = p.anzEnemyMechwarper;
+            this.anzEnemyMechwarperStarted = p.anzEnemyMechwarperStarted;
+            this.anzOwnChromaggus = p.anzOwnChromaggus;
+            this.anzEnemyChromaggus = p.anzEnemyChromaggus;
+            this.anzOwnDragonConsort = p.anzOwnDragonConsort;
+            this.anzOwnMurlocConsort = p.anzOwnMurlocConsort;
+            this.anzOwnDragonConsortStarted = p.anzOwnDragonConsortStarted;
+            this.ownElementCost = p.ownElementCost;
+            this.ownElementCostStarted = p.ownElementCostStarted;
+            this.ownBeastCostLessOnce = p.ownBeastCostLessOnce;
+            this.ownBeastCostLessOnceStarted = p.ownBeastCostLessOnceStarted;
+            this.ownAbilityFreezesTarget = p.ownAbilityFreezesTarget;
+            this.enemyAbilityFreezesTarget = p.enemyAbilityFreezesTarget;
+            this.ownDemonCostLessOnce = p.ownDemonCostLessOnce;
+            this.ownHeroPowerCostLessOnce = p.ownHeroPowerCostLessOnce;
+            this.ownHeroPowerCostLessTwice = p.ownHeroPowerCostLessTwice;
+            this.enemyHeroPowerCostLessOnce = p.enemyHeroPowerCostLessOnce;
+            this.enemyHeroPowerExtraDamage = p.enemyHeroPowerExtraDamage;
+            this.ownHeroPowerAllowedQuantity = p.ownHeroPowerAllowedQuantity;
+            this.enemyHeroPowerAllowedQuantity = p.enemyHeroPowerAllowedQuantity;
+            this.anzUsedOwnHeroPower = p.anzUsedOwnHeroPower;
+            this.anzUsedEnemyHeroPower = p.anzUsedEnemyHeroPower;
+            this.ownMinionsDiedTurn = p.ownMinionsDiedTurn;
+            this.enemyMinionsDiedTurn = p.enemyMinionsDiedTurn;
+            this.feugenDead = p.feugenDead;
+            this.stalaggDead = p.stalaggDead;
+            this.weHavePlayedMillhouseManastorm = p.weHavePlayedMillhouseManastorm;
+            this.ownSpiritclaws = p.ownSpiritclaws;
+            this.enemySpiritclaws = p.enemySpiritclaws;
+            this.doublepriest = p.doublepriest;
+            this.enemydoublepriest = p.enemydoublepriest;
+            this.ownMistcaller = p.ownMistcaller;
+            this.lockandload = p.lockandload;
+            this.stampede = p.stampede;
+            this.ownBaronRivendare = p.ownBaronRivendare;
+            this.enemyBaronRivendare = p.enemyBaronRivendare;
+            this.ownBrannBronzebeard = p.ownBrannBronzebeard;
+            this.enemyBrannBronzebeard = p.enemyBrannBronzebeard;
+            this.ownTurnEndEffectsTriggerTwice = p.ownTurnEndEffectsTriggerTwice;
+            this.enemyTurnEndEffectsTriggerTwice = p.enemyTurnEndEffectsTriggerTwice;
+            this.ownFandralStaghelm = p.ownFandralStaghelm;
+            this.weHaveSteamwheedleSniper = p.weHaveSteamwheedleSniper;
+            this.enemyHaveSteamwheedleSniper = p.enemyHaveSteamwheedleSniper;
+
+            this.tempanzOwnCards = this.owncards.Count;
+            this.tempanzEnemyCards = this.enemyAnzCards;
+            this.value = int.MinValue;
+
+            // 法术派系 (reuse dictionary)
+            this.ownSpellSchoolCounts.Clear();
+            foreach (var kvp in p.ownSpellSchoolCounts)
+            {
+                this.ownSpellSchoolCounts[kvp.Key] = kvp.Value;
+            }
+
+            this.ownElizagoreblade = p.ownElizagoreblade;
+            this.ownSunscreenTurns = p.ownSunscreenTurns;
+            this.enemySunscreenTurns = p.enemySunscreenTurns;
+            this.ownHeroPowerCanBeUsedMultipleTimes = p.ownHeroPowerCanBeUsedMultipleTimes;
+            this.excavationCount = p.excavationCount;
+            this.allExcavationCount = p.allExcavationCount;
+            this.nextBattlecryTriggers = p.nextBattlecryTriggers;
+            this.ownLegionInvasion = p.ownLegionInvasion;
+            this.enemyLegionInvasion = p.enemyLegionInvasion;
+            this.ownAmitusThePeacekeeper = p.ownAmitusThePeacekeeper;
+            this.enemyAmitusThePeacekeeper = p.enemyAmitusThePeacekeeper;
+            this.nextElementalReduction = p.nextElementalReduction;
+            this.thisTurnNextElementalReduction = p.thisTurnNextElementalReduction;
+            this.lastPlayedCardCost = p.lastPlayedCardCost;
+            this.playedElementalThisTurn = p.playedElementalThisTurn;
+
+            this.name = p.name;
+        }
+
+        /// <summary>
+        /// 将 Playfield 实例重置为可复用的空状态。
+        /// 清除所有列表和对象引用以便安全地归还对象池。
+        /// 注意：此方法不会将列表置为 null，只会 Clear()，以便 CopyFrom 可以复用它。
+        /// </summary>
+        public void ClearForPool()
+        {
+            // 将 Minion 对象归还 MinionPool，再清空列表
+            foreach (var m in this.ownMinions) MinionPool.Return(m);
+            this.ownMinions.Clear();
+            foreach (var m in this.enemyMinions) MinionPool.Return(m);
+            this.enemyMinions.Clear();
+
+            // 将 Handcard 对象归还 HandcardPool，再清空列表
+            foreach (var hc in this.owncards) HandcardPool.Return(hc);
+            this.owncards.Clear();
+
+            // 清空其余列表（保留分配的对象）
+            this.nextPlayfields.Clear();
+            this.playactions.Clear();
+            this.ownSecretsIDList.Clear();
+            this.enemySecretList.Clear();
+            this.pIdHistory.Clear();
+            this.ownGraveyard.Clear();
+            this.LurkersDB.Clear();
+            this.enemyHand.Clear();
+            this.ownDeck.Clear();
+            this.cardsToReturnAtEndOfTurn.Clear();
+            this.ownPlayedDeathrattleCards.Clear();
+            this.enemyPlayedDeathrattleCards.Clear();
+            this.ownMinionsPlayedThisGame.Clear();
+            this.sigilsToTriggerOnOwnTurnStart.Clear();
+
+            // 重置字典
+            if (this.ownSpellSchoolCounts != null)
+                this.ownSpellSchoolCounts.Clear();
+
+            // 释放对象引用
+            this.bestEnemyPlay = null;
+            this.endTurnState = null;
+            this.diedMinions = null;
+            this.enemyCardsOut = null;
+            this.tempTrigger = new triggerCounter();
+
+            // 重置数值字段
+            this.value = int.MinValue;
+            this.hashcode = 0;
+            this.complete = false;
+            this.totalAngr = -1;
+            this.enemyTotalAngr = -1;
+            this.evaluatePenality = 0;
+            this.ruleWeight = 0;
+            this.rulesUsed = "";
+            this.name = "";
+            this.enemyGuessDeck = "";
+            this.print = false;
+            this.logging = false;
+
+            // 重置光环计数
+            this.anzOwnRaidleader = 0;
+            this.anzEnemyRaidleader = 0;
+            this.anzOwnVessina = 0;
+            this.anzEnemyVessina = 0;
+            this.anzOwnStormwindChamps = 0;
+            this.anzEnemyStormwindChamps = 0;
+            this.anzOwnWarhorseTrainer = 0;
+            this.anzEnemyWarhorseTrainer = 0;
+            this.anzOwnTundrarhino = 0;
+            this.anzEnemyTundrarhino = 0;
+            this.anzOwnMrSmite = 0;
+            this.anzEnemyMrSmite = 0;
+            this.anzOwnTimberWolfs = 0;
+            this.anzEnemyTimberWolfs = 0;
+            this.anzOwnMurlocWarleader = 0;
+            this.anzEnemyMurlocWarleader = 0;
+            this.anzAcidmaw = 0;
+            this.anzOwnGrimscaleOracle = 0;
+            this.anzEnemyGrimscaleOracle = 0;
+            this.anzOwnShadowfiend = 0;
+            this.anzOwnAuchenaiSoulpriest = 0;
+            this.anzEnemyAuchenaiSoulpriest = 0;
+            this.anzOwnSouthseacaptain = 0;
+            this.anzEnemySouthseacaptain = 0;
+            this.anzOwnMalGanis = 0;
+            this.anzEnemyMalGanis = 0;
+            this.anzOwnPiratesStarted = 0;
+            this.anzOwnMurlocStarted = 0;
+            this.anzOwnElementStarted = 0;
+            this.anzOwnDraeneiStarted = 0;
+            this.anzOwnTreantStarted = 0;
+            this.anzOwnChromaggus = 0;
+            this.anzEnemyChromaggus = 0;
+            this.anzOwnDragonConsort = 0;
+            this.anzOwnMurlocConsort = 0;
+            this.anzOwnDragonConsortStarted = 0;
+            this.ownElementCost = 0;
+            this.ownElementCostStarted = 0;
+            this.ownBeastCostLessOnce = 0;
+            this.ownBeastCostLessOnceStarted = 0;
+            this.anzOwnBolfRamshield = 0;
+            this.anzEnemyBolfRamshield = 0;
+            this.anzOwnHorsemen = 0;
+            this.anzEnemyHorsemen = 0;
+            this.anzOwnAnimatedArmor = 0;
+            this.anzEnemyAnimatedArmor = 0;
+            this.anzMoorabi = 0;
+            this.anzDark = 0;
+            this.anzTamsinroame = 0;
+            this.anzOldWoman = 0;
+            this.anzTamsin = false;
+            this.anzUsedOwnHeroPower = 0;
+            this.anzUsedEnemyHeroPower = 0;
+            this.anzOwnExtraAngrHp = 0;
+            this.anzEnemyExtraAngrHp = 0;
+            this.anzOwnMechwarper = 0;
+            this.anzOwnMechwarperStarted = 0;
+            this.anzEnemyMechwarper = 0;
+            this.anzEnemyMechwarperStarted = 0;
+            this.anzOgOwnCThun = 0;
+            this.anzOgOwnCThunHpBonus = 0;
+            this.anzOgOwnCThunAngrBonus = 0;
+            this.anzOgOwnCThunTaunt = 0;
+            this.anzOwnJadeGolem = 0;
+            this.anzEnemyJadeGolem = 0;
+            this.anzOwnElementalsThisTurn = 0;
+            this.anzOwnElementalsLastTurn = 0;
+            this.anzEnemyTaunt = 0;
+            this.anzOwnTaunt = 0;
+            this.usedUndeadAllies = 0;
+            this.ownAbilityFreezesTarget = 0;
+            this.enemyAbilityFreezesTarget = 0;
+            this.ownHeroPowerCostLessOnce = 0;
+            this.enemyHeroPowerCostLessOnce = 0;
+            this.ownHeroPowerCostLessTwice = 0;
+            this.ownDemonCostLessOnce = 0;
+            this.ownHeroPowerExtraDamage = 0;
+            this.enemyHeroPowerExtraDamage = 0;
+            this.ownHeroPowerAllowedQuantity = 1;
+            this.enemyHeroPowerAllowedQuantity = 1;
+            this.useNature = 0;
+            this.blackwaterpirate = 0;
+            this.blackwaterpirateStarted = 0;
+            this.embracetheshadow = 0;
+            this.ownCrystalCore = 0;
+            this.ownMinionsInDeckCost0 = false;
+            this.LothraxionsPower = false;
+            this.ownMinionsDiedTurn = 0;
+            this.enemyMinionsDiedTurn = 0;
+            this.feugenDead = false;
+            this.stalaggDead = false;
+            this.weHavePlayedMillhouseManastorm = false;
+            this.weHaveSteamwheedleSniper = false;
+            this.enemyHaveSteamwheedleSniper = false;
+            this.ownSpiritclaws = false;
+            this.enemySpiritclaws = false;
+            this.needGraveyard = false;
+            this.doublepriest = 0;
+            this.enemydoublepriest = 0;
+            this.ownMistcaller = 0;
+            this.lockandload = 0;
+            this.stampede = 0;
+            this.ownBaronRivendare = 0;
+            this.enemyBaronRivendare = 0;
+            this.ownBrannBronzebeard = 0;
+            this.enemyBrannBronzebeard = 0;
+            this.ownTurnEndEffectsTriggerTwice = 0;
+            this.enemyTurnEndEffectsTriggerTwice = 0;
+            this.ownFandralStaghelm = 0;
+            this.tempanzOwnCards = 0;
+            this.tempanzEnemyCards = 0;
+            this.isOwnTurn = true;
+            this.turnCounter = 0;
+            this.attacked = false;
+            this.attackFaceHP = 15;
+            this.ownController = 0;
+            this.guessingHeroHP = 30;
+            this.doDirtyTts = 100000;
+            this.mana = 0;
+            this.manaTurnEnd = 0;
+            this.enemySecretCount = 0;
+            this.owncarddraw = 0;
+            this.enemycarddraw = 0;
+            this.enemyAnzCards = 0;
+            this.libram = 0;
+            this.spellpower = 0;
+            this.spellpowerStarted = 0;
+            this.enemyspellpower = 0;
+            this.enemyspellpowerStarted = 0;
+            this.wehaveCounterspell = 0;
+            this.lethlMissing = 1000;
+            this.nextSecretThisTurnCost0 = false;
+            this.playedPreparation = false;
+            this.nextSpellThisTurnCost0 = false;
+            this.nextMurlocThisTurnCostHealth = false;
+            this.nextSpellThisTurnCostHealth = false;
+            this.nextAnyCardThisTurnCostEnemyHealth = false;
+            this.winzigebeschwoererin = 0;
+            this.startedWithWinzigebeschwoererin = 0;
+            this.winRazormaneBattleguard = 0;
+            this.startedRazormaneBattleguard = 0;
+            this.managespenst = 0;
+            this.startedWithManagespenst = 0;
+            this.ownMinionsCostMore = 0;
+            this.ownMinionsCostMoreAtStart = 0;
+            this.ownSpelsCostMore = 0;
+            this.ownSpelsCostMoreAtStart = 0;
+            this.ownDRcardsCostMore = 0;
+            this.ownDRcardsCostMoreAtStart = 0;
+            this.beschwoerungsportal = 0;
+            this.startedWithbeschwoerungsportal = 0;
+            this.myCardsCostLess = 0;
+            this.startedWithmyCardsCostLess = 0;
+            this.anzOwnAviana = 0;
+            this.anzOwnScargil = 0;
+            this.anzOwnCloakedHuntress = 0;
+            this.anzOwnRazorfenRockstar = 0;
+            this.anzOwnXB931Housekeeper = 0;
+            this.anzOwnPopGarThePutrid = 0;
+            this.anzEnemyPopGarThePutrid = 0;
+            this.nerubarweblord = 0;
+            this.startedWithnerubarweblord = 0;
+            this.startedWithDamagedMinions = false;
+            this.ownWeaponAttackStarted = 0;
+            this.ownMobsCountStarted = 0;
+            this.ownCardsCountStarted = 0;
+            this.enemyMobsCountStarted = 0;
+            this.enemyCardsCountStarted = 0;
+            this.ownHeroHpStarted = 30;
+            this.enemyHeroHpStarted = 30;
+            this.mobsplayedThisTurn = 0;
+            this.startedWithMobsPlayedThisTurn = 0;
+            this.spellsplayedSinceRecalc = 0;
+            this.secretsplayedSinceRecalc = 0;
+            this.optionsPlayedThisTurn = 0;
+            this.cardsPlayedThisTurn = 0;
+            this.ueberladung = 0;
+            this.lockedMana = 0;
+            this.enemyOptionsDoneThisTurn = 0;
+            this.ownMaxResources = 10;
+            this.ownMaxHandSize = 10;
+            this.enemyMaxResources = 10;
+            this.enemyMaxHandSize = 10;
+            this.ownMaxMana = 0;
+            this.enemyMaxMana = 0;
+            this.lostDamage = 0;
+            this.lostHeal = 0;
+            this.lostWeaponDamage = 0;
+            this.ownDeckSize = 30;
+            this.enemyDeckSize = 30;
+            this.ownHeroFatigue = 0;
+            this.enemyHeroFatigue = 0;
+            this.ownAbilityReady = false;
+            this.enemyAbilityReady = false;
+            this.shadowmadnessed = 0;
+            this.enemyHeroTurnStartedHp = 0;
+            this.ownHeroTurnStartedHp = 0;
+            this.ownElizagoreblade = 0;
+            this.ownSunscreenTurns = 0;
+            this.enemySunscreenTurns = 0;
+            this.ownHeroPowerCanBeUsedMultipleTimes = false;
+            this.excavationCount = 0;
+            this.allExcavationCount = 0;
+            this.nextBattlecryTriggers = 1;
+            this.ownRelicDoubleCast = false;
+            this.enemyRelicDoubleCast = false;
+            this.nextMinionBecomesFiveFive = false;
+            this.tempSpellPower = 0;
+            this.nextChooseOneHasBothEffects = false;
+            this.parrotSanctuaryCount = 0;
+            this.lastDrawnCardEntityID = -1;
+            this.ownLegionInvasion = false;
+            this.enemyLegionInvasion = false;
+            this.ownAmitusThePeacekeeper = false;
+            this.enemyAmitusThePeacekeeper = false;
+            this.damageDealtToEnemyHeroThisTurn = 0;
+            this.nextElementalReduction = 0;
+            this.thisTurnNextElementalReduction = 0;
+            this.lastPlayedCardCost = 0;
+            this.playedElementalThisTurn = false;
+            this.ownMinionsPlayedThisGame.Clear();
+            this.ownElementalsPlayedThisTurn = 0;
+            this.ownMinionStartCount = 0;
+            this.enemyMinionStartCount = 0;
+            this.healOrDamageTimes = 0;
+            this.healTimes = 0;
+            this.setMankrik = false;
+            this.anzSolor = false;
+            this.nextEntity = 70;
+            this.pID = 0;
+            this.isLethalCheck = false;
+            this.enemyTurnsCount = 0;
+            this.patchesInDeck = true;
+            this.AnzSoulFragments = 0;
+            this.ownSecretsIDList.Clear();
+            this.enemySecretList.Clear();
+            this.useSecretsPlayAround = true;
+            this.loatheb = false;
+            this.loathebEffect = 0;
         }
 
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,7 @@ namespace HREngine.Bots
             foreach (Minion m in p.enemyMinions)
             {
                 p.minionSetHealthtoX(m, 1);
-                if (m.Hp == 1 && !m.divineshild)
+                if (m.Hp == 1 && !m.divineShield)
                 {
                     p.minionGetTempBuff(own, m.Angr, 0);
                 }

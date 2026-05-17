@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
             int dmg = (ownplay) ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
             bool summondemon = false;
 
-            if (!target.isHero && dmg >= target.Hp && !target.divineshild && !target.immune)
+            if (!target.isHero && dmg >= target.Hp && !target.divineShield && !target.immune)
             {
                 summondemon = true;
             }

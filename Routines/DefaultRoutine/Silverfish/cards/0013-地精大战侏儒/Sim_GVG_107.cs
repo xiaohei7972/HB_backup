@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 
             foreach (Minion m in temp)
             {
-                if (m.entitiyID == own.entitiyID) continue;
+                if (m.entityID == own.entityID) continue;
                 if (!m.taunt)
                 {
                     m.taunt = true;

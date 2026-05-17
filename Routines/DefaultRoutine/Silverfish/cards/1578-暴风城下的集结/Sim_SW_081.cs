@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -35,7 +35,7 @@ namespace HREngine.Bots
                     p.drawACard(deckCard, own.own, false);
                     Helpfunctions.Instance.ErrorLog("瓦里安，暴风城国王抽" + deckMinion.nameCN + "？");
                     foundShield = true;
-                    own.divineshild = true;
+                    own.divineShield = true;
                     p.evaluatePenality -= 10;
                 }
                 if (deckMinion.tank && !foundTank)

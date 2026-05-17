@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
 			{
 				int damage = ownplay ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
 				p.minionGetDamageOrHeal(target, damage);
-				if (target.Hp <= damage && !target.divineshild)
+				if (target.Hp <= damage && !target.divineShield)
 				{
 					p.drawACard(p.handleExcavation().cardIDenum, ownplay, true);
 				}

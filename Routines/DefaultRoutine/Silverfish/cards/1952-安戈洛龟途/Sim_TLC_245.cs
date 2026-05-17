@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
 			}
 			if (choice == 2)
 			{
-				own.divineshild = true;
+				own.divineShield = true;
 			}
 			if (choice == 3)
 			{

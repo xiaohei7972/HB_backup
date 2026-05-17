@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,8 +19,8 @@ namespace HREngine.Bots
 				List<Minion> minions = new List<Minion>(attacker.own ? p.enemyMinions : p.ownMinions);
 				foreach (Minion minion in minions)
 				{
-					if (minion.entitiyID == defender.entitiyID) continue;
-					if (!defender.divineshild)
+					if (minion.entityID == defender.entityID) continue;
+					if (!defender.divineShield)
 					{
 						if (attacker.poisonous)
 						{

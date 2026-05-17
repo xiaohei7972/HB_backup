@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace HREngine.Bots
         // 当友方随从攻击时触发此方法
         public override void onMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
         {
-            if (triggerEffectMinion.entitiyID != attacker.entitiyID && attacker.own && RaceUtils.IsRaceOrAll(attacker.handcard.card.race, CardDB.Race.PIRATE))
+            if (triggerEffectMinion.entityID != attacker.entityID && attacker.own && RaceUtils.IsRaceOrAll(attacker.handcard.card.race, CardDB.Race.PIRATE))
             {
                 p.minionGetBuffed(attacker, 1, 1);
             }

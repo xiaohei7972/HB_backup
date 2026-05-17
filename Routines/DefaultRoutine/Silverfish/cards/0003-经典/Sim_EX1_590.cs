@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
             int shilds = 0;
             foreach (Minion m in p.ownMinions)
             {
-                if (m.divineshild)
+                if (m.divineShield)
                 {
                     p.minionLosesDivineShield(m);
                     shilds++;
@@ -23,7 +23,7 @@ namespace HREngine.Bots
             }
             foreach (Minion m in p.enemyMinions)
             {
-                if (m.divineshild)
+                if (m.divineShield)
                 {
                     p.minionLosesDivineShield(m);
                     shilds++;

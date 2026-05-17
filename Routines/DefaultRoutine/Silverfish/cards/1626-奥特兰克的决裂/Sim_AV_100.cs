@@ -24,11 +24,20 @@ namespace HREngine.Bots
 
             if (check)
             {
-                CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.None);
-                List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
-                int pos = temp.Count;
-                p.callKid(kid, pos, (own.own) ? true : false);
-                p.callKid(kid, pos + 1, (own.own) ? true : false);
+                // 召唤牌库中2个法力值消耗小于该随从的随从
+                int summoned = 0;
+                foreach (KeyValuePair<CardDB.cardIDEnum, int> kvp in p.prozis.turnDeck)
+                {
+                    if (summoned >= 2) break;
+                    CardDB.Card deckMinion = CardDB.Instance.getCardDataFromID(kvp.Key);
+                    if (deckMinion.type == CardDB.cardtype.MOB)
+                    {
+                        List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
+                        int pos = temp.Count;
+                        p.callKid(deckMinion, pos, own.own);
+                        summoned++;
+                    }
+                }
             }
         }
 		

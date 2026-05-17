@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,7 +55,7 @@ namespace HREngine.Bots
                 case 2: // 强化
                     foreach (Minion m in triggerMinion.own ? p.ownMinions : p.enemyMinions)
                     {
-                        if (m.entitiyID != triggerMinion.entitiyID)
+                        if (m.entityID != triggerMinion.entityID)
                             p.minionGetBuffed(m, 2, 2);
                     }
                     break;

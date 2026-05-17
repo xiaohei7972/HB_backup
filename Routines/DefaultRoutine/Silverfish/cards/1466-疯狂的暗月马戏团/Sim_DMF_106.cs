@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 			List<Minion> temp= (own.own) ? p.ownMinions : p.enemyMinions;
 			foreach(Minion mnn in temp)
 			{
-				if( mnn.name == CardDB.cardNameEN.occultconjurer && own.entitiyID != mnn.entitiyID && mnn.playedThisTurn)
+				if( mnn.name == CardDB.cardNameEN.occultconjurer && own.entityID != mnn.entityID && mnn.playedThisTurn)
 				{
 					mnn.setMinionToMinion(own);
 					break;

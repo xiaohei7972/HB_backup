@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,14 +24,14 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 2, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 2, 0);
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 2, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 2, 0);
                 }
             }
 
@@ -43,14 +43,14 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -2, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -2, 0);
                 }
             }
             else
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -2, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -2, 0);
                 }
             }
         }

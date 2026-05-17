@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
                 p.anzOwnRaidleader++;
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
             else
@@ -24,7 +24,7 @@ namespace HREngine.Bots
                 p.anzEnemyRaidleader++;
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, 1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, 1, 0);
                 }
             }
 
@@ -36,7 +36,7 @@ namespace HREngine.Bots
                 p.anzOwnRaidleader--;
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
             else
@@ -44,7 +44,7 @@ namespace HREngine.Bots
                 p.anzEnemyRaidleader--;
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (own.entitiyID != m.entitiyID) p.minionGetBuffed(m, -1, 0);
+                    if (own.entityID != m.entityID) p.minionGetBuffed(m, -1, 0);
                 }
             }
         }

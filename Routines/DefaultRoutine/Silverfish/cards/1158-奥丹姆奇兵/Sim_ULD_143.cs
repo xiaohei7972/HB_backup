@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 			{
 				p.minionGetBuffed(target, 4, 4);
 
-				target.divineshild = true;
+				target.divineShield = true;
 				if (!target.taunt)
 				{
 					target.taunt = true;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
             {
                 if (mnn.zonepos == m.zonepos - 1 || mnn.zonepos == m.zonepos + 1)
                 {
-                    mnn.divineshild = true;
+                    mnn.divineShield = true;
                 }
             }
         }

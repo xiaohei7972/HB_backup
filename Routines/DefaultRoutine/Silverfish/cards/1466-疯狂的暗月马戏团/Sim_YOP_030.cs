@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -27,7 +27,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (m.name == CardDB.cardNameEN.felfiredeadeye && !m.silenced && own.entitiyID != m.entitiyID) another = true;
+                    if (m.name == CardDB.cardNameEN.felfiredeadeye && !m.silenced && own.entityID != m.entityID) another = true;
                 }
                 if (!another) p.ownHeroAblility.manacost++;
             }
@@ -35,7 +35,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (m.name == CardDB.cardNameEN.felfiredeadeye && !m.silenced && own.entitiyID != m.entitiyID) another = true;
+                    if (m.name == CardDB.cardNameEN.felfiredeadeye && !m.silenced && own.entityID != m.entityID) another = true;
                 }
                 if (!another) p.enemyHeroAblility.manacost++;
             }

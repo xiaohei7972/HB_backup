@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using log4net;
 using Triton.Bot;
 using Triton.Bot.Settings;
@@ -23,7 +24,7 @@ namespace AutoStop
 
         private UserControl _control;
         private DateTime _gameStartTime;
-        private System.Timers.Timer _concedeTimer;
+        private DispatcherTimer _concedeTimer;
         private int _originalEnfaceReward;
         private bool _facePenaltySwitched;
 
@@ -64,10 +65,10 @@ namespace AutoStop
         {
             Log.DebugFormat("[自动停止插件] 开启");
             GameEventManager.GameOver += GameEventManagerOnGameOver;
-            _concedeTimer = new System.Timers.Timer(10000);
-            _concedeTimer.Elapsed += ConcedeTimerOnElapsed;
-            _concedeTimer.AutoReset = true;
-            _concedeTimer.Enabled = true;
+            _concedeTimer = new DispatcherTimer();
+            _concedeTimer.Interval = TimeSpan.FromSeconds(10);
+            _concedeTimer.Tick += ConcedeTimerOnElapsed;
+            _concedeTimer.Start();
             AutoStopSettings.Instance.ReloadFile();
             _originalEnfaceReward = DefaultRoutineSettings.Instance.EnfaceReward;
             _facePenaltySwitched = false;
@@ -89,9 +90,8 @@ namespace AutoStop
             
             if (_concedeTimer != null)
             {
-                _concedeTimer.Enabled = false;
-                _concedeTimer.Elapsed -= ConcedeTimerOnElapsed;
-                _concedeTimer.Dispose();
+                _concedeTimer.Stop();
+                _concedeTimer.Tick -= ConcedeTimerOnElapsed;
                 _concedeTimer = null;
             }
         }
@@ -158,7 +158,7 @@ namespace AutoStop
             }
         }
 
-        private void ConcedeTimerOnElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void ConcedeTimerOnElapsed(object sender, EventArgs e)
         {
             try
             {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,11 +13,11 @@ namespace HREngine.Bots
 		{
             foreach (Minion m in p.ownMinions)
             {
-                if (m.entitiyID != own.entitiyID) p.minionGetDestroyed(m);
+                if (m.entityID != own.entityID) p.minionGetDestroyed(m);
             }
             foreach (Minion m in p.enemyMinions)
             {
-                if (m.entitiyID != own.entitiyID) p.minionGetDestroyed(m);
+                if (m.entityID != own.entityID) p.minionGetDestroyed(m);
             }
             p.discardCards(10, own.own);
 		}

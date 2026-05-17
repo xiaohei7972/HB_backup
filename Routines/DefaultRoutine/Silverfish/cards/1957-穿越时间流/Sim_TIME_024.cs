@@ -11,7 +11,18 @@ namespace HREngine.Bots
 	//<b>战吼：</b>在你的下个回合开始时，将本随从的攻击力变为无穷大！
 	class Sim_TIME_024 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			own.TAG_SCRIPT_DATA_NUM_1 = 1;
+		}
+
+		public override void onTurnStartTrigger(Playfield p, Minion triggerEffectMinion, bool turnStartOfOwner)
+		{
+			if (triggerEffectMinion.own == turnStartOfOwner && triggerEffectMinion.TAG_SCRIPT_DATA_NUM_1 == 1)
+			{
+				triggerEffectMinion.Angr = 99999;
+				triggerEffectMinion.TAG_SCRIPT_DATA_NUM_1 = 0;
+			}
+		}
 	}
 }

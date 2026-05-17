@@ -11,7 +11,36 @@ namespace HREngine.Bots
 	//你的<b>战吼</b>，<b>亡语</b>，英雄技能和回合结束效果会触发两次。
 	class Sim_TIME_064 : SimTemplate
 	{
-		
-		
+		public override void onAuraStarts(Playfield p, Minion own)
+		{
+			if (own.own)
+			{
+				p.ownBrannBronzebeard++;
+				p.ownBaronRivendare++;
+				p.ownTurnEndEffectsTriggerTwice++;
+			}
+			else
+			{
+				p.enemyBrannBronzebeard++;
+				p.enemyBaronRivendare++;
+				p.enemyTurnEndEffectsTriggerTwice++;
+			}
+		}
+
+		public override void onAuraEnds(Playfield p, Minion m)
+		{
+			if (m.own)
+			{
+				p.ownBrannBronzebeard--;
+				p.ownBaronRivendare--;
+				p.ownTurnEndEffectsTriggerTwice--;
+			}
+			else
+			{
+				p.enemyBrannBronzebeard--;
+				p.enemyBaronRivendare--;
+				p.enemyTurnEndEffectsTriggerTwice--;
+			}
+		}
 	}
 }

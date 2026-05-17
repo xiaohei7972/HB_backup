@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace HREngine.Bots
         public override void useTitanAbility(Playfield p, Minion triggerMinion, int titanAbilityNO, Minion target)
         {
             int skillUsedCount = 0;
-            var targetMinions = p.ownMinions.Where(m => m.entitiyID == triggerMinion.entitiyID).ToList();
+            var targetMinions = p.ownMinions.Where(m => m.entityID == triggerMinion.entityID).ToList();
             targetMinions.ForEach(m =>
             {
                 // 检查第一个技能是否已被使用

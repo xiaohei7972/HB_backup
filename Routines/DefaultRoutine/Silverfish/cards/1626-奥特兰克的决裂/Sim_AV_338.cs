@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +10,7 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
         {
 			p.minionGetBuffed(target, 2, 1);
-			if (target.divineshild == false) target.divineshild = true;
+			if (target.divineShield == false) target.divineShield = true;
 			target.lifesteal = true;
 			
 		}

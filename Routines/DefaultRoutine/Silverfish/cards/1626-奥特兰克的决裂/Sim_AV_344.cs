@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +9,7 @@ namespace HREngine.Bots
 		//在你召唤一个随从后，使其获得+2/+2。 持续3回合。
         public override void onMinionWasSummoned(Playfield p, Minion m, Minion summonedMinion)
         {
-            if (m.own == summonedMinion.own && m.entitiyID != summonedMinion.entitiyID)
+            if (m.own == summonedMinion.own && m.entityID != summonedMinion.entityID)
             {
                 p.minionGetBuffed(summonedMinion, 2, 2);
             }

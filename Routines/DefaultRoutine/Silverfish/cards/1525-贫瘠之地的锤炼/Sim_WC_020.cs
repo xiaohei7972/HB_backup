@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
             {
                 p.lockedMana++;
                 p.evaluatePenality += 5;
-                if(m.Hp <= dmg && !m.divineshild)
+                if(m.Hp <= dmg && !m.divineShield)
                 {
                     p.minionGetDamageOrHeal(m, dmg);
                 }

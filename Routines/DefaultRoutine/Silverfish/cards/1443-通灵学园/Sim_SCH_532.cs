@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
 			if (m.own == ownplay && m.Spellburst && hc.card.type == CardDB.cardtype.SPELL)
 			{
 				m.Spellburst = false;
-				if (!m.divineshild) { m.divineshild = true;  p.evaluatePenality -= 10; }
+				if (!m.divineShield) { m.divineShield = true;  p.evaluatePenality -= 10; }
 				else p.evaluatePenality += 10;
 			}
 		}

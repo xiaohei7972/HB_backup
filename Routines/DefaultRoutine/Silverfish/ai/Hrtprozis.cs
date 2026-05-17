@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -663,7 +663,7 @@ namespace HREngine.Bots
             else if (s.StartsWith("HERO_06")) return "druid";
             else if (s.StartsWith("HERO_07")) return "warlock";
             else if (s.StartsWith("HERO_08")) return "mage";
-            else if (s.StartsWith("HERO_09")) return "perist";
+            else if (s.StartsWith("HERO_09")) return "priest";
             else if (s.StartsWith("HERO_10")) return "demonhunter";
             else if (s.StartsWith("HERO_11")) return "deathknight";
 
@@ -1111,7 +1111,7 @@ namespace HREngine.Bots
             {
                 handcard = new Handmanager.Handcard(hc),
                 zonepos = id + 1,
-                entitiyID = hc.entity,
+                entityID = hc.entity,
                 Angr = hc.card.Attack,
                 Hp = hc.card.Health,
                 maxHp = hc.card.Health,
@@ -1130,7 +1130,7 @@ namespace HREngine.Bots
                 m.Ready = true;
                 m.charge = 1;
             }
-            if (hc.card.Shield) m.divineshild = true;
+            if (hc.card.Shield) m.divineShield = true;
             if (hc.card.poisonous) m.poisonous = true;
             if (hc.card.lifesteal) m.lifesteal = true;
             if (hc.card.reborn) m.reborn = true;
@@ -1160,7 +1160,7 @@ namespace HREngine.Bots
             {
                 ownHeroEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
             }
-            help.logg((this.heroname == HeroEnum.None ? this.heronameingame : this.heroname.ToString()) + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entitiyID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack + " " + this.enemyHero.stealth
+            help.logg((this.heroname == HeroEnum.None ? this.heronameingame : this.heroname.ToString()) + " " + this.ownHero.Hp + " " + this.ownHero.maxHp + " " + this.ownHero.armor + " " + this.ownHero.immuneWhileAttacking + " " + this.ownHero.immune + " " + this.ownHero.entityID + " " + this.ownHero.Ready + " " + this.ownHero.numAttacksThisTurn + " " + this.ownHero.frozen + " " + this.ownHero.Angr + " " + this.ownHero.tempAttack + " " + this.enemyHero.stealth
                 + ownHeroEnchs.ToString()
                 );
             help.logg("weapon: " + ownWeapon.Angr + " " + ownWeapon.Durability + " " + this.ownWeapon.card.nameCN + " " + this.ownWeapon.card.cardIDenum + " " + (this.ownWeapon.poisonous ? 1 : 0) + " " + (this.ownWeapon.lifesteal ? 1 : 0) + " " + this.ownWeapon.scriptNum1);
@@ -1182,7 +1182,7 @@ namespace HREngine.Bots
             {
                 enemyHeroEnchs.AppendFormat(" {0}", cardIDEnum.ToString());
             }
-            help.logg((this.enemyHeroname == HeroEnum.None ? this.enemyHeronameingame : this.enemyHeroname.ToString()) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entitiyID + " " + this.enemyHero.stealth + (enemyHeroEnchs.ToString()));
+            help.logg((this.enemyHeroname == HeroEnum.None ? this.enemyHeronameingame : this.enemyHeroname.ToString()) + " " + this.enemyHero.Hp + " " + this.enemyHero.maxHp + " " + this.enemyHero.armor + " " + this.enemyHero.frozen + " " + this.enemyHero.immune + " " + this.enemyHero.entityID + " " + this.enemyHero.stealth + (enemyHeroEnchs.ToString()));
             help.logg("weapon: " + this.enemyWeapon.Angr + " " + this.enemyWeapon.Durability + " " + this.enemyWeapon.card.nameCN + " " + this.enemyWeapon.card.cardIDenum + " " + (this.enemyWeapon.poisonous ? 1 : 0) + " " + (this.enemyWeapon.lifesteal ? 1 : 0) + " " + this.enemyWeapon.scriptNum1);
             help.logg("ability: " + "True" + " " + this.enemyAbility.cardIDenum);
             help.logg("fatigue: " + this.ownDeckSize + " " + this.ownHeroFatigue + " " + this.enemyDeckSize + " " + this.enemyHeroFatigue);
@@ -1194,13 +1194,13 @@ namespace HREngine.Bots
         /// <param name="minion">随从</param>
         public void printOwnMinions(StringBuilder stringBuilder, Minion minion)
         {
-            stringBuilder.AppendFormat("{0} ({1}/{2}) {3} zp: e: {4} A:{1} H:{2} mH:{5} rey:{6} natt:{7}", minion.handcard.card.nameCN, minion.Angr, minion.Hp, minion.zonepos, minion.entitiyID, minion.maxHp, minion.Ready, minion.numAttacksThisTurn);
+            stringBuilder.AppendFormat("{0} ({1}/{2}) {3} zp: e: {4} A:{1} H:{2} mH:{5} rey:{6} natt:{7}", minion.handcard.card.nameCN, minion.Angr, minion.Hp, minion.zonepos, minion.entityID, minion.maxHp, minion.Ready, minion.numAttacksThisTurn);
 
             if (minion.exhausted) stringBuilder.Append(" ex");
             if (minion.taunt) stringBuilder.Append(" tnt");
             if (minion.frozen) stringBuilder.Append(" frz");
             if (minion.silenced) stringBuilder.Append(" silenced");
-            if (minion.divineshild) stringBuilder.Append(" divshield");
+            if (minion.divineShield) stringBuilder.Append(" divshield");
             if (minion.Spellburst) stringBuilder.Append(" 法术迸发");
             if (minion.Frenzy) stringBuilder.Append(" 暴怒");
             if (minion.playedThisTurn) stringBuilder.Append(" ptt");
@@ -1238,9 +1238,9 @@ namespace HREngine.Bots
             if (minion.returnToHand >= 1) stringBuilder.AppendFormat(" retHand({0})", minion.returnToHand);
             if (minion.infest >= 1) stringBuilder.AppendFormat(" infest({0})", minion.infest);
             if (minion.deathrattle2 != null) stringBuilder.AppendFormat(" dethrl({0})", minion.deathrattle2.cardIDenum);
-            if (minion.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(minion.entitiyID))
+            if (minion.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(minion.entityID))
             {
-                stringBuilder.AppendFormat(" respawn:{0}:{1}", this.LurkersDB[minion.entitiyID].IDEnum, this.LurkersDB[minion.entitiyID].own);
+                stringBuilder.AppendFormat(" respawn:{0}:{1}", this.LurkersDB[minion.entityID].IDEnum, this.LurkersDB[minion.entityID].own);
             }
             if (minion.handcard.card.type == CardDB.cardtype.LOCATION) stringBuilder.AppendFormat(" cooldownTurn:{0}", minion.CooldownTurn);
             if (minion.enchs.Count > 0)
@@ -1264,12 +1264,12 @@ namespace HREngine.Bots
             {
                 StringBuilder minionStringBuilder = new StringBuilder(120);
                 printOwnMinions(minionStringBuilder, m);
-                // string mini = m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ")" + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
+                // string mini = m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ")" + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entityID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready + " natt:" + m.numAttacksThisTurn;
                 // if (m.exhausted) mini += " ex";
                 // if (m.taunt) mini += " tnt";
                 // if (m.frozen) mini += " frz";
                 // if (m.silenced) mini += " silenced";
-                // if (m.divineshild) mini += " divshield";
+                // if (m.divineShield) mini += " divshield";
                 // if (m.Spellburst) mini += " 法术迸发";
                 // if (m.Frenzy) mini += " 暴怒";
                 // if (m.playedThisTurn) mini += " ptt";
@@ -1307,9 +1307,9 @@ namespace HREngine.Bots
                 // if (m.returnToHand >= 1) mini += " retHand(" + m.returnToHand + ")";
                 // if (m.infest >= 1) mini += " infest(" + m.infest + ")";
                 // if (m.deathrattle2 != null) mini += " dethrl(" + m.deathrattle2.cardIDenum + ")";
-                // if (m.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(m.entitiyID))
+                // if (m.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(m.entityID))
                 // {
-                //     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
+                //     mini += " respawn:" + this.LurkersDB[m.entityID].IDEnum + ":" + this.LurkersDB[m.entityID].own;
                 // }
                 // if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
                 // if (m.enchs.Count > 0)
@@ -1335,12 +1335,12 @@ namespace HREngine.Bots
             {
                 StringBuilder minionStringBuilder = new StringBuilder(120);
                 printOwnMinions(minionStringBuilder, m);
-                // string mini = m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ")" + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entitiyID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready;// +" natt:" + m.numAttacksThisTurn;
+                // string mini = m.handcard.card.nameCN + "(" + m.Angr + "/" + m.Hp + ")" + " " + m.handcard.card.cardIDenum + " zp:" + m.zonepos + " e:" + m.entityID + " A:" + m.Angr + " H:" + m.Hp + " mH:" + m.maxHp + " rdy:" + m.Ready;// +" natt:" + m.numAttacksThisTurn;
                 // if (m.exhausted) mini += " ex";
                 // if (m.taunt) mini += " tnt";
                 // if (m.frozen) mini += " frz";
                 // if (m.silenced) mini += " silenced";
-                // if (m.divineshild) mini += " divshield";
+                // if (m.divineShield) mini += " divshield";
                 // if (m.Spellburst) mini += " 法术迸发";
                 // if (m.Frenzy) mini += " 暴怒";
                 // if (m.playedThisTurn) mini += " ptt";
@@ -1379,9 +1379,9 @@ namespace HREngine.Bots
                 // if (m.returnToHand >= 1) mini += " retHand(" + m.returnToHand + ")";
                 // if (m.infest >= 1) mini += " infest(" + m.infest + ")";
                 // if (m.deathrattle2 != null) mini += " dethrl(" + m.deathrattle2.cardIDenum + ")";
-                // if (m.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(m.entitiyID))
+                // if (m.name == CardDB.cardNameEN.moatlurker && this.LurkersDB.ContainsKey(m.entityID))
                 // {
-                //     mini += " respawn:" + this.LurkersDB[m.entitiyID].IDEnum + ":" + this.LurkersDB[m.entitiyID].own;
+                //     mini += " respawn:" + this.LurkersDB[m.entityID].IDEnum + ":" + this.LurkersDB[m.entityID].own;
                 // }
                 // if (m.handcard.card.type == CardDB.cardtype.LOCATION) mini += " cooldownTurn:" + m.CooldownTurn;
 

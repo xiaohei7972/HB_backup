@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,9 +33,9 @@ namespace HREngine.Bots
         public void doAction(Action aa)
         {
             // 查找目标随从或英雄
-            Minion trgt = aa.target != null ? FindMinionByEntityId(aa.target.entitiyID) : null;
+            Minion trgt = aa.target != null ? FindMinionByEntityId(aa.target.entityID) : null;
             // 查找执行操作的随从或英雄
-            Minion o = aa.own != null ? FindMinionByEntityId(aa.own.entitiyID) : null;
+            Minion o = aa.own != null ? FindMinionByEntityId(aa.own.entityID) : null;
             // 查找要操作的手牌
             Handmanager.Handcard ha = FindHandCard(aa);
 
@@ -77,7 +77,7 @@ namespace HREngine.Bots
                     int enemyHeroHpBefore = this.enemyHero.Hp;
                     if (a.target != null)
                     {
-                        Minion targetMinon = FindMinionByEntityId(a.target.entitiyID);
+                        Minion targetMinon = FindMinionByEntityId(a.target.entityID);
                         // 使用地标
                         useLocation(a.own, targetMinon);
                     }
@@ -98,7 +98,7 @@ namespace HREngine.Bots
                     enemyHeroHpBefore = this.enemyHero.Hp;
                     if (a.target != null)
                     {
-                        Minion targetMinon = FindMinionByEntityId(a.target.entitiyID);
+                        Minion targetMinon = FindMinionByEntityId(a.target.entityID);
                         // 使用泰坦技能
                         useTitanAbility(a.own, a.titanAbilityNO, targetMinon);
                     }
@@ -121,7 +121,7 @@ namespace HREngine.Bots
                 case actionEnum.useUnderfelRift:
                 case actionEnum.rewind: break;
             }
-            // UpdateHash((int)aa.actionType, o.entitiyID, 12, aa.penalty, evaluatePenality);
+            // UpdateHash((int)aa.actionType, o.entityID, 12, aa.penalty, evaluatePenality);
 
 
 
@@ -146,16 +146,16 @@ namespace HREngine.Bots
         {
             if (entityID <= 0) return null;
 
-            if (entityID == this.ownHero.entitiyID) return this.ownHero;
-            if (entityID == this.enemyHero.entitiyID) return this.enemyHero;
+            if (entityID == this.ownHero.entityID) return this.ownHero;
+            if (entityID == this.enemyHero.entityID) return this.enemyHero;
 
             foreach (var m in ownMinions)
             {
-                if (m.entitiyID == entityID) return m;
+                if (m.entityID == entityID) return m;
             }
             foreach (var m in enemyMinions)
             {
-                if (m.entitiyID == entityID) return m;
+                if (m.entityID == entityID) return m;
             }
             return null;
         }
@@ -324,7 +324,7 @@ namespace HREngine.Bots
             int dmg1 = AdjustDamageForWeapon(attacker, attacker.Angr);
 
             // 防御者受到伤害
-            bool defenderHasDivineshild = defender.divineshild; // 攻击前，防御者是否具有圣盾
+            bool defenderHasDivineShield = defender.divineShield; // 攻击前，防御者是否具有圣盾
             oldHp = defender.Hp;
             defender.getDamageOrHeal(dmg1, this, true, false);
             bool defenderGotDmg = oldHp > defender.Hp;
@@ -337,7 +337,7 @@ namespace HREngine.Bots
 
             if (defenderGotDmg)
             {
-                HandleDefenderDamageEffects(attacker, defender, oldHp, defenderHasDivineshild);
+                HandleDefenderDamageEffects(attacker, defender, oldHp, defenderHasDivineShield);
             }
 
             if (defender.isHero)
@@ -346,7 +346,7 @@ namespace HREngine.Bots
                 return;
             }
 
-            HandleOverkillAndHonorableKill(attacker, defender, oldHp, attackerAngr, defenderHasDivineshild);
+            HandleOverkillAndHonorableKill(attacker, defender, oldHp, attackerAngr, defenderHasDivineShield);
 
             // 攻击者受到伤害
             bool attackerGotDmg = false;
@@ -573,7 +573,7 @@ namespace HREngine.Bots
         /// <summary>
         /// 处理防御者受到伤害后的效果，如冻结、吸血等。
         /// </summary>
-        private void HandleDefenderDamageEffects(Minion attacker, Minion defender, int oldHp, bool defenderHasDivineshild)
+        private void HandleDefenderDamageEffects(Minion attacker, Minion defender, int oldHp, bool defenderHasDivineShield)
         {
             if (!attacker.silenced)
             {
@@ -640,9 +640,9 @@ namespace HREngine.Bots
         /// <summary>
         /// 处理超杀和荣誉击杀效果。
         /// </summary>
-        private void HandleOverkillAndHonorableKill(Minion attacker, Minion defender, int oldHp, int attackerAngr, bool defenderHasDivineshild)
+        private void HandleOverkillAndHonorableKill(Minion attacker, Minion defender, int oldHp, int attackerAngr, bool defenderHasDivineShield)
         {
-            if (oldHp < attackerAngr && !defenderHasDivineshild)
+            if (oldHp < attackerAngr && !defenderHasDivineShield)
             {
                 if (!attacker.isHero)
                 {
@@ -655,7 +655,7 @@ namespace HREngine.Bots
                 }
             }
 
-            if (oldHp == attackerAngr && !defenderHasDivineshild)
+            if (oldHp == attackerAngr && !defenderHasDivineShield)
             {
                 if (!attacker.isHero)
                 {
@@ -891,7 +891,7 @@ namespace HREngine.Bots
 
             if (logging)
             {
-                Helpfunctions.Instance.logg("attack with weapon target: " + target.entitiyID);
+                Helpfunctions.Instance.logg("attack with weapon target: " + target.entityID);
             }
 
             // 如果目标是英雄，则处理触发的秘密，并可能改变攻击目标
@@ -903,7 +903,7 @@ namespace HREngine.Bots
                     // 搜索新的攻击目标
                     foreach (Minion m in this.ownMinions)
                     {
-                        if (m.entitiyID == newTarget)
+                        if (m.entityID == newTarget)
                         {
                             target = m;
                             break;
@@ -911,14 +911,14 @@ namespace HREngine.Bots
                     }
                     foreach (Minion m in this.enemyMinions)
                     {
-                        if (m.entitiyID == newTarget)
+                        if (m.entityID == newTarget)
                         {
                             target = m;
                             break;
                         }
                     }
-                    if (this.ownHero.entitiyID == newTarget) target = this.ownHero;
-                    if (this.enemyHero.entitiyID == newTarget) target = this.enemyHero;
+                    if (this.ownHero.entityID == newTarget) target = this.ownHero;
+                    if (this.enemyHero.entityID == newTarget) target = this.enemyHero;
                 }
             }
 

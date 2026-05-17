@@ -50,7 +50,6 @@ namespace Stats
         public void Initialize()
         {
             Log.DebugFormat("[统计插件] 初始化");
-            TritonHs.OnGuiTick += TritonHsOnOnGuiTick;
             if (!MainSettings.Instance.EnabledPlugins.Contains(this.Name))
                 MainSettings.Instance.EnabledPlugins.Add(this.Name);
         }
@@ -130,7 +129,6 @@ namespace Stats
         /// <summary>Deinitializes this object. This is called when the object is being unloaded from the bot.</summary>
         public void Deinitialize()
         {
-            TritonHs.OnGuiTick -= TritonHsOnOnGuiTick;
         }
 
         /// <summary>
@@ -149,6 +147,7 @@ namespace Stats
                 using (TritonHs.AcquireFrame())
                 {
                     HSCard c = TritonHs.EnemyHero;
+                    if (c == null) return;
                     TAG_CLASS cc = c.Class;
                     if (gameOverEventArgs.Result == GameOverFlag.Victory)
                     {
@@ -316,16 +315,5 @@ namespace Stats
             }));
         }
 
-        private void TritonHsOnOnGuiTick(object sender, GuiTickEventArgs guiTickEventArgs)
-        {
-            if (IsEnabled)
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var statusBar = Triton.Common.Mvvm.ViewModelLocator.GetSingleton<Triton.Common.Mvvm.StatusBarViewModel>();
-                    statusBar.LeftText = string.Format("运行时间: {0}", TritonHs.Runtime.Elapsed.ToString("h'小时 'm'分 's'秒'"));
-                }));
-            }
-        }
     }
 }

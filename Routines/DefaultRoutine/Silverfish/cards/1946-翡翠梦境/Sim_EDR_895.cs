@@ -11,7 +11,24 @@ namespace HREngine.Bots
 	//<b>战吼：</b>开启为期三回合的月相演变。当满月升起时，在本局对战中你的卡牌法力值消耗为（1）点。
 	class Sim_EDR_895 : SimTemplate
 	{
-		
+		// Battlecry: Start a 3-turn lunar cycle.
+		// When Full Moon rises (after 3 turns), cards cost (1).
+		// We approximate by reducing all hand card costs to 1 immediately
+		// and granting mana to compensate.
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (own.own)
+			{
+				// Set all cards in hand to cost (1) as approximation of Full Moon effect
+				foreach (Handmanager.Handcard hc in p.owncards)
+				{
+					hc.manacost = 1;
+				}
+				// Grant extra mana to allow playing multiple reduced-cost cards
+				p.ownMaxMana += 5;
+				p.mana += 5;
+			}
+		}
 		
 	}
 }

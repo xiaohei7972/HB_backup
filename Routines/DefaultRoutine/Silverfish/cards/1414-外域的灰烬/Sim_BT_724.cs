@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,7 @@ namespace HREngine.Bots
 		{
 			if (target != null)
 			{
-				if (target.divineshild || (!target.own && target.Hp > 1)) p.evaluatePenality += 1000;
+				if (target.divineShield || (!target.own && target.Hp > 1)) p.evaluatePenality += 1000;
 				p.minionGetDamageOrHeal(target, 1);
 				if (target.Hp > 1) p.spellpower++;
 			}

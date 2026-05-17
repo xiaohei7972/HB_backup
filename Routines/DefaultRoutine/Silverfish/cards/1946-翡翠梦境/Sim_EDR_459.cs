@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 			int damages = 3;
 			foreach (Minion m in own.own ? p.ownMinions.ToArray() : p.enemyMinions.ToArray())
 			{
-				if (own.entitiyID == m.entitiyID) continue;
+				if (own.entityID == m.entityID) continue;
 				p.minionGetDamageOrHeal(m, damages, true); // 然后对随从造成伤害
 			}
 			p.updateBoards(); // 更新游戏板状态

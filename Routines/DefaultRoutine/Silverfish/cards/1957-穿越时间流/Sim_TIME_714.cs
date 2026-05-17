@@ -11,7 +11,13 @@ namespace HREngine.Bots
 	//<b>战吼：</b>消灭你的对手上回合使用的所有随从。
 	class Sim_TIME_714 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			List<Minion> temp = (own.own) ? new List<Minion>(p.enemyMinions) : new List<Minion>(p.ownMinions);
+			foreach (Minion m in temp)
+			{
+				p.minionGetDestroyed(m);
+			}
+		}
 	}
 }

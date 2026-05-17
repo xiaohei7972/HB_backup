@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace HREngine.Bots
 
 			if (fiveCostCard)
 			{
-				own.divineshild = true;
+				own.divineShield = true;
 				own.lifesteal = true;
 			}
         }

@@ -1,76 +1,54 @@
-# IDE 和开发环境文件
-.trae/
-.trea/
-.vs/
-.vscode/
-开发配置教程/.idea
-
-# 备份文件
-备份/
-
-# 临时计划文件
-*.partial-plan.md
-
-# 调试符号文件
-*.pdb
-
-# 编译输出和构建文件
+# Auto-generated build artifacts
+build-info.txt
+build-version.txt
+*.stub
+*.exe.config
+Hearthbuddy.exe
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.cache
+*.log
 bin/
 obj/
-Build/
-CompiledAssemblies/*
-CompilingDLLs/*.dll
-build.log
+CompiledAssemblies/
+*.pdb
 
-# 项目特定目录
-Routines/.vs
-Routines/.vscode
-Routines/.bin
-Routines/.obj
+# Runtime helper binary
+Helper32.exe
 
-# 日志和临时文件
+# Self-rename mechanism (random 10-char exe copies)
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z].exe
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z].exe.config
+
+# Runtime logs
 Logs/
-Routines/DefaultRoutine/Silverfish/UltimateLogs/
 myLog.txt
-fatal-removal.txt
-fatal-rename.txt
+fatal-*.txt
 
-# 数据文件和配置
-Data/
-UltimateLogs/
-Settings/
-dll/
+# Server-manager skill artifacts
+.command-logs/
+.server-logs/
+.commands.json
+.servers.json
+
+# Temp/test files
+Helper32.old
+startup.err
+startup.log
+Tools/ArchTest/
+Tools/ArchTest2/
+
+# Card data (auto-generated binary cache)
+CardDefs.xml
+CardDefs.bin
+Routines/DefaultRoutine/Silverfish/data/CardDefs.bin
+
+# JIT profiles
 JitProfiles/
 
-# 可执行文件和程序文件
-炉石中控.2.exe
-炉石中控2.exe
-yqdiqeuhya.exe
-yqdiqeuhya.exe.config
-opcpitmhbx.exe
-opcpitmhbx.exe.config
-
-# 历史文件和旧版本
-过去的主程序/
-
-# 特定测试和开发文件
-Routines/DefaultRoutine/Silverfish/Test/Data/
-Routines/DefaultRoutine/Silverfish/Test/AiTest.cs
-Routines/DefaultRoutine/Silverfish/Test/AutoJudge.cs
-开发配置教程/CardDefs.xml
-
-# 系统文件
-desktop.ini
-
-# 文档文件
-AGENTS.md
-PROJECT_DOCUMENTATION.md
-
-# 注释掉的条目（保留供参考）
-# Routines/DefaultRoutine/Silverfish/Test/Data/对局记录/
-# CompiledAssemblies/*.dll
-# Hearthbuddy_backed.csproj.user
-# Settings/CustomDecks/
-# 用户配置教程/
-# 炉石兄弟.exe
-# Hearthbuddy.exe
+# Runtime settings (auto-modified)
+Settings/Default/Main.json
+Settings/Default/DefaultRoutine.json
+Settings/Default/Quest.json

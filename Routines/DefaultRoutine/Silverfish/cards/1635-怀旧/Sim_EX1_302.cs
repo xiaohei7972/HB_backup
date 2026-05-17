@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
 		public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
         {
             int dmg = (ownplay) ? p.getSpellDamageDamage(1) : p.getEnemySpellDamageDamage(1);
-            if (dmg >= target.Hp && !target.divineshild && !target.immune)
+            if (dmg >= target.Hp && !target.divineShield && !target.immune)
             {
                 //this.owncarddraw++;
                 p.drawACard(CardDB.cardIDEnum.None, ownplay);

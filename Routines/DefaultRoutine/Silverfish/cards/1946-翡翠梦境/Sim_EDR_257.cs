@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 			if (choice == 1 || (p.ownFandralStaghelm > 0 && own.own))
 			{
 				p.minionGetBuffed(own, 3, 0);
-				own.divineshild = true;
+				own.divineShield = true;
 			}
 			if (choice == 2 || (p.ownFandralStaghelm > 0 && own.own))
 			{

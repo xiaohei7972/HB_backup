@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +31,7 @@ using Triton.Bot.Logic.Bots.DefaultBot;
 using Logger = Triton.Common.LogUtilities.Logger;
 using System.Diagnostics;
 using System.Threading;
-using System.Data.SqlTypes;
+
 
 namespace HREngine.Bots
 {
@@ -290,6 +290,10 @@ def Execute():
                 Log.ErrorFormat("[clearLog] An exception occurred: {0}.", ex);
                 BotManager.Stop();
                 return;
+            }
+            finally
+            {
+                proc?.Dispose();
             }
         }
 
@@ -768,7 +772,7 @@ def Execute():
             } */
             // if(TritonHs.GameState.IsTagBlockingInput())
             // if(TritonHs.GameState.IsResponsePacketBlocked() && TritonHs.GameState.IsGameOver())
-          while(TritonHs.GameState.IsTagBlockingInput())
+          while(TritonHs.GameState != null && TritonHs.GameState.IsTagBlockingInput())
 
         //   while(TritonHs.GameState.IsBusy() || TritonHs.GameState.HasPowersToProcess())
           {
@@ -904,7 +908,7 @@ def Execute():
             {
                 if (this.printlearnmode)
                 {
-                    Ai.Instance.simmulateWholeTurnandPrint();
+                    Ai.Instance.simulateWholeTurnAndPrint();
                 }
                 this.printlearnmode = false;
 
@@ -1054,8 +1058,8 @@ def Execute():
             {
                 if (titanAction.target != null)
                 {
-                    HSCard titan = getEntityWithNumber(titanAction.own.entitiyID);
-                    HSCard target = getEntityWithNumber(titanAction.target.entitiyID);
+                    HSCard titan = getEntityWithNumber(titanAction.own.entityID);
+                    HSCard target = getEntityWithNumber(titanAction.target.entityID);
                     await titan.UseOn(target.Card);
                     await Coroutine.Sleep(222);
                     titanAction = null;
@@ -1077,7 +1081,7 @@ def Execute():
             }
             if (moveTodo.target != null)
             {
-                HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                HSCard target = getEntityWithNumber(moveTodo.target.entityID);
                 if (target != null)
                 {
                     Log.DebugFormat("使用: {0} 瞄准: {1}", cardtoplay.Name, target.Name);
@@ -1103,7 +1107,7 @@ def Execute():
                     {
                         Log.DebugFormat("抉择");
 
-                        dirtytarget = moveTodo.target.entitiyID;
+                        dirtytarget = moveTodo.target.entityID;
                         dirtychoice = moveTodo.druidchoice;
                         choiceCardId = moveTodo.hc.card.cardIDenum.ToString();
                         // 等待一小段时间，确保游戏客户端已进入抉择界面
@@ -1112,7 +1116,7 @@ def Execute():
                         ChooseOneClick(dirtychoice);
                     }
                     dirtyTargetSource = moveTodo.hc.entity;
-                    dirtytarget = moveTodo.target.entitiyID;
+                    dirtytarget = moveTodo.target.entityID;
 
                 }
                 else
@@ -1164,8 +1168,8 @@ def Execute():
         /// </summary>
         private async Task AttackWithMinion(Action moveTodo)
         {
-            HSCard attacker = getEntityWithNumber(moveTodo.own.entitiyID);
-            HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+            HSCard attacker = getEntityWithNumber(moveTodo.own.entityID);
+            HSCard target = getEntityWithNumber(moveTodo.target.entityID);
             if (attacker != null && target != null)
             {
                 Log.WarnFormat("随从攻击: {0} 目标为: {1}    惩罚值：{2}", attacker.Name, target.Name, moveTodo.penalty);
@@ -1186,14 +1190,14 @@ def Execute():
         /// </summary>
         private async Task AttackWithHero(Action moveTodo)
         {
-            HSCard attacker = getEntityWithNumber(moveTodo.own.entitiyID);
-            HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+            HSCard attacker = getEntityWithNumber(moveTodo.own.entityID);
+            HSCard target = getEntityWithNumber(moveTodo.target.entityID);
             if (attacker != null && target != null)
             {
-                dirtytarget = moveTodo.target.entitiyID;
+                dirtytarget = moveTodo.target.entityID;
                 Log.WarnFormat("英雄攻击: {0} 目标为: {1}    惩罚值：{2}", attacker.Name, target.Name, moveTodo.penalty);
-                dirtyTargetSource = moveTodo.own.entitiyID;
-                dirtytarget = moveTodo.target.entitiyID;
+                dirtyTargetSource = moveTodo.own.entityID;
+                dirtytarget = moveTodo.target.entityID;
                 await attacker.DoAttack(target);
             }
             else
@@ -1214,14 +1218,14 @@ def Execute():
 
             if (moveTodo.target != null)
             {
-                HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                HSCard target = getEntityWithNumber(moveTodo.target.entityID);
                 if (target != null)
                 {
                     Log.WarnFormat("使用英雄技能: {0} 目标为 {1} 抉择:{2}    惩罚值：{3}", cardtoplay.Name, target.Name, moveTodo.druidchoice, moveTodo.penalty);
                     await cardtoplay.Pickup();
                     if (moveTodo.druidchoice >= 1)
                     {
-                        dirtytarget = moveTodo.target.entitiyID;
+                        dirtytarget = moveTodo.target.entityID;
                         dirtychoice = moveTodo.druidchoice;
                         if (moveTodo.hc != null)
                         {
@@ -1234,7 +1238,7 @@ def Execute():
 
                     }
                     dirtyTargetSource = 9000;
-                    dirtytarget = moveTodo.target.entitiyID;
+                    dirtytarget = moveTodo.target.entityID;
 
                     await cardtoplay.UseOn(target.Card);
                 }
@@ -1298,12 +1302,12 @@ def Execute():
         /// <returns></returns>
         private async Task UseLocation(Action moveTodo)
         {
-            HSCard location = getEntityWithNumber(moveTodo.own.entitiyID);
+            HSCard location = getEntityWithNumber(moveTodo.own.entityID);
             if (location != null)
             {
                 if (moveTodo.target != null)
                 {
-                    HSCard target = getEntityWithNumber(moveTodo.target.entitiyID);
+                    HSCard target = getEntityWithNumber(moveTodo.target.entityID);
                     if (target != null)
                     {
                         Log.WarnFormat("使用地标 {0} 目标为 {1}    惩罚值{2}", location.Name, target.Name, moveTodo.penalty);
@@ -1313,13 +1317,13 @@ def Execute():
                     }
                     else
                     {
-                        Log.ErrorFormat("[AI] 目标 {0}丢失. 再次重试...", moveTodo.target.entitiyID);
+                        Log.ErrorFormat("[AI] 目标 {0}丢失. 再次重试...", moveTodo.target.entityID);
                         await Coroutine.Sleep(20);
                     }
                 }
                 else
                 {
-                    Log.WarnFormat("使用地标 {0} 暂时没有目标    惩罚值", location.Name, moveTodo.penalty);
+                    Log.WarnFormat("使用地标 {0} 暂时没有目标    惩罚值：{1}", location.Name, moveTodo.penalty);
                     await location.LeftClickCard();
                     Log.WarnFormat("地标 {0} 标记为冷却中...", location.Name);
 
@@ -1341,7 +1345,7 @@ def Execute():
         private async Task UseTitanAbility(Action moveTodo)
         {
             // Log.InfoFormat("处理使用泰坦技能的动作");
-            HSCard titan = getEntityWithNumber(moveTodo.own.entitiyID);
+            HSCard titan = getEntityWithNumber(moveTodo.own.entityID);
             if (titan != null)
             {
                 CardDB.Card card = moveTodo.own.handcard.card;
@@ -1651,7 +1655,7 @@ def Execute():
                                     bool found = false;
                                     foreach (Minion m in tmpPlf.ownMinions)
                                     {
-                                        if (m.entitiyID == sourceEntityId)
+                                        if (m.entityID == sourceEntityId)
                                         {
                                             //当已拥有这个关键词时为true
                                             bool forbidden = false;
@@ -1660,7 +1664,7 @@ def Execute():
                                                 case CardDB.cardIDEnum.UNG_999t5: if (m.handcard.card.Elusive) forbidden = true; break;
                                                 case CardDB.cardIDEnum.UNG_999t6: if (m.taunt) forbidden = true; break;
                                                 case CardDB.cardIDEnum.UNG_999t7: if (m.windfury) forbidden = true; break;
-                                                case CardDB.cardIDEnum.UNG_999t8: if (m.divineshild) forbidden = true; break;
+                                                case CardDB.cardIDEnum.UNG_999t8: if (m.divineShield) forbidden = true; break;
                                                 case CardDB.cardIDEnum.UNG_999t10: if (m.stealth) forbidden = true; break;
                                                 case CardDB.cardIDEnum.UNG_999t13: if (m.poisonous) forbidden = true; break;
                                             }

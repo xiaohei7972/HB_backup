@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections;
@@ -1794,7 +1794,7 @@ namespace HREngine.Bots
             }
 
 
-            bool targetWasHero = (doneMove.target != null && doneMove.target.entitiyID == p.enemyHero.entitiyID);
+            bool targetWasHero = (doneMove.target != null && doneMove.target.entityID == p.enemyHero.entityID);
 
             if (doneMove.actionType == actionEnum.attackWithHero || doneMove.actionType == actionEnum.attackWithMinion)
             {
@@ -1842,7 +1842,7 @@ namespace HREngine.Bots
                                 if (enemySecretsOpenedStep.Count == 1)
                                 {
                                     missdirection = true;
-                                    if (!attackerIsHero && p.ownMinions.Find(x => x.entitiyID == doneMove.own.entitiyID) == null)
+                                    if (!attackerIsHero && p.ownMinions.Find(x => x.entityID == doneMove.own.entityID) == null)
                                     {
                                         missdirection = false;
                                         freezing = false;

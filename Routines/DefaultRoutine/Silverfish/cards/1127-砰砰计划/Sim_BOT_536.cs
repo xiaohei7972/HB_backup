@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,7 +20,7 @@ namespace HREngine.Bots
 				int count = 0;
 				foreach (Minion mnn in temp)
 				{
-					if (mnn.name == CardDB.cardNameEN.doppelgangster && m.entitiyID != mnn.entitiyID && mnn.playedThisTurn)
+					if (mnn.name == CardDB.cardNameEN.doppelgangster && m.entityID != mnn.entityID && mnn.playedThisTurn)
 					{
 						mnn.setMinionToMinion(m);
 						count++;

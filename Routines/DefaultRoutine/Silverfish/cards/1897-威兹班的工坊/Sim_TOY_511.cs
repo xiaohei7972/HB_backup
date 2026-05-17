@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,10 +14,10 @@ namespace HREngine.Bots
 		// 可能无限回调,就先注释掉了
 		// public override void onMinionWasSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
 		// {
-		// 	if (triggerEffectMinion.entitiyID != summonedMinion.entitiyID && triggerEffectMinion.own == summonedMinion.own && RaceUtils.IsRaceOrAll(summonedMinion.handcard.card.race, CardDB.Race.PIRATE))
+		// 	if (triggerEffectMinion.entityID != summonedMinion.entityID && triggerEffectMinion.own == summonedMinion.own && RaceUtils.IsRaceOrAll(summonedMinion.handcard.card.race, CardDB.Race.PIRATE))
 		// 	{
 				// 想办法获取召唤后的随从的复制的实体id,然后和原随从实体id做对比
-		// 		if (summonedMinion.entitiyID != summonedMinion.entitiyID)
+		// 		if (summonedMinion.entityID != summonedMinion.entityID)
 		// 			p.callKid(summonedMinion.handcard.card, triggerEffectMinion.zonepos, triggerEffectMinion.own);
 
 		// 	}

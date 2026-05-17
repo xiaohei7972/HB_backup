@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
             Minion m = p.searchRandomMinion(temp, searchmode.searchLowestHP);
             if (m != null)
             {
-                m.divineshild = true;
+                m.divineShield = true;
                 if (!m.taunt)
                 {
                     m.taunt = true;

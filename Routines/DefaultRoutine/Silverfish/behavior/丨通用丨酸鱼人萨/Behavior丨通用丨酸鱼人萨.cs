@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 namespace HREngine.Bots
@@ -452,8 +452,8 @@ namespace HREngine.Bots
             if (m.silenced) return retval;
 
             if (m.taunt) retval += bonus * 3;
-            if (m.divineshild) retval += m.Angr * 2;
-            if (m.divineshild && m.taunt) retval += 5;
+            if (m.divineShield) retval += m.Angr * 2;
+            if (m.divineShield && m.taunt) retval += 5;
             if (m.stealth) retval += 2;
 
             // 剧毒价值 2 点属性
@@ -589,13 +589,13 @@ namespace HREngine.Bots
             // 风怒价值
             if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1) && m.windfury) retval += m.Angr;
             // 圣盾价值
-            if (m.divineshild) retval += m.Angr * 3;
+            if (m.divineShield) retval += m.Angr * 3;
             // 潜行价值
             if (m.stealth) retval += m.Angr / 2 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 2 + 1;
             // 圣盾嘲讽
-            if (m.divineshild && m.taunt) retval += 4;
+            if (m.divineShield && m.taunt) retval += 4;
             // 鱼人种族价值
             if (m.handcard.card.race == CardDB.Race.MURLOC || m.handcard.card.race == CardDB.Race.ALL)
             {
@@ -777,19 +777,19 @@ namespace HREngine.Bots
             for (int i = 0; i < minCnt; i++)
             {
                 // 对手可以进行交换
-                if ((enemyMinions[i].Angr >= ownMinions[i].Hp || enemyMinions[i].poisonous) && !ownMinions[i].divineshild && !ownMinions[i].stealth)
+                if ((enemyMinions[i].Angr >= ownMinions[i].Hp || enemyMinions[i].poisonous) && !ownMinions[i].divineShield && !ownMinions[i].stealth)
                 {
                     // 攻击前
                     int enemyVal1 = getEnemyMinionValue(enemyMinions[i], p);
                     Minion afterAtk = new Minion(enemyMinions[i]);
-                    if (!enemyMinions[i].divineshild)
+                    if (!enemyMinions[i].divineShield)
                     {
                         afterAtk.Hp -= ownMinions[i].Angr;
                         if (ownMinions[i].poisonous) afterAtk.Hp = 0;
                     }
                     else
                     {
-                        afterAtk.divineshild = false;
+                        afterAtk.divineShield = false;
                     }
                     // 攻击后
                     int enemyVal2 = getEnemyMinionValue(afterAtk, p);

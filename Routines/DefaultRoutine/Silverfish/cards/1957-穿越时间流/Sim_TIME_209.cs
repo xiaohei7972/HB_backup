@@ -11,7 +11,16 @@ namespace HREngine.Bots
 	//<b>奇闻</b><b>突袭</b>。<b>战吼：</b>为本随从装备高山之王的战锤！<b>亡语：</b>将该战锤置入你的手牌。
 	class Sim_TIME_209 : SimTemplate
 	{
-		
-		
+		CardDB.Card weapon = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.TIME_209t);
+
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			p.equipWeapon(weapon, own.own);
+		}
+
+		public override void onDeathrattle(Playfield p, Minion m)
+		{
+			p.drawACard(CardDB.cardIDEnum.TIME_209t, m.own, true);
+		}
 	}
 }

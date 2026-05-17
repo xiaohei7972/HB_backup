@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (p.anyRaceCardInHand(CardDB.Race.DRAGON))
             {
-                p.allMinionsGetDamage(3, own.entitiyID);
+                p.allMinionsGetDamage(3, own.entityID);
             }
         }
 

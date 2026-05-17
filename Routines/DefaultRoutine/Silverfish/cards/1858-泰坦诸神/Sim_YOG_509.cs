@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
 				// 增加2点攻击力和2点生命值
 				p.minionGetBuffed(target, 2, 2);
 				// int damage = ownplay ? p.getSpellDamageDamage(target.Angr) : p.getEnemySpellDamageDamage(target.Angr);
-				p.allMinionsGetDamage(target.Angr, target.entitiyID);
+				p.allMinionsGetDamage(target.Angr, target.entityID);
 			}
 		}
 

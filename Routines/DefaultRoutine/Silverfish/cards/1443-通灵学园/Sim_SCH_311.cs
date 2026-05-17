@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,7 @@ namespace HREngine.Bots
 		{
             foreach (Minion m in p.ownMinions)
             {
-                if (m.entitiyID == own.entitiyID) continue;
+                if (m.entityID == own.entityID) continue;
 				p.minionGetRush(m);
             }
 		}

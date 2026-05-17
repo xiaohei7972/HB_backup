@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,20 +21,20 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in this.ownMinions)
                 {
-                    if (m.entitiyID == newTarget)
+                    if (m.entityID == newTarget)
                     {
                         return m;
                     }
                 }
                 foreach (Minion m in this.enemyMinions)
                 {
-                    if (m.entitiyID == newTarget)
+                    if (m.entityID == newTarget)
                     {
                         return m;
                     }
                 }
-                if (this.ownHero.entitiyID == newTarget) return this.ownHero;
-                if (this.enemyHero.entitiyID == newTarget) return this.enemyHero;
+                if (this.ownHero.entityID == newTarget) return this.ownHero;
+                if (this.enemyHero.entityID == newTarget) return this.enemyHero;
             }
             return target;
         }
@@ -63,20 +63,20 @@ namespace HREngine.Bots
                 // 遍历己方和敌方随从列表，找到新的攻击目标
                 foreach (Minion m in this.ownMinions)
                 {
-                    if (m.entitiyID == newTarget)
+                    if (m.entityID == newTarget)
                     {
                         return m;
                     }
                 }
                 foreach (Minion m in this.enemyMinions)
                 {
-                    if (m.entitiyID == newTarget)
+                    if (m.entityID == newTarget)
                     {
                         return m;
                     }
                 }
-                if (this.ownHero.entitiyID == newTarget) return this.ownHero;
-                if (this.enemyHero.entitiyID == newTarget) return this.enemyHero;
+                if (this.ownHero.entityID == newTarget) return this.ownHero;
+                if (this.enemyHero.entityID == newTarget) return this.enemyHero;
             }
             return target;
         }

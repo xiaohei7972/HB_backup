@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,14 +16,14 @@ namespace HREngine.Bots
             // 使所有其他随从获得-1/-1
             foreach (Minion m in p.ownMinions)
             {
-                if (m.entitiyID != own.entitiyID)
+                if (m.entityID != own.entityID)
                 {
                     p.minionGetBuffed(m, -1, -1);
                 }
             }
             foreach (Minion m in p.enemyMinions)
             {
-                if (m.entitiyID != own.entitiyID)
+                if (m.entityID != own.entityID)
                 {
                     p.minionGetBuffed(m, -1, -1);
                 }
@@ -35,14 +35,14 @@ namespace HREngine.Bots
             // 使所有其他随从获得+1/+1
             foreach (Minion minion in p.ownMinions)
             {
-                if (minion.entitiyID != m.entitiyID)
+                if (minion.entityID != m.entityID)
                 {
                     p.minionGetBuffed(minion, 1, 1);
                 }
             }
             foreach (Minion minion in p.enemyMinions)
             {
-                if (minion.entitiyID != m.entitiyID)
+                if (minion.entityID != m.entityID)
                 {
                     p.minionGetBuffed(minion, 1, 1);
                 }

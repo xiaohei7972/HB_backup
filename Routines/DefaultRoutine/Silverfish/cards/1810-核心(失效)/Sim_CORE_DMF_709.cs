@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
 				// 增强战场上的己方其他图腾随从
 				foreach (Minion minion in p.ownMinions)
 				{
-					if (minion.handcard.card.type == CardDB.cardtype.MOB && RaceUtils.IsRaceOrAll(CardDB.Race.TOTEM, minion.handcard.card.race) && minion.entitiyID != triggerEffectMinion.entitiyID)
+					if (minion.handcard.card.type == CardDB.cardtype.MOB && RaceUtils.IsRaceOrAll(CardDB.Race.TOTEM, minion.handcard.card.race) && minion.entityID != triggerEffectMinion.entityID)
 						p.minionGetBuffed(minion, 1, 1);
 				}
 

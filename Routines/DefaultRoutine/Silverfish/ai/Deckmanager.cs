@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System.Collections.Generic;
 
@@ -53,7 +53,7 @@ namespace HREngine.Bots
                     playaction += "id " + this.card.entity;
                     if (this.target != null)
                     {
-                        playaction += " target " + this.target.entitiyID;
+                        playaction += " target " + this.target.entityID;
                     }
 
                     if (this.place >= 0)
@@ -67,18 +67,18 @@ namespace HREngine.Bots
                 }
                 if (this.actionType == actionEnum.attackWithMinion)
                 {
-                    help.writeToBuffer("attack " + this.own.entitiyID + " enemy " + this.target.entitiyID);
+                    help.writeToBuffer("attack " + this.own.entityID + " enemy " + this.target.entityID);
                 }
                 if (this.actionType == actionEnum.attackWithHero)
                 {
-                    help.writeToBuffer("heroattack " + this.target.entitiyID);
+                    help.writeToBuffer("heroattack " + this.target.entityID);
                 }
                 if (this.actionType == actionEnum.useHeroPower)
                 {
 
                     if (this.target != null)
                     {
-                        help.writeToBuffer("useability on target " + this.target.entitiyID);
+                        help.writeToBuffer("useability on target " + this.target.entityID);
                     }
                     else
                     {
@@ -94,7 +94,7 @@ namespace HREngine.Bots
                 playaction += "id " + this.card.entity;
                 if (this.target != null)
                 {
-                    playaction += " target " + this.target.entitiyID;
+                    playaction += " target " + this.target.entityID;
                 }
 
                 if (this.place >= 0)
@@ -108,18 +108,18 @@ namespace HREngine.Bots
             }
             if (this.actionType == actionEnum.attackWithMinion)
             {
-                help.logg("attacker: " + this.own.entitiyID + " enemy: " + this.target.entitiyID);
+                help.logg("attacker: " + this.own.entityID + " enemy: " + this.target.entityID);
             }
             if (this.actionType == actionEnum.attackWithHero)
             {
-                help.logg("attack with hero, enemy: " + this.target.entitiyID);
+                help.logg("attack with hero, enemy: " + this.target.entityID);
             }
             if (this.actionType == actionEnum.useHeroPower)
             {
                 help.logg("useability ");
                 if (this.target != null)
                 {
-                    help.logg("on enemy: " + this.target.entitiyID);
+                    help.logg("on enemy: " + this.target.entityID);
                 }
             }
             help.logg("");
@@ -136,7 +136,7 @@ namespace HREngine.Bots
                 retval += "id " + this.card.entity;
                 if (this.target != null)
                 {
-                    retval += " target " + this.target.entitiyID;
+                    retval += " target " + this.target.entityID;
                 }
 
                 if (this.place >= 0)
@@ -147,18 +147,18 @@ namespace HREngine.Bots
             }
             if (this.actionType == actionEnum.attackWithMinion)
             {
-                retval += ("attacker: " + this.own.entitiyID + " enemy: " + this.target.entitiyID);
+                retval += ("attacker: " + this.own.entityID + " enemy: " + this.target.entityID);
             }
             if (this.actionType == actionEnum.attackWithHero)
             {
-                retval += ("attack with hero, enemy: " + this.target.entitiyID);
+                retval += ("attack with hero, enemy: " + this.target.entityID);
             }
             if (this.actionType == actionEnum.useHeroPower)
             {
                 retval += ("useability ");
                 if (this.target != null)
                 {
-                    retval += ("on target: " + this.target.entitiyID);
+                    retval += ("on target: " + this.target.entityID);
                 }
             }
 

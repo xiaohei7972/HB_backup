@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                    if (target.entityID != m.entityID && attacker.entityID != m.entityID)
                     {
                         newTarget = m;
                     }
@@ -26,7 +26,7 @@ namespace HREngine.Bots
                 {
                     foreach (Minion m in p.ownMinions)
                     {
-                        if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                        if (target.entityID != m.entityID && attacker.entityID != m.entityID)
                         {
                             newTarget = m;
                         }
@@ -43,7 +43,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                    if (target.entityID != m.entityID && attacker.entityID != m.entityID)
                     {
                         newTarget = m;
                     }
@@ -53,7 +53,7 @@ namespace HREngine.Bots
                 {
                     foreach (Minion m in p.enemyMinions)
                     {
-                        if (target.entitiyID != m.entitiyID && attacker.entitiyID != m.entitiyID)
+                        if (target.entityID != m.entityID && attacker.entityID != m.entityID)
                         {
                             newTarget = m;
                         }
@@ -69,7 +69,7 @@ namespace HREngine.Bots
 
             if (newTarget != null)
             {
-                number = newTarget.entitiyID;
+                number = newTarget.entityID;
             }
         }
 

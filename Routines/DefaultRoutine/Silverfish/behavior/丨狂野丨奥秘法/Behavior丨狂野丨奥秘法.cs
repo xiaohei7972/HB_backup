@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -671,7 +671,7 @@ namespace HREngine.Bots
                 retval += m.Angr * 2;
                 //retval += m.handcard.card.rarity;
                 //if (!m.playedThisTurn && m.windfury) retval += m.Angr; 奥秘法没有风怒随从
-                //if (m.divineshild) retval += 1; 没有圣盾
+                //if (m.divineShield) retval += 1; 没有圣盾
                 //if (m.stealth) retval += 1; 没有潜行
                 //if (m.handcard.card.isSpecialMinion && !m.silenced)  奥秘法已方没有特殊要照顾的随从
                 //{
@@ -680,12 +680,12 @@ namespace HREngine.Bots
                 //}
                 //else
                 //{
-                //    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineshild) retval -= 5;
+                //    if (m.Angr <= 2 && m.Hp <= 2 && !m.divineShield) retval -= 5;
                 //}
                 //if (!m.taunt && m.stealth && penman.specialMinions.ContainsKey(m.name)) retval += 20;
                 //if (m.poisonous) retval += 1; //没有剧毒
                 //if (m.lifesteal) retval += m.Angr/2; //没有吸血
-                //if (m.divineshild && m.taunt) retval += 4; //没有圣盾
+                //if (m.divineShield && m.taunt) retval += 4; //没有圣盾
                 //if (m.taunt && m.handcard.card.name == CardDB.cardName.frog) owntaunt++; //没有嘲讽
                 //if (m.handcard.card.isToken && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
                 //if (!penman.specialMinions.ContainsKey(m.name) && m.Angr <= 2 && m.Hp <= 2) retval -= 5;
@@ -695,7 +695,7 @@ namespace HREngine.Bots
                 //if (m.handcard.card.name == CardDB.cardName.nerubianegg) //蛛魔之卵
                 //{
                 //    if (m.Angr >= 1) retval += 2;
-                //    if ((!m.taunt && m.Angr == 0) && (m.divineshild || m.maxHp > 2)) retval -= 10;
+                //    if ((!m.taunt && m.Angr == 0) && (m.divineShield || m.maxHp > 2)) retval -= 10;
                 //}
                 if (m.Ready) readycount++;
                 if (m.Hp <= 4 && (m.Angr > 2 || m.Hp > 3)) ownMinionsCount++;
@@ -854,7 +854,7 @@ namespace HREngine.Bots
             int retval = 5; //初始值
             if (m.Angr == 0)
                 retval = -2; //0攻怪，没有初始5分，负分开始
-            else if (m.Angr <= 2 && !m.divineshild && !m.taunt) //进攻小，且非圣盾 非嘲讽
+            else if (m.Angr <= 2 && !m.divineShield && !m.taunt) //进攻小，且非圣盾 非嘲讽
             {
                 if (m.Hp <= 3)
                     retval = 0;  // <=23身材的没有初始5分，以防火焰总点23变22拿奖励
@@ -870,8 +870,8 @@ namespace HREngine.Bots
             }
 
             if (m.taunt) retval += 5; //嘲讽
-            if (m.divineshild) retval += m.Angr; //圣盾
-            if (m.divineshild && m.taunt) retval += 5; //圣盾且嘲讽
+            if (m.divineShield) retval += m.Angr; //圣盾
+            if (m.divineShield && m.taunt) retval += 5; //圣盾且嘲讽
             if (m.stealth) retval += 1; //潜行
 
             if (m.poisonous) //剧毒

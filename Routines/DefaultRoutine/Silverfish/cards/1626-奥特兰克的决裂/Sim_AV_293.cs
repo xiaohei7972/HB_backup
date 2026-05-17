@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace HREngine.Bots
             int pos = p.ownMinions.Count;
             foreach (Minion mm in p.enemyMinions)
             {
-                if (mm.Hp == target.Angr && !mm.divineshild)
+                if (mm.Hp == target.Angr && !mm.divineShield)
                 {
                     p.evaluatePenality -= (mm.Hp + mm.Angr) * 2;
                     p.callKid(kid, pos + 1, ownplay);

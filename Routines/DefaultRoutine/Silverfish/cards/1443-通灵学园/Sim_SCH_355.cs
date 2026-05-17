@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,13 +16,13 @@ namespace HREngine.Bots
                 {
                     p.AnzSoulFragments--;
                     p.ownDeckSize--;
-                    p.allMinionsGetDamage(3, own.entitiyID);
+                    p.allMinionsGetDamage(3, own.entityID);
                 }
             }
             else
             {
                 p.enemyDeckSize--;
-                p.allMinionsGetDamage(3, own.entitiyID);
+                p.allMinionsGetDamage(3, own.entityID);
             }
         }
     }

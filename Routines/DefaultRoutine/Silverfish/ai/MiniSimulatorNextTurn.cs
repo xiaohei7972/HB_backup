@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +9,9 @@ namespace HREngine.Bots
     /// </summary>
     public class MiniSimulatorNextTurn
     {
+        // 静态只读比较器，避免 Sort lambda 每次分配委托
+        private static readonly Comparison<Playfield> ValueDescComparer = (a, b) => b.value.CompareTo(a.value);
+
         //#####################################################################################################################
         //public int maxdeep = 6;      // 最大搜索深度
         //public int maxwide = 10;      // 每步最大保留场面数
@@ -136,7 +139,7 @@ namespace HREngine.Bots
 
             // 清空可能的游戏状态列表，添加初始状态
             this.posmoves.Clear();
-            this.posmoves.Add(new Playfield(playf));
+            this.posmoves.Add(PlayfieldPool.Rent(playf));
 
             // 标记是否还有操作可做
             bool havedonesomething = true;
@@ -177,14 +180,21 @@ namespace HREngine.Bots
                     {
                         // 标记有操作可做
                         havedonesomething = true;
-                        // 创建新的游戏状态并执行动作
-                        Playfield pf = new Playfield(p);
+                        // 从对象池获取游戏状态副本（复用，减少GC压力）
+                        Playfield pf = PlayfieldPool.Rent(p);
                         pf.doAction(a);
                         // 如果我方英雄存活，添加到可能的状态列表
-                        if (pf.ownHero.Hp > 0) this.posmoves.Add(pf);
-                        // 增加已计算场面数
+                        if (pf.ownHero.Hp > 0)
+                        {
+                            this.posmoves.Add(pf);
+                        }
+                        else
+                        {
+                            PlayfieldPool.Return(pf);
+                        }
                         if (totalboards > 0) this.calculated++;
                     }
+                    ActionListPool.Return(actions);
 
                     // 结束当前回合
                     p.endTurn();
@@ -241,8 +251,8 @@ namespace HREngine.Bots
                 {
                     botBase.getPlayfieldValue(posmoves[i]);
                 }
-                // 按价值排序（直接使用缓存的value字段）
-                posmoves.Sort((a, b) => b.value.CompareTo(a.value));
+                // 按价值排序（使用静态Comparer, 零分配）
+                posmoves.Sort(ValueDescComparer);
 
                 // 初始化最佳状态
                 Playfield bestplay = posmoves[0];
@@ -280,17 +290,21 @@ namespace HREngine.Bots
         /// 剪枝可能的状态
         /// </summary>
         /// <param name="maxwide">每步最大保留场面数</param>
+        // x64 优化: 实例级缓存临时集合
+        List<Playfield> _cutTemp = new List<Playfield>();
+        Dictionary<Int64, Playfield> _cutDict = new Dictionary<Int64, Playfield>();
+
         public void cuttingposibilities(int maxwide)
         {
-            // 临时存储剪枝后的状态
-            List<Playfield> temp = new List<Playfield>();
-            // 用于去重的字典
-            Dictionary<Int64, Playfield> tempDict = new Dictionary<Int64, Playfield>();
+            _cutTemp.Clear();
+            _cutDict.Clear();
+            var temp = _cutTemp;
+            var tempDict = _cutDict;
 
             try
             {
-                // 按价值排序，保留最佳状态
-                posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+                // 按价值排序，保留最佳状态 (使用已缓存的value, 避免O(n log n)次重复计算)
+                posmoves.Sort(ValueDescComparer);
             }
             catch (Exception e)
             {
@@ -400,7 +414,7 @@ namespace HREngine.Bots
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
                             // 如果属性相同，不添加
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
                             continue;
                         }
 
@@ -413,7 +427,7 @@ namespace HREngine.Bots
                                 continue;
                             }
                             // 如果名称相同，检查属性是否相同
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
                             continue;
                         }
                     }

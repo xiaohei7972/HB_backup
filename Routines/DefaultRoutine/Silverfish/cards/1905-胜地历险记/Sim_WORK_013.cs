@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
 				// 增强战场上的所有己方随从
 				foreach (Minion minion in p.ownMinions)
 				{
-					if (minion.handcard.card.type == CardDB.cardtype.MOB && minion.handcard.card.battlecry && minion.entitiyID != own.entitiyID)
+					if (minion.handcard.card.type == CardDB.cardtype.MOB && minion.handcard.card.battlecry && minion.entityID != own.entityID)
 						p.minionGetBuffed(minion, 1, 1);
 				}
 

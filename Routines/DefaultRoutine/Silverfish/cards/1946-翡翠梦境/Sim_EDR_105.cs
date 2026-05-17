@@ -4,17 +4,24 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 中立 费用：2 攻击力：1 生命值：2
-	//Creature of Madness
-	//疯狂生物
-	//<b>Battlecry:</b> <b>Discover</b> a3-Cost minion with a <b>Dark_Gift.</b>
-	//<b>战吼：</b><b>发现</b>一张具有<b>黑暗之赐</b>的法力值消耗为（3）的随从牌。
+	//随从 德鲁伊 费用：1 攻击力：1 生命值：1
+	//Enchanted Acorn
+	//附魔橡果
+	//<b>Deathrattle:</b> Summon a 2/2 Treant with <b>Taunt</b>.
+	//<b>亡语：</b>召唤一个2/2并具有<b>嘲讽</b>的树人。
 	class Sim_EDR_105 : SimTemplate
 	{
-		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
-        {
-            p.drawACard(CardDB.cardNameEN.unknown, own.own, true);
-        }
-		
+		CardDB.Card kid = CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.EX1_tk9); // 2/2 Treant
+
+		public override void onDeathrattle(Playfield p, Minion m)
+		{
+			int pos = m.own ? p.ownMinions.Count : p.enemyMinions.Count;
+			Minion summoned = p.callKidAndReturn(kid, pos, m.own);
+			if (summoned != null)
+			{
+				summoned.taunt = true;
+			}
+		}
+
 	}
 }

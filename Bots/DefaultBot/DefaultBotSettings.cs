@@ -8,7 +8,6 @@ using Triton.Bot.Settings;
 using Triton.Common;
 using Triton.Common.LogUtilities;
 using Triton.Game.Mapping;
-using Hearthbuddy.Windows;
 using GreyMagic;
 
 namespace Triton.Bot.Logic.Bots.DefaultBot
@@ -33,6 +32,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         private static readonly ILog _log = Common.LogUtilities.Logger.GetLoggerInstanceForType();
 
         private static DefaultBotSettings _instance;
+        private static readonly object _lock = new object();
 
         public DefaultBotSettings() : base(GetSettingsFilePath(
             Configuration.Instance.Name, string.Format("{0}.json", "DefaultBot")))
@@ -44,23 +44,33 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         {
             get
             {
-                DefaultBotSettings result;
-                if ((result = _instance) == null)
+                if (_instance == null)
                 {
-                    result = (_instance = new DefaultBotSettings());
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                            _instance = new DefaultBotSettings();
+                    }
                 }
-                return result;
+                return _instance;
             }
         }
 
         public void ReloadFile()
         {
             Reload(GetSettingsFilePath(Configuration.Instance.Name,
-                string.Format("{0}.json", "DefaultBot" + GetMyHashCode())));
+                string.Format("{0}.json", "DefaultBot")));
             if (CommandLine.Arguments.Exists("rule"))
             {
-                ConstructedGameRule = (VisualsFormatType)(int.Parse(CommandLine.Arguments.Single("rule")) + 1);
-                _log.ErrorFormat("[中控设置] 传统对战模式 = {0}.", ConstructedGameRule);
+                try
+                {
+                    ConstructedGameRule = (VisualsFormatType)(int.Parse(CommandLine.Arguments.Single("rule")) + 1);
+                    _log.ErrorFormat("[中控设置] 传统对战模式 = {0}.", ConstructedGameRule);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 rule 参数失败: {0}.", e.Message);
+                }
             }
             if (CommandLine.Arguments.Exists("deck"))
             {
@@ -70,14 +80,28 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
             if (CommandLine.Arguments.Exists("width"))
             {
                 ReleaseLimit = true;
-                ReleaseLimitW = int.Parse(CommandLine.Arguments.Single("width"));
-                _log.ErrorFormat("[中控设置] 炉石窗口宽度 = {0}.", ReleaseLimitW);
+                try
+                {
+                    ReleaseLimitW = int.Parse(CommandLine.Arguments.Single("width"));
+                    _log.ErrorFormat("[中控设置] 炉石窗口宽度 = {0}.", ReleaseLimitW);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 width 参数失败: {0}.", e.Message);
+                }
             }
             if (CommandLine.Arguments.Exists("height"))
             {
                 ReleaseLimit = true;
-                ReleaseLimitH = int.Parse(CommandLine.Arguments.Single("height"));
-                _log.ErrorFormat("[中控设置] 炉石窗口高度 = {0}.", ReleaseLimitH);
+                try
+                {
+                    ReleaseLimitH = int.Parse(CommandLine.Arguments.Single("height"));
+                    _log.ErrorFormat("[中控设置] 炉石窗口高度 = {0}.", ReleaseLimitH);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 height 参数失败: {0}.", e.Message);
+                }
             }
         }
 
@@ -116,8 +140,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _constructedGameRule = value;
                     NotifyPropertyChanged(() => ConstructedGameRule);
+                    _log.InfoFormat("[天梯脚本设置] 对战模式 = {0}.", _constructedGameRule);
                 }
-                _log.InfoFormat("[天梯脚本设置] 对战模式 = {0}.", _constructedGameRule);
             }
         }
 
@@ -135,8 +159,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _constructedCustomDeck = text;
                     NotifyPropertyChanged(() => ConstructedCustomDeck);
+                    _log.InfoFormat("[天梯脚本设置] 卡组名称 = {0}.", _constructedCustomDeck);
                 }
-                _log.InfoFormat("[天梯脚本设置] 卡组名称 = {0}.", _constructedCustomDeck);
             }
         }
 
@@ -160,8 +184,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _autoGreet = value;
                     NotifyPropertyChanged(() => AutoGreet);
+                    _log.InfoFormat("[天梯脚本设置] 自动打招呼 = {0}.", _autoGreet);
                 }
-                _log.InfoFormat("[天梯脚本设置] 自动打招呼 = {0}.", _autoGreet);
             }
         }
 
@@ -178,8 +202,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _needsToCacheCustomDecks = value;
                     NotifyPropertyChanged(() => NeedsToCacheCustomDecks);
+                    _log.InfoFormat("[天梯脚本设置] 需要缓存卡组 = {0}.", _needsToCacheCustomDecks);
                 }
-                _log.InfoFormat("[天梯脚本设置] 需要缓存卡组 = {0}.", _needsToCacheCustomDecks);
             }
         }
 
@@ -201,8 +225,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                         ReleaseLimitH = _releaseLimitW / 4 * 3;
                     }
                     NotifyPropertyChanged(() => ReleaseLimitW);
+                    _log.InfoFormat("[天梯脚本设置] 炉石窗口宽度 = {0}.", _releaseLimitW);
                 }
-                _log.InfoFormat("[天梯脚本设置] 炉石窗口宽度 = {0}.", _releaseLimitW);
                 try
                 {
                     if (BotManager.IsRunning && ReleaseLimit)
@@ -229,8 +253,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     if (_releaseLimitH < 90) _releaseLimitH = 90;
                     if (_releaseLimitH > 1080) _releaseLimitH = 1080;
                     NotifyPropertyChanged(() => ReleaseLimitH);
+                    _log.InfoFormat("[天梯脚本设置] 炉石窗口高度 = {0}.", _releaseLimitH);
                 }
-                _log.InfoFormat("[天梯脚本设置] 炉石窗口高度 = {0}.", _releaseLimitH);
             }
         }
 
@@ -246,8 +270,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _releaseLimit = value;
                     NotifyPropertyChanged(() => ReleaseLimit);
+                    _log.InfoFormat("[天梯脚本设置] 自动设置炉石窗口宽高 = {0}.", _releaseLimit);
                 }
-                _log.InfoFormat("[天梯脚本设置] 自动设置炉石窗口宽高 = {0}.", _releaseLimit);
                 try
                 {
                     if (_releaseLimit)
@@ -280,8 +304,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _autoConcedeAfterConstructedWin = value;
                     NotifyPropertyChanged(() => AutoConcedeAfterConstructedWin);
+                    _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = {2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeAfterConstructedWin);
                 }
-                _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = {2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeAfterConstructedWin);
                 if (AutoConcedeAfterConstructedWin)
                 {
                     if (ForceConcedeAtMulligan) ForceConcedeAtMulligan = false;
@@ -307,8 +331,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     _autoConcedeNumberOfWins = value;
                     if (_autoConcedeNumberOfWins < 0) _autoConcedeNumberOfWins = 1;
                     NotifyPropertyChanged(() => AutoConcedeNumberOfWins);
+                    _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 赢{2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeNumberOfWins);
                 }
-                _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 赢{2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeNumberOfWins);
             }
         }
 
@@ -323,8 +347,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     _autoConcedeNumberOfLosses = value;
                     if (_autoConcedeNumberOfLosses < 0) _autoConcedeNumberOfLosses = 1;
                     NotifyPropertyChanged(() => AutoConcedeNumberOfLosses);
+                    _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 投{2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeNumberOfLosses);
                 }
-                _log.InfoFormat("[天梯脚本设置] 保持排名(赢{0}投{1}) = 投{2}.", _autoConcedeNumberOfWins, _autoConcedeNumberOfLosses, _autoConcedeNumberOfLosses);
             }
         }
 
@@ -340,8 +364,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _normalConcede = value;
                     NotifyPropertyChanged(() => NormalConcede);
+                    _log.InfoFormat("[天梯脚本设置] 普通互投拿千胜头像 = {0}.", _normalConcede);
                 }
-                _log.InfoFormat("[天梯脚本设置] 普通互投拿千胜头像 = {0}.", _normalConcede);
                 if (NormalConcede)
                 {
                     if (AutoConcedeAfterConstructedWin) AutoConcedeAfterConstructedWin = false;
@@ -363,8 +387,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     _forceConcedeAtMulligan = value;
                     NotifyPropertyChanged(() => ForceConcedeAtMulligan);
+                    _log.InfoFormat("[天梯脚本设置] 急速投降至互投区 = {0}.", _forceConcedeAtMulligan);
                 }
-                _log.InfoFormat("[天梯脚本设置] 急速投降至互投区 = {0}.", _forceConcedeAtMulligan);
                 if (ForceConcedeAtMulligan)
                 {
                     if (AutoConcedeAfterConstructedWin) AutoConcedeAfterConstructedWin = false;
@@ -413,8 +437,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                         _needNowConcede = false;
                     }
                     NotifyPropertyChanged(() => NeedNowConcede);
+                    _log.InfoFormat("[天梯脚本设置] 立即投降 = {0}.", _needNowConcede);
                 }
-                _log.InfoFormat("[天梯脚本设置] 立即投降 = {0}.", _needNowConcede);
             }
         }
 
@@ -432,8 +456,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     if (_autoConcedeMinDelayMs < 0) _autoConcedeMinDelayMs = 0;
                     if (_autoConcedeMinDelayMs > _autoConcedeMaxDelayMs) _autoConcedeMinDelayMs = _autoConcedeMaxDelayMs;
                     NotifyPropertyChanged(() => AutoConcedeMinDelayMs);
+                    _log.InfoFormat("[天梯脚本设置] 投降最小延时(ms) = {0}.", _autoConcedeMinDelayMs);
                 }
-                _log.InfoFormat("[天梯脚本设置] 投降最小延时(ms) = {0}.", _autoConcedeMinDelayMs);
             }
         }
 
@@ -451,8 +475,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     if (_autoConcedeMaxDelayMs < 0) _autoConcedeMaxDelayMs = 0;
                     if (_autoConcedeMaxDelayMs < _autoConcedeMinDelayMs) _autoConcedeMaxDelayMs = _autoConcedeMinDelayMs;
                     NotifyPropertyChanged(() => AutoConcedeMaxDelayMs);
+                    _log.InfoFormat("[天梯脚本设置] 投降最大延时(ms)  = {0}.", _autoConcedeMaxDelayMs);
                 }
-                _log.InfoFormat("[天梯脚本设置] 投降最大延时(ms)  = {0}.", _autoConcedeMaxDelayMs);
             }
         }
 

@@ -8,13 +8,15 @@ namespace HREngine.Bots
         public void Test()
         {
             Settings.Instance.test = true;
-            string mainPath = @"D:\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\"; // 确保此路径正确
+            // 自动检测 Silverfish 目录路径（基于程序集位置）
+            string assemblyDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string mainPath = Path.Combine(assemblyDir, "Routines", "DefaultRoutine", "Silverfish") + Path.DirectorySeparatorChar;
             Settings.Instance.mainPath = mainPath;
 
-            var testFilePath = Path.Combine(mainPath, @"D:\Hearthbuddy_backed\Routines\DefaultRoutine\Silverfish\data\");
+            var testFilePath = Path.Combine(mainPath, "Test", "Data", "test.txt");
             var data = File.ReadAllText(testFilePath);
-            Settings.Instance.logpath = Path.Combine(mainPath, @"Test\Data\");
-            Settings.Instance.path = Path.Combine(mainPath, @"data\"); // 用于CardDB类构造，读取CardDefs.xml
+            Settings.Instance.logpath = Path.Combine(mainPath, "Test", "Data") + Path.DirectorySeparatorChar;
+            Settings.Instance.path = Path.Combine(mainPath, "data") + Path.DirectorySeparatorChar; // 用于CardDB类构造，读取CardDefs.xml
             InitSetting();
 
             Ai ai = Ai.Instance;

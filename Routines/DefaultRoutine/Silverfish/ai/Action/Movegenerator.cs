@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace HREngine.Bots
         /// <returns>返回所有可能的动作列表</returns>
         public List<Action> getMoveList(Playfield p, bool usePenalityManager, bool useCutingTargets, bool own)
         {
-            List<Action> resultAction = new List<Action>();
+            List<Action> resultAction = ActionListPool.Rent();
 
             // 游戏终止条件：游戏已结束或己方英雄死亡，返回空列表
             if (p.complete || p.ownHero.Hp <= 0)
@@ -625,7 +625,7 @@ namespace HREngine.Bots
 
             // 关键词威胁加成
             if (m.taunt) threat += 10;           // 嘲讽：必须处理，高优先级
-            if (m.divineshild) threat += 8;      // 圣盾：需要两次攻击才能消灭
+            if (m.divineShield) threat += 8;      // 圣盾：需要两次攻击才能消灭
             if (m.poisonous) threat += 10;       // 剧毒：可以消灭任意随从
             if (m.windfury || m.megaWindfury) threat += 5;  // 风怒：可以攻击多次
             if (m.lifesteal) threat += 3;        // 吸血：有恢复能力
@@ -642,7 +642,7 @@ namespace HREngine.Bots
 
             // 特殊机制威胁
             if (m.Deathrattle) threat += 3;      // 亡语：可能有后续效果
-            if (m.divineshild) threat += 5;      // 圣盾额外加成
+            if (m.divineShield) threat += 5;      // 圣盾额外加成
 
             return threat;
         }
@@ -681,8 +681,8 @@ namespace HREngine.Bots
                    result.Add(m);
                    continue;
                }
-               if (uniqueMinions.Contains(m.entitiyID)) continue;
-               uniqueMinions.Add(m.entitiyID);
+               if (uniqueMinions.Contains(m.entityID)) continue;
+               uniqueMinions.Add(m.entityID);
                result.Add(m);
                // bool goingtoadd = true;
                // bool isSpecial = m.handcard.card.isSpecialMinion;
@@ -693,7 +693,7 @@ namespace HREngine.Bots
                //     bool onlyNotSpecial = (!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && otherMinion.silenced));
 
                //     if (onlySpecial && (m.name != otherMinion.name)) continue; // different name -> take it
-               //     // if ((onlySpecial || onlyNotSpecial) && (otherMinion.Angr == m.Angr && otherMinion.Hp == m.Hp && otherMinion.divineshild == m.divineshild && otherMinion.taunt == m.taunt && otherMinion.poisonous == m.poisonous && otherMinion.lifesteal == m.lifesteal && m.handcard.card.isToken == otherMinion.handcard.card.isToken && otherMinion.handcard.card.race == m.handcard.card.race && otherMinion.Spellburst == m.Spellburst && otherMinion.cantAttackHeroes == m.cantAttackHeroes))
+               //     // if ((onlySpecial || onlyNotSpecial) && (otherMinion.Angr == m.Angr && otherMinion.Hp == m.Hp && otherMinion.divineShield == m.divineShield && otherMinion.taunt == m.taunt && otherMinion.poisonous == m.poisonous && otherMinion.lifesteal == m.lifesteal && m.handcard.card.isToken == otherMinion.handcard.card.isToken && otherMinion.handcard.card.race == m.handcard.card.race && otherMinion.Spellburst == m.Spellburst && otherMinion.cantAttackHeroes == m.cantAttackHeroes))
                //     if ((onlySpecial || onlyNotSpecial) && (otherMinion == m))
                //     {
                //         goingtoadd = false;

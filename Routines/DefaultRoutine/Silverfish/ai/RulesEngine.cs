@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Linq;
 using System.IO;
@@ -1046,11 +1046,11 @@ namespace HREngine.Bots
                             possibleRules.AddRange(AttackerIdRulesGame[cardID].Keys);
                             if (attackersWRule.ContainsKey(cardID))
                             {
-                                attackersWRule[cardID].Add(new actUnit(cardID, a, a.own.entitiyID));
+                                attackersWRule[cardID].Add(new actUnit(cardID, a, a.own.entityID));
                             }
                             else
                             {
-                                attackersWRule.Add(cardID, new List<actUnit> { new actUnit(cardID, a, a.own.entitiyID) });
+                                attackersWRule.Add(cardID, new List<actUnit> { new actUnit(cardID, a, a.own.entityID) });
                                 attackersWRulePen.Add(cardID, 0);
                             }
                         }
@@ -3137,42 +3137,42 @@ namespace HREngine.Bots
                     return false;
                 case param.omc_shields_equal:
                     tmp_counter = 0;
-                    foreach (Minion m in p.ownMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.ownMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter == cond.num) return true;
                     return false;
                 case param.omc_shields_notequal:
                     tmp_counter = 0;
-                    foreach (Minion m in p.ownMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.ownMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter != cond.num) return true;
                     return false;
                 case param.omc_shields_greater:
                     tmp_counter = 0;
-                    foreach (Minion m in p.ownMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.ownMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter > cond.num) return true;
                     return false;
                 case param.omc_shields_less:
                     tmp_counter = 0;
-                    foreach (Minion m in p.ownMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.ownMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter < cond.num) return true;
                     return false;
                 case param.emc_shields_equal:
                     tmp_counter = 0;
-                    foreach (Minion m in p.enemyMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.enemyMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter == cond.num) return true;
                     return false;
                 case param.emc_shields_notequal:
                     tmp_counter = 0;
-                    foreach (Minion m in p.enemyMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.enemyMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter != cond.num) return true;
                     return false;
                 case param.emc_shields_greater:
                     tmp_counter = 0;
-                    foreach (Minion m in p.enemyMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.enemyMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter > cond.num) return true;
                     return false;
                 case param.emc_shields_less:
                     tmp_counter = 0;
-                    foreach (Minion m in p.enemyMinions) if (m.divineshild) tmp_counter++;
+                    foreach (Minion m in p.enemyMinions) if (m.divineShield) tmp_counter++;
                     if (tmp_counter < cond.num) return true;
                     return false;
                 case param.omc_taunts_equal:

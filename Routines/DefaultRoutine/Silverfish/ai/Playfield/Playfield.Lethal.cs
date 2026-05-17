@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -358,7 +358,7 @@ namespace HREngine.Bots
                             foreach (Minion mnn in temp.ToArray())
                             {
                                 mnn.cantLowerHPbelowONE = dontkill;
-                                this.minionGetDamageOrHeal(mnn, mnn.entitiyID == target.entitiyID ? damage4 : damage1);
+                                this.minionGetDamageOrHeal(mnn, mnn.entityID == target.entityID ? damage4 : damage1);
                                 mnn.cantLowerHPbelowONE = false;
                             }
                         }
@@ -723,7 +723,7 @@ namespace HREngine.Bots
             foreach (Minion m in this.ownMinions)
             {
                 if (m.taunt) ghd -= m.Hp;
-                if (m.taunt && m.divineshild) ghd -= 1;
+                if (m.taunt && m.divineShield) ghd -= 1;
             }
 
             int guessingHeroDamage = Math.Max(0, ghd);
@@ -1152,8 +1152,8 @@ namespace HREngine.Bots
                         temp.Sort((a, b) => a.Hp.CompareTo(b.Hp));
                         foreach (Minion m in temp)
                         {
-                            if (m.divineshild) continue;
-                            m.divineshild = true;
+                            if (m.divineShield) continue;
+                            m.divineShield = true;
                             break;
                         }
                         continue;

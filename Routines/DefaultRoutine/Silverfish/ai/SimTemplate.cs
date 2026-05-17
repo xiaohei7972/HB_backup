@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 
 namespace HREngine.Bots
 {
@@ -186,11 +185,6 @@ namespace HREngine.Bots
         /// <param name="choice">在有多个选择的情况下使用，例如抉择或发现。表示玩家的选择。</param>
         /// <param name="hc">表示打出的具体手牌信息，可以包含法力值、卡牌类型等信息。</param>
 
-        //public virtual void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
-        //{
-        //    return;
-        //}
-
         /// <summary>
         /// 流放效果（法术牌）
         /// </summary>
@@ -232,7 +226,7 @@ namespace HREngine.Bots
         /// <param name="own"></param>
         /// <param name="num"></param>
         /// <param name="checkBonus"></param>
-        /// <returns></returns>b
+        /// <returns></returns>
         public virtual bool onCardDicscard(Playfield p, Handmanager.Handcard hc, Minion own, int num, bool checkBonus = false)
         {
             return false;
@@ -505,18 +499,6 @@ namespace HREngine.Bots
             return;
         }
 
-        // /// <summary>
-        // /// 当有友方随从攻击后,本牌触发此效果(重载)
-        // /// </summary>
-        // /// <param name="p">游戏场地对象，包含游戏状态信息。</param>
-        // /// <param name="triggerEffectMinion">触发此效果的随从。</param>
-        // /// <param name="attacker">进行攻击的随从。</param>
-        // /// <param name="defender">攻击目标随从。</param>
-        // public virtual void afterMinionAttack(Playfield p, Minion triggerEffectMinion, Minion attacker, Minion defender)
-        // {
-        //     // 默认实现为空。子类可以根据需求重写此方法。
-        //     return;
-        // }
 
 
         /// <summary>
@@ -581,7 +563,7 @@ namespace HREngine.Bots
         /// <param name="triggerEffectMinion"></param>
         /// <param name="summonedMinion"></param>
         //
-        public virtual void afetrMinionSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
+        public virtual void afterMinionSummoned(Playfield p, Minion triggerEffectMinion, Minion summonedMinion)
         {
 
         }
@@ -904,17 +886,5 @@ namespace HREngine.Bots
         {
             return OriginalManaCost;
         }
-        /* public class Enchantment
-        {
-            public virtual void EnchantmentOnMinionAttack(Playfield p, Minion attacker, Minion target, ref bool terminatedAttack)
-            {
-                return;
-            }
-            public virtual void EnchantmentAfterMinionAttack(Playfield p, Minion attacker, Minion defender, bool dontcount = false)
-            {
-                // 默认实现为空。子类可以根据需求重写此方法。
-                return;
-            }
-        } */
     }
 }

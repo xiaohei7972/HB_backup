@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
         }
         // public override void onMinionWasSummoned(Playfield p, Minion m, Minion summonedMinion)
         // {
-        //     if (summonedMinion.playedFromHand && summonedMinion.Angr == 1 && m.own == summonedMinion.own && m.entitiyID != summonedMinion.entitiyID)
+        //     if (summonedMinion.playedFromHand && summonedMinion.Angr == 1 && m.own == summonedMinion.own && m.entityID != summonedMinion.entityID)
         //     {
         //         p.minionGetBuffed(summonedMinion, 2, 2);
         //     }

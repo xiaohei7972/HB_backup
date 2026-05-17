@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
 
             // 检查 target 是否为 null
-            if (target != null && target.own && target.entitiyID != 0)
+            if (target != null && target.own && target.entityID != 0)
             {
                 int newCost = target.handcard.card.cost + 1; // 新随从的法力值消耗增加1点
                 p.minionTransform(target, p.getRandomCardForManaMinion(newCost)); // 变形为一个新的随从

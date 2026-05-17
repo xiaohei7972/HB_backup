@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,9 +16,9 @@ namespace HREngine.Bots
 			if (target != null)
 			{
 				p.minionGetBuffed(target, 2, 2);
-				if (!target.divineshild)
+				if (!target.divineShield)
 				{
-					target.divineshild = true;
+					target.divineShield = true;
 					target.updateReadyness();
 				}
 			}

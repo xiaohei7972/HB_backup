@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace HREngine.Bots
             if (pos == 1)
             {
                 own.taunt = true;
-                own.divineshild = true;
+                own.divineShield = true;
             }
         }
 

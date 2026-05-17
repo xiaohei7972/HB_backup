@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace HREngine.Bots
@@ -233,10 +233,10 @@ namespace HREngine.Bots
 
                                 // 检查敌方英雄是否受到伤害
                                 if (tmp.enemyHero.Hp != tmpPlOld.enemyHero.Hp)
-                                    actIdDmg.Add(tmpPlOld.enemyHero.entitiyID, tmp.enemyHero.Hp - tmpPlOld.enemyHero.Hp);
+                                    actIdDmg.Add(tmpPlOld.enemyHero.entityID, tmp.enemyHero.Hp - tmpPlOld.enemyHero.Hp);
                                 // 检查己方英雄是否受到伤害
                                 if (tmp.ownHero.Hp != tmpPlOld.ownHero.Hp)
-                                    actIdDmg.Add(tmpPlOld.ownHero.entitiyID, tmp.ownHero.Hp - tmpPlOld.ownHero.Hp);
+                                    actIdDmg.Add(tmpPlOld.ownHero.entityID, tmp.ownHero.Hp - tmpPlOld.ownHero.Hp);
 
                                 bool found = false;
                                 // 检查敌方随从是否受到伤害
@@ -245,16 +245,16 @@ namespace HREngine.Bots
                                     found = false;
                                     foreach (Minion nm in tmpPlOld.enemyMinions)
                                     {
-                                        if (m.entitiyID == nm.entitiyID)
+                                        if (m.entityID == nm.entityID)
                                         {
                                             found = true;
                                             // 如果随从受到伤害，记录伤害值
-                                            if (m.Hp != nm.Hp) actIdDmg.Add(m.entitiyID, m.Hp - nm.Hp);
+                                            if (m.Hp != nm.Hp) actIdDmg.Add(m.entityID, m.Hp - nm.Hp);
                                             break;
                                         }
                                     }
                                     // 如果是新出现的随从，记录其当前生命值
-                                    if (!found) actIdDmg.Add(m.entitiyID, m.Hp);
+                                    if (!found) actIdDmg.Add(m.entityID, m.Hp);
                                 }
                                 // 检查己方随从是否受到伤害
                                 foreach (Minion m in tmp.ownMinions)
@@ -262,16 +262,16 @@ namespace HREngine.Bots
                                     found = false;
                                     foreach (Minion nm in tmpPlOld.ownMinions)
                                     {
-                                        if (m.entitiyID == nm.entitiyID)
+                                        if (m.entityID == nm.entityID)
                                         {
                                             found = true;
                                             // 如果随从受到伤害，记录伤害值
-                                            if (m.Hp != nm.Hp) actIdDmg.Add(m.entitiyID, m.Hp - nm.Hp);
+                                            if (m.Hp != nm.Hp) actIdDmg.Add(m.entityID, m.Hp - nm.Hp);
                                             break;
                                         }
                                     }
                                     // 如果是新出现的随从，记录其当前生命值
-                                    if (!found) actIdDmg.Add(m.entitiyID, m.Hp);
+                                    if (!found) actIdDmg.Add(m.entityID, m.Hp);
                                 }
                                 // 将随机伤害的结果添加到字典中
                                 rndActIdsDmg.Add(aa.hc.entity, actIdDmg);
@@ -303,22 +303,22 @@ namespace HREngine.Bots
                             // 获取随机伤害的结果
                             Dictionary<int, int> actIdDmg = rndActIdsDmg[a.hc.entity];
                             // 处理敌方英雄的伤害
-                            if (actIdDmg.ContainsKey(tmpPf.enemyHero.entitiyID))
-                                tmpPf.minionGetDamageOrHeal(tmpPf.enemyHero, actIdDmg[tmpPf.enemyHero.entitiyID]);
+                            if (actIdDmg.ContainsKey(tmpPf.enemyHero.entityID))
+                                tmpPf.minionGetDamageOrHeal(tmpPf.enemyHero, actIdDmg[tmpPf.enemyHero.entityID]);
                             // 处理己方英雄的伤害
-                            if (actIdDmg.ContainsKey(tmpPf.ownHero.entitiyID))
-                                tmpPf.minionGetDamageOrHeal(tmpPf.ownHero, actIdDmg[tmpPf.ownHero.entitiyID]);
+                            if (actIdDmg.ContainsKey(tmpPf.ownHero.entityID))
+                                tmpPf.minionGetDamageOrHeal(tmpPf.ownHero, actIdDmg[tmpPf.ownHero.entityID]);
                             // 处理敌方随从的伤害
                             foreach (Minion m in tmpPf.enemyMinions)
                             {
-                                if (actIdDmg.ContainsKey(m.entitiyID))
-                                    tmpPf.minionGetDamageOrHeal(m, actIdDmg[m.entitiyID]);
+                                if (actIdDmg.ContainsKey(m.entityID))
+                                    tmpPf.minionGetDamageOrHeal(m, actIdDmg[m.entityID]);
                             }
                             // 处理己方随从的伤害
                             foreach (Minion m in tmpPf.ownMinions)
                             {
-                                if (actIdDmg.ContainsKey(m.entitiyID))
-                                    tmpPf.minionGetDamageOrHeal(m, actIdDmg[m.entitiyID]);
+                                if (actIdDmg.ContainsKey(m.entityID))
+                                    tmpPf.minionGetDamageOrHeal(m, actIdDmg[m.entityID]);
                             }
                             // 触发伤害相关的效果
                             tmpPf.doDmgTriggers();
@@ -403,7 +403,7 @@ namespace HREngine.Bots
                     // 查找要攻击的随从
                     foreach (Minion m in p.ownMinions)
                     {
-                        if (m.entitiyID == a.own.entitiyID)
+                        if (m.entityID == a.own.entityID)
                         {
                             // 如果随从没有准备好，则返回 false
                             if (!m.Ready)
@@ -448,7 +448,7 @@ namespace HREngine.Bots
                     // 检查地标是否可以使用
                     foreach (Minion m in p.ownMinions)
                     {
-                        if (m.entitiyID == a.own.entitiyID)
+                        if (m.entityID == a.own.entityID)
                         {
                             // 确认地标类型并检查其冷却时间是否已经结束
                             if (m.handcard.card.type == CardDB.cardtype.LOCATION && m.CooldownTurn == 0)
@@ -464,7 +464,7 @@ namespace HREngine.Bots
                     // 检查泰坦是否可以使用
                     foreach (Minion m in p.ownMinions)
                     {
-                        if (m.entitiyID == a.own.entitiyID)
+                        if (m.entityID == a.own.entityID)
                         {
                             // 确认泰坦技能是否可以使用（至少有一个技能未使用）
                             if (m.handcard.card.Titan && (!m.TitanAbilityUsed1 || !m.TitanAbilityUsed2 || !m.TitanAbilityUsed3))
@@ -510,7 +510,7 @@ namespace HREngine.Bots
                 actionFound = false;
 
                 // 检查目标是否是敌方英雄或己方英雄
-                if (p.enemyHero.entitiyID == a.target.entitiyID || p.ownHero.entitiyID == a.target.entitiyID)
+                if (p.enemyHero.entityID == a.target.entityID || p.ownHero.entityID == a.target.entityID)
                 {
                     actionFound = true;
                 }
@@ -519,7 +519,7 @@ namespace HREngine.Bots
                     // 检查目标是否是敌方随从
                     foreach (Minion m in p.enemyMinions)
                     {
-                        if (m.entitiyID == a.target.entitiyID)
+                        if (m.entityID == a.target.entityID)
                         {
                             actionFound = true;
                             break;
@@ -530,7 +530,7 @@ namespace HREngine.Bots
                     {
                         foreach (Minion m in p.ownMinions)
                         {
-                            if (m.entitiyID == a.target.entitiyID)
+                            if (m.entityID == a.target.entityID)
                             {
                                 actionFound = true;
                                 break;

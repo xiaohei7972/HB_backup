@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
 			int dmg = p.owncards.Count;
-			p.allMinionsGetDamage(dmg, own.entitiyID);
+			p.allMinionsGetDamage(dmg, own.entityID);
 		}
 	}
 }

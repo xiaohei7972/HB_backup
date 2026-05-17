@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
             {
                 if (m.handcard.card.race == CardDB.Race.MURLOC)
                 {
-                    if (m.entitiyID != own.entitiyID) p.minionGetBuffed(own, 1, 0);
+                    if (m.entityID != own.entityID) p.minionGetBuffed(own, 1, 0);
                 }
             }
 
@@ -24,7 +24,7 @@ namespace HREngine.Bots
             {
                 if (m.handcard.card.race == CardDB.Race.MURLOC)
                 {
-                    if (m.entitiyID != own.entitiyID) p.minionGetBuffed(own, 1, 0);
+                    if (m.entityID != own.entityID) p.minionGetBuffed(own, 1, 0);
                 }
             }
 		}

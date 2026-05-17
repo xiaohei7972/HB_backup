@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -27,7 +27,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in own.own ? p.enemyMinions : p.ownMinions)
                 {
-                    if (m.entitiyID != summonedBeast.entitiyID) // 确保野兽不攻击自己
+                    if (m.entityID != summonedBeast.entityID) // 确保野兽不攻击自己
                     {
                         p.minionAttacksMinion(summonedBeast, m);
                     }

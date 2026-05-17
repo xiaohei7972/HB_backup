@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,7 @@ namespace HREngine.Bots
 
         // public override void onMinionWasSummoned(Playfield p, Minion m, Minion summonedMinion)
         // {
-        //     if (summonedMinion.handcard.card.battlecry && summonedMinion.playedFromHand && summonedMinion.own == m.own && summonedMinion.entitiyID != m.entitiyID)
+        //     if (summonedMinion.handcard.card.battlecry && summonedMinion.playedFromHand && summonedMinion.own == m.own && summonedMinion.entityID != m.entityID)
         //     {
         //         Minion target = null;
 

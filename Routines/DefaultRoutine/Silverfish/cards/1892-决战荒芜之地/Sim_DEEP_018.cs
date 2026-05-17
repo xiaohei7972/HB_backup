@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,9 +15,9 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
         {
             // 给目标随从赋予圣盾
-            if (target != null && target.divineshild == false)
+            if (target != null && target.divineShield == false)
             {
-                target.divineshild = true;
+                target.divineShield = true;
             }
 
             // 发掘一个宝藏

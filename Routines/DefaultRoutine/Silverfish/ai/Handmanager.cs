@@ -120,6 +120,74 @@ namespace HREngine.Bots
 
 
             }
+            /// <summary>
+            /// 将 source 的所有字段复制到当前实例中（复用现有对象，不分配新内存）。
+            /// 等价于拷贝构造函数 Handcard(Handcard hc)。
+            /// 此方法供 HandcardPool.Rent() 使用。
+            /// </summary>
+            public void CopyFrom(Handcard hc)
+            {
+                this.position = hc.position;
+                this.entity = hc.entity;
+                this.manacost = hc.manacost;
+                this.card = hc.card;
+                this.addattack = hc.addattack;
+                this.addHp = hc.addHp;
+                this.poweredUp = hc.poweredUp;
+                this.SCRIPT_DATA_NUM_1 = hc.SCRIPT_DATA_NUM_1;
+                this.SCRIPT_DATA_NUM_2 = hc.SCRIPT_DATA_NUM_2;
+                this.MODULAR_ENTITY_PART_1 = hc.MODULAR_ENTITY_PART_1;
+                this.MODULAR_ENTITY_PART_2 = hc.MODULAR_ENTITY_PART_2;
+                this.discovered = hc.discovered;
+                this.TAG_ONE_TURN_EFFECT = hc.TAG_ONE_TURN_EFFECT;
+                this.LUNAHIGHLIGHTHINT = hc.LUNAHIGHLIGHTHINT;
+                this.scheme = hc.scheme;
+                this.enchs = hc.enchs;
+                this.darkmoon_num = hc.darkmoon_num;
+                this.extraParam2 = hc.extraParam2;
+                this.extraParam3 = hc.extraParam3;
+                this.temporary = hc.temporary;
+                this.valeeraShadow = hc.valeeraShadow;
+                this.conditionalCount = hc.conditionalCount;
+                this.conditionalList = hc.conditionalList;
+                this.literallyUnplayable = hc.literallyUnplayable;
+                this.HAS_DARK_GIFT = hc.HAS_DARK_GIFT;
+            }
+
+            /// <summary>
+            /// 将 Handcard 实例重置为可复用的空状态，以便安全地归还对象池。
+            /// 清除列表和字段引用，值类型字段由后续的 CopyFrom 覆盖。
+            /// </summary>
+            public void ClearForPool()
+            {
+                this.position = 0;
+                this.entity = -1;
+                this.manacost = 1000;
+                this.addattack = 0;
+                this.addHp = 0;
+                this.poweredUp = 0;
+                this.SCRIPT_DATA_NUM_1 = 0;
+                this.SCRIPT_DATA_NUM_2 = 0;
+                this.MODULAR_ENTITY_PART_1 = 0;
+                this.MODULAR_ENTITY_PART_2 = 0;
+                this.TAG_ONE_TURN_EFFECT = 0;
+                this.LUNAHIGHLIGHTHINT = 0;
+                this.scheme = 1;
+                this.darkmoon_num = 0;
+                this.extraParam2 = 0;
+                this.extraParam3 = false;
+                this.discovered = false;
+                this.temporary = false;
+                this.valeeraShadow = false;
+                this.conditionalCount = 0;
+                this.literallyUnplayable = false;
+                this.HAS_DARK_GIFT = CardDB.cardIDEnum.None;
+                this.target = null;
+                this.card = CardDB.Instance.unknownCard;
+                this.enchs.Clear();
+                this.conditionalList.Clear();
+            }
+
             public Handcard(CardDB.Card c)
             {
                 this.manacost = c.cost;

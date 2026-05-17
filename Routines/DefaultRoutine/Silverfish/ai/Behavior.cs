@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -450,13 +450,13 @@ namespace HREngine.Bots
             // 风怒价值
             if ((!m.playedThisTurn || m.rush == 1 || m.charge == 1) && m.windfury) retval += m.Angr;
             // 圣盾价值
-            if (m.divineshild) retval += m.Angr / 2 + 1;
+            if (m.divineShield) retval += m.Angr / 2 + 1;
             // 潜行价值
             if (m.stealth) retval += m.Angr / 3 + 1;
             // 吸血
             if (m.lifesteal) retval += m.Angr / 3 + 1;
             // 圣盾嘲讽
-            if (m.divineshild && m.taunt) retval += 4;
+            if (m.divineShield && m.taunt) retval += 4;
             retval += m.synergy;
             return retval;
         }
@@ -597,28 +597,28 @@ namespace HREngine.Bots
             List<Minion> enemyMinions = new List<Minion>(p.enemyMinions);
             List<Minion> ownMinions = new List<Minion>(p.ownMinions);
             enemyMinions.Sort((a, b) => -(a.poisonous ? 10000 : a.Angr + (a.untouchable ? -100 : 0)).CompareTo(b.poisonous ? 10000 : b.Angr + (b.untouchable ? -100 : 0)));
-            ownMinions.Sort((a, b) => -(getMyMinionValue(a, p) + (a.taunt ? 1000 : 0) + (a.Hp > 5 || a.untouchable || a.divineshild || a.stealth ? -100 : 0)).CompareTo(getMyMinionValue(b, p)) + (b.taunt ? 1000 : 0) + (b.Hp > 5 || b.untouchable || b.divineshild || b.stealth ? -100 : 0));
+            ownMinions.Sort((a, b) => -(getMyMinionValue(a, p) + (a.taunt ? 1000 : 0) + (a.Hp > 5 || a.untouchable || a.divineShield || a.stealth ? -100 : 0)).CompareTo(getMyMinionValue(b, p)) + (b.taunt ? 1000 : 0) + (b.Hp > 5 || b.untouchable || b.divineShield || b.stealth ? -100 : 0));
             int minCnt = enemyMinions.Count > ownMinions.Count ? ownMinions.Count : enemyMinions.Count;
             for (int i = 0; i < minCnt; i++)
             {
                 // 对手可以进行交换
                 if ((enemyMinions[i].Angr >= ownMinions[i].Hp || enemyMinions[i].poisonous))
                 {
-                    if (ownMinions[i].untouchable || enemyMinions[i].untouchable || ownMinions[i].divineshild || ownMinions[i].stealth)
+                    if (ownMinions[i].untouchable || enemyMinions[i].untouchable || ownMinions[i].divineShield || ownMinions[i].stealth)
                     {
                         continue;
                     }
                     // 攻击前
                     int enemyVal1 = getEnemyMinionValue(enemyMinions[i], p);
                     Minion afterAtk = new Minion(enemyMinions[i]);
-                    if (!enemyMinions[i].divineshild)
+                    if (!enemyMinions[i].divineShield)
                     {
                         afterAtk.Hp -= ownMinions[i].Angr;
                         if (ownMinions[i].poisonous) afterAtk.Hp = 0;
                     }
                     else
                     {
-                        afterAtk.divineshild = false;
+                        afterAtk.divineShield = false;
                     }
                     // 攻击后
                     int enemyVal2 = getEnemyMinionValue(afterAtk, p);
@@ -676,8 +676,8 @@ namespace HREngine.Bots
                 foreach (Minion m in p.enemyMinions)
                 {
                     if (m.Hp <= 0) continue;
-                    if (found_flameward && m.Hp <= 3 && !m.divineshild) continue;
-                    if (found_explosive && m.Hp <= 2 && !m.divineshild) continue;
+                    if (found_flameward && m.Hp <= 3 && !m.divineShield) continue;
+                    if (found_explosive && m.Hp <= 2 && !m.divineShield) continue;
                     enemyAtk += m.Angr;
                     if (m.windfury)
                     {
@@ -723,6 +723,38 @@ namespace HREngine.Bots
         public virtual int getUseTitanAbilityPenality(Minion m, Minion target, Playfield p)
         {
             return 0;
+        }
+
+        /// <summary>
+        /// 留牌辅助方法：保留一张卡，丢弃其余同名卡
+        /// 在 specialMulligan 中调用，避免重复的 foreach 循环
+        /// </summary>
+        /// <param name="cards">起手卡牌列表</param>
+        /// <param name="card">当前卡牌</param>
+        /// <param name="reason">留牌原因（中文）</param>
+        protected void keepOneDiscardRest(List<Mulligan.CardIDEntity> cards, Mulligan.CardIDEntity card, string reason)
+        {
+            foreach (Mulligan.CardIDEntity tmp in cards)
+            {
+                if (tmp.entitiy == card.entitiy) continue;
+                if (tmp.id == card.id)
+                {
+                    tmp.holdByRule = -2;
+                    tmp.holdReason = "按规则丢弃第二张卡" + reason;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 留牌辅助方法：丢弃所有同名卡
+        /// 在 specialMulligan 中调用，避免重复代码
+        /// </summary>
+        /// <param name="card">当前卡牌</param>
+        /// <param name="reason">丢弃原因（中文）</param>
+        protected void discardAll(Mulligan.CardIDEntity card, string reason)
+        {
+            card.holdByRule = -2;
+            card.holdReason = "按规则丢弃" + reason;
         }
 
         /// <summary>

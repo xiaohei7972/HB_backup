@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
         {
             if (hc.card.type == CardDB.cardtype.SPELL && hc.target != null && hc.target.own == wasOwnCard)
             {
-                if (hc.target.own == triggerEffectMinion.own && hc.target.entitiyID != triggerEffectMinion.entitiyID)
+                if (hc.target.own == triggerEffectMinion.own && hc.target.entityID != triggerEffectMinion.entityID)
                 {
                     hc.card.sim_card.onCardPlay(p, wasOwnCard, triggerEffectMinion, hc.extraParam2, hc);
                 }

@@ -11,7 +11,11 @@ namespace HREngine.Bots
 	//<b>回溯</b>，<b>回溯</b>，<b>回溯</b><b>战吼：</b>随机召唤2个<b>传说</b>随从。
 	class Sim_TIME_038 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			int pos = own.zonepos;
+			p.callKid(p.getRandomCardForManaMinion(10), pos, own.own);
+			p.callKid(p.getRandomCardForManaMinion(10), pos, own.own);
+		}
 	}
 }

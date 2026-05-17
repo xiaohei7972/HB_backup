@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +10,7 @@ namespace HREngine.Bots
         //<b>突袭</b>。<b><b>法术迸发</b>：</b>获得<b>圣盾</b>。
         public override void OnSpellburst(Playfield p, Minion m, Handmanager.Handcard hc)
         {
-            m.divineshild = true;
+            m.divineShield = true;
         }
     }
 }

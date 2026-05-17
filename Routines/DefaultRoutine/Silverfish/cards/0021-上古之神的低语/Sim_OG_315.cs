@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
             List<Minion> temp = (own.own) ? p.ownMinions : p.enemyMinions;
             foreach (Minion m in temp)
             {
-                if (m.entitiyID == own.entitiyID) continue;
+                if (m.entityID == own.entityID) continue;
                 if ((TAG_RACE)m.handcard.card.race == TAG_RACE.PIRATE)
                 {
                     if (own.own)

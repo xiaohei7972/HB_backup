@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 		{
 			foreach (Minion m in attacker.own ? p.ownMinions : p.enemyMinions)
 			{
-				if (m.handcard.card.cardIDenum == CardDB.cardIDEnum.GDB_235 || m.entitiyID == attacker.entitiyID) continue;
+				if (m.handcard.card.cardIDenum == CardDB.cardIDEnum.GDB_235 || m.entityID == attacker.entityID) continue;
 				m.extraAttacksThisTurn++;
 				m.updateReadyness();
 

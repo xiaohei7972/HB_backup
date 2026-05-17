@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,7 @@ namespace HREngine.Bots
 	{
 		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
 		{
-			own.divineshild = true;
+			own.divineShield = true;
 			own.lifesteal = true;
 			p.drawACard(p.handleExcavation().cardIDenum, own.own, true);
         }

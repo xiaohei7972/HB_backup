@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 			if (target != null)
 			{
 				p.minionGetBuffed(target, 3, 3);
-				target.divineshild = true;
+				target.divineShield = true;
 				p.minionGetDamageOrHeal(ownplay ? p.ownHero : p.enemyHero, 3);
 
 			}

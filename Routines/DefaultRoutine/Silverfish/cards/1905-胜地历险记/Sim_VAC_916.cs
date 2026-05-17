@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
         {
             if (target != null)
             {
-                if (target.divineshild)
+                if (target.divineShield)
                 {
                     // 如果目标已有圣盾，增加1点攻击力（仅限本回合）
                     p.minionGetTempBuff(target, 1, 0);
@@ -23,7 +23,7 @@ namespace HREngine.Bots
                 else
                 {
                     // 否则给予目标圣盾
-                    target.divineshild = true;
+                    target.divineShield = true;
                 }
 
                 // 触发“还剩3杯”的效果，抽一张指定卡牌（假设卡牌ID为 VAC_916t2）

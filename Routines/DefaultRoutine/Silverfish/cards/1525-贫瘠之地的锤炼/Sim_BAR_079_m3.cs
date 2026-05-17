@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -50,7 +50,7 @@ namespace HREngine.Bots
             }
             if (hc.enchs.Contains(CardDB.cardIDEnum.BAR_079t6))
             {
-                own.divineshild = true;
+                own.divineShield = true;
             }
             if (hc.enchs.Contains(CardDB.cardIDEnum.BAR_079t7))
             {

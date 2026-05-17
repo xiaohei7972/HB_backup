@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace HREngine.Bots
                 int dmg = p.getSpellDamageDamage(3);
                 p.minionGetDamageOrHeal(target, dmg);
                 p.ownSecretsIDList.Add(CardDB.cardIDEnum.None);
-                if (dmg == target.Hp && !target.divineshild)
+                if (dmg == target.Hp && !target.divineShield)
                 {
                     p.ownSecretsIDList.Add(CardDB.cardIDEnum.None);
                 }

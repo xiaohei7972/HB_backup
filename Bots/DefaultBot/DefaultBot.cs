@@ -31,6 +31,10 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         private static readonly ILog ilog_0;
 
         private Coroutine coroutine_0;
+        private bool _needsCoroutineReset = false;
+        private int _hbTimer;
+        private int _hbCount;
+        private Func<Task> _sceneAllProcDelegate;
 
         private EmoteType emoteType_0;
 
@@ -724,6 +728,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 await Coroutine.Sleep(3000);
             }
             DefaultBotSettings.Instance.LastDeckId = heroPickerButton_0.m_preconDeckID;
+            DefaultBotSettings.Instance.Save();
             return true;
         }
 
@@ -736,7 +741,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
             {
                 for (int i = 0; i < list_1.Count; i++)
                 {
-                    collectionDeckBoxVisual = list_1[i].m_customDecks.FirstOrDefault((CollectionDeckBoxVisual x) => x.m_deckName.Text.Equals(string_1));
+                    collectionDeckBoxVisual = list_1[i].m_customDecks.FirstOrDefault((CollectionDeckBoxVisual x) => x.m_deckName.Text.Equals(string_1, StringComparison.OrdinalIgnoreCase));
                     if (collectionDeckBoxVisual != null)
                     {
                         ilog_0.DebugFormat("[卡组选择] 在第{0}页找到卡组\"{1}\"，现在切换到页面{2}.",
@@ -763,6 +768,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     Client.LeftClickAt(position);
                     DefaultBotSettings.Instance.LastDeckId = collectionDeckBoxVisual.m_deckID;
+                    DefaultBotSettings.Instance.Save();
                     await Coroutine.Sleep(3000);
                     ilog_0.DebugFormat("[卡组选择] 已选中卡组\"{0}\".", string_1);
                     return true;
@@ -1664,21 +1670,51 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         //脚本启动
         public void Start()
         {
-            coroutine_0 = new Coroutine(() => SceneAllProc());
+            try
+            {
+            _sceneAllProcDelegate = () => SceneAllProc();
+            coroutine_0 = new Coroutine(_sceneAllProcDelegate);
             bool_2 = false;
+            ilog_0.Debug("[Start] Step1: GameEventManager.Instance.Start()...");
             GameEventManager.Instance.Start();
+            ilog_0.Debug("[Start] Step2: ProcessHookManager.Enable() (hooks 1+2 only)...");
             ProcessHookManager.Enable();
+            ilog_0.Debug("[Start] Step2.1: NewGame event...");
             GameEventManager.NewGame += NewGameEventArgsFunc;
+            ilog_0.Debug("[Start] Step2.2: GameOver event...");
             GameEventManager.GameOver += GameOverEventArgsFunc;
+            ilog_0.Debug("[Start] Step2.3: MulliganConfirm event...");
             GameEventManager.MulliganConfirm += MulliganConfirmEventArgsFunc;
-            InactivePlayerKicker.Get().SetShouldCheckForInactivity(check: false);
+            ilog_0.Debug("[Start] Step2.4: InactivePlayerKicker...");
+            try { var ik = InactivePlayerKicker.Get(); if (ik != null) ik.SetShouldCheckForInactivity(check: false); }
+            catch (Exception ex) { ilog_0.Warn("[Start] InactivePlayerKicker unavailable in x64: " + ex.Message); }
 
-            BnetPresenceMgr bnet = BnetPresenceMgr.Get();
-            BnetBattleTag battleTag = bnet.GetMyPlayer().GetAccount().GetBattleTag();
-            string hashCode = (battleTag.GetName() + "#" +
-                battleTag.GetNumber()).GetHashCode().ToString();
-            JsonSettings.SetMyHashCode(hashCode);
-            DevSettings.Instance.CurrAccountHashCode = hashCode;
+            ilog_0.Debug("[Start] Step3: BnetPresenceMgr.Get()...");
+            try
+            {
+                BnetPresenceMgr bnet = BnetPresenceMgr.Get();
+                if (bnet != null)
+                {
+                    ilog_0.Debug("[Start] Step4: bnet.GetMyPlayer()...");
+                    var player = bnet.GetMyPlayer();
+                    if (player != null)
+                    {
+                        var account = player.GetAccount();
+                        if (account != null)
+                        {
+                            BnetBattleTag battleTag = account.GetBattleTag();
+                            if (battleTag != null)
+                            {
+                                string hashCode = (battleTag.GetName() + "#" +
+                                    battleTag.GetNumber()).GetHashCode().ToString();
+                                JsonSettings.SetMyHashCode(hashCode);
+                                DevSettings.Instance.CurrAccountHashCode = hashCode;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { ilog_0.Warn("[Start] BnetPresenceMgr chain failed (x64): " + ex.Message); }
 
             DefaultBotSettings.Instance.ReloadFile();
 
@@ -1705,51 +1741,96 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
 
             PluginManager.Start();
             RoutineManager.Start();
+
+            // Heartbeat: log every 2s to narrow down crash timing
+            _hbTimer = Environment.TickCount;
+            _hbCount = 0;
+            }
+            catch (Exception ex)
+            {
+                ilog_0.Error("[Start] CRASH: " + ex.ToString());
+                throw;
+            }
         }
 
         //脚本停止
         public void Stop()
         {
+            ilog_0.Debug("[Stop] Disposing coroutine...");
             if (coroutine_0 != null)
             {
                 coroutine_0.Dispose();
                 coroutine_0 = null;
             }
+            _needsCoroutineReset = false;
+            ilog_0.Debug("[Stop] Unsubscribing events...");
             GameEventManager.GameOver -= GameOverEventArgsFunc;
             GameEventManager.NewGame -= NewGameEventArgsFunc;
             GameEventManager.MulliganConfirm -= MulliganConfirmEventArgsFunc;
+            ilog_0.Debug("[Stop] GameEventManager.Stop()...");
             GameEventManager.Instance.Stop();
+            ilog_0.Debug("[Stop] PluginManager.Stop()...");
             PluginManager.Stop();
+            ilog_0.Debug("[Stop] RoutineManager.Stop()...");
             RoutineManager.Stop();
+            ilog_0.Debug("[Stop] ProcessHookManager.Disable()...");
             ProcessHookManager.Disable();
+            ilog_0.Debug("[Stop] Done.");
         }
 
         //脚本循环
         public void Tick()
         {
-            if (coroutine_0.IsFinished)
+            ilog_0.Debug("[Tick] Entered Tick()");
+
+            // 检查停止信号 - 响应用户的停止请求
+            if (!BotManager.IsRunning)
             {
-                ilog_0.DebugFormat("脚本已经停止 {0}", coroutine_0.Status);
+                if (coroutine_0 != null)
+                {
+                    coroutine_0.Dispose();
+                    coroutine_0 = null;
+                }
+                return;
+            }
+
+            if (coroutine_0 == null || coroutine_0.IsFinished)
+            {
+                ilog_0.DebugFormat("脚本已经停止 {0}", coroutine_0 != null ? coroutine_0.Status.ToString() : "null");
                 BotManager.Stop();
                 return;
             }
+
+            // Performance optimization: Defer coroutine recreation to avoid allocation pressure.
+            // Instead of 4 separate Dispose+new patterns, use a flag and reset once.
             if (!TritonHs.IsClientInUsableState(logReason: true))
             {
                 BotManager.MsBeforeNextTick += 750;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
+            // Heartbeat: track crash timing
+            int now = Environment.TickCount;
+            if (now - _hbTimer > 2000) { _hbTimer = now; ilog_0.Debug("[HB] Alive #" + (++_hbCount)); }
+
+            // Reset coroutine once at the start of next usable state
+            if (_needsCoroutineReset)
+            {
+                coroutine_0.Dispose();
+                coroutine_0 = new Coroutine(_sceneAllProcDelegate);
+                _needsCoroutineReset = false;
+            }
+
             if (!bool_2 && ChatMgr.Get().FriendListFrame != null)
             {
                 ilog_0.ErrorFormat("[脚本循环] 好友聊天列表不为空.");
-                Client.LeftClickAtDialog(BnetBar.Get().
-                    m_friendButton.m_OnlineCountText.Transform.Position);
+                Client.LeftClickAtDialog(BnetBar.Get().m_friendButton.m_OnlineCountText.Transform.Position);
                 BotManager.MsBeforeNextTick += 1000;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
             bool unhandled = false;
             if (TritonHs.HandleDialog(ShouldAcceptFriendlyChallenge, out unhandled))
             {
@@ -1758,21 +1839,20 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     BotManager.Stop();
                 }
                 BotManager.MsBeforeNextTick += 3000;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
             GameEventManager.Instance.Tick();
             PluginManager.Tick();
             RoutineManager.Tick();
             try
             {
-                coroutine_0.Resume();//bot动作
+                coroutine_0.Resume();
             }
             catch
             {
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 throw;
             }
         }

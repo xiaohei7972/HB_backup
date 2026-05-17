@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace HREngine.Bots
 			int heal = own.own ? p.getMinionHeal(-3) : p.getEnemyMinionHeal(-3);
 			Minion hero = own.own ? p.ownHero : p.enemyHero;
 			p.minionGetDamageOrHeal(hero, heal);
-			hero.divineshild = true;
+			hero.divineShield = true;
 		}
 
 	}

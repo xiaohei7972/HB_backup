@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace HREngine.Bots
 
         public override void OnHonorableKill(Playfield p, Minion attacker, Minion target)
         {
-            if (target != null && attacker.Angr == target.Hp && !target.divineshild)
+            if (target != null && attacker.Angr == target.Hp && !target.divineShield)
             {
                 p.callKid(kid, attacker.zonepos, attacker.own);
             }

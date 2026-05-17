@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,7 +23,7 @@ namespace HREngine.Bots
                 if (summonedMinion != null)
                 {
                 // 赋予圣盾效果
-                    summonedMinion.divineshild = true;
+                    summonedMinion.divineShield = true;
                 }
             }
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,7 +70,7 @@ namespace HREngine.Bots
             int val = getValueOfEnemyMinion(mnn);
             foreach (Minion m in p.enemyMinions)
             {
-                if (litt.Find(x => x.entitiyID == m.entitiyID) == null) continue;
+                if (litt.Find(x => x.entityID == m.entityID) == null) continue;
                 if (getValueOfEnemyMinion(m) < val) ret = false;
             }
             return ret;

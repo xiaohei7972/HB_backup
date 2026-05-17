@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
 
             foreach (Minion m in p.ownMinions.ToArray())
             {
-                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+                if (m.untouchable || m.entityID == own.entityID) continue;
 				{
 					p.addCorpses(1);
                     p.minionGetDestroyed(m);
@@ -25,7 +25,7 @@ namespace HREngine.Bots
             }
             foreach (Minion m in p.enemyMinions.ToArray())
             {
-                if (m.untouchable || m.entitiyID == own.entitiyID) continue;
+                if (m.untouchable || m.entityID == own.entityID) continue;
 				{
 					p.addCorpses(1);
                     p.minionGetDestroyed(m);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +30,7 @@ namespace HREngine.Bots
                     // 有火焰术士必定加给火焰术士
                     foreach(Minion m in p.ownMinions)
                     {
-                        if(m.handcard.card.nameCN == CardDB.cardNameCN.火焰术士弗洛格尔 && !m.poisonous && target!=null && target.entitiyID != m.entitiyID)
+                        if(m.handcard.card.nameCN == CardDB.cardNameCN.火焰术士弗洛格尔 && !m.poisonous && target!=null && target.entityID != m.entityID)
                         {
                             return 1000;
                         }
@@ -78,7 +78,7 @@ namespace HREngine.Bots
         {
             int pen = -10;
             // 谁莫名其妙给我设置了 16 点杀怪奖励？
-            //if (target.Hp <= p.ownHero.Angr && !target.divineshild)
+            //if (target.Hp <= p.ownHero.Angr && !target.divineShield)
             //{
             //    pen += 16;
             //}
@@ -164,7 +164,7 @@ namespace HREngine.Bots
                             if (a.hc.card.nameCN == CardDB.cardNameCN.鱼人恩典 || a.hc.card.nameCN == CardDB.cardNameCN.鱼勇可贾)
                                 return -15000; // 不可接受，抛弃本牌面以及子牌面
                         }
-                        if (a.actionType == actionEnum.attackWithMinion && !a.target.isHero && a.own.Hp < 3 && !a.own.divineshild)
+                        if (a.actionType == actionEnum.attackWithMinion && !a.target.isHero && a.own.Hp < 3 && !a.own.divineShield)
                         {
                             return -15000; // 不可接受，抛弃本牌面以及子牌面
                         }
@@ -212,7 +212,7 @@ namespace HREngine.Bots
             //if (canBe_duplicate)
             //{
             //    pen = 1;
-            //    if (target.Hp > m.Angr || target.divineshild) return 0;
+            //    if (target.Hp > m.Angr || target.divineShield) return 0;
             //    else
             //    {
             //        pen += target.handcard.manacost;
@@ -255,7 +255,7 @@ namespace HREngine.Bots
                     for (int i = first_attack_hero + 1; i < p.playactions.Count; i++)
                     {
                         Action a = p.playactions[i];
-                        if (a.actionType == actionEnum.attackWithMinion && !a.target.isHero && a.own.Hp < 3 && !a.own.divineshild)
+                        if (a.actionType == actionEnum.attackWithMinion && !a.target.isHero && a.own.Hp < 3 && !a.own.divineShield)
                         {
                             return -15000; // 不可接受，抛弃本牌面以及子牌面
                         }
@@ -263,7 +263,7 @@ namespace HREngine.Bots
                     // 尽量少留 2 血以下生物
                     foreach (Minion m in p.ownMinions)
                     {
-                        if (m.Hp < 3 && !m.divineshild)
+                        if (m.Hp < 3 && !m.divineShield)
                         {
                             pen -= m.Angr * 6;
                         }

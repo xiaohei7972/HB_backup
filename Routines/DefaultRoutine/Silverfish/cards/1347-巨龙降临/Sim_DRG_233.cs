@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
 			{
 				if(p.anyRaceCardInHand(CardDB.Race.DRAGON))
 				{
-					target.divineshild = true;
+					target.divineShield = true;
 				}
 			}
 		}

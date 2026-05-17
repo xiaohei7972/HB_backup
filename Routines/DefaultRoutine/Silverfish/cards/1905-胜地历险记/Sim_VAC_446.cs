@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,7 +20,7 @@ namespace HREngine.Bots
                 foreach (Minion minion in p.ownMinions)
                 {
                     // 排除当前的随从自身，并检查该随从是否未攻击
-                    if (minion.entitiyID != m.entitiyID && minion.numAttacksThisTurn == 0)
+                    if (minion.entityID != m.entityID && minion.numAttacksThisTurn == 0)
                     {
                         // 给未攻击的随从增加+2/+2
                         p.minionGetBuffed(minion, 2, 2);

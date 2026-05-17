@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +18,7 @@ namespace HREngine.Bots
                 List<Minion> temp = (turnEndOfOwner) ? p.ownMinions : p.enemyMinions;
                 foreach (Minion mnn in temp)
                 {
-                    if (mnn.name == CardDB.cardNameEN.echoingooze && triggerEffectMinion.entitiyID != mnn.entitiyID)
+                    if (mnn.name == CardDB.cardNameEN.echoingooze && triggerEffectMinion.entityID != mnn.entityID)
                     {
                         mnn.setMinionToMinion(triggerEffectMinion);
                         break;

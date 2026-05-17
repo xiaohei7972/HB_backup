@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
 			{
 				int damage = ownplay ? p.getSpellDamageDamage(3) : p.getEnemySpellDamageDamage(3);
 				// 对一个随从造成4点伤害
-				p.allMinionsGetDamage(damage, target.entitiyID);
+				p.allMinionsGetDamage(damage, target.entityID);
 			}
 
 		}

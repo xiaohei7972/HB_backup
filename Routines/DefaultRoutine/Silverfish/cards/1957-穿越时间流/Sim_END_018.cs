@@ -11,7 +11,25 @@ namespace HREngine.Bots
 	//<b>战吼：</b>将你手牌中一张随机卡牌的法力值消耗变为无穷大！<b>亡语：</b>将其变回原本消耗。
 	class Sim_END_018 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			if (own.own && p.owncards.Count > 0)
+			{
+				own.TAG_SCRIPT_DATA_NUM_1 = 0;
+				Handmanager.Handcard hc = p.owncards[0];
+				own.TAG_SCRIPT_DATA_NUM_1 = hc.card.cost;
+				hc.manacost = 99;
+			}
+		}
+
+		public override void onDeathrattle(Playfield p, Minion m)
+		{
+			if (m.own && p.owncards.Count > 0 && m.TAG_SCRIPT_DATA_NUM_1 > 0)
+			{
+				Handmanager.Handcard hc = p.owncards[0];
+				hc.manacost = m.TAG_SCRIPT_DATA_NUM_1;
+				m.TAG_SCRIPT_DATA_NUM_1 = 0;
+			}
+		}
 	}
 }

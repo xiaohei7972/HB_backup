@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace HREngine.Bots
 				p.minionGetBuffed(target, 1, 2);
 				foreach (Minion m in ownplay ? p.ownMinions : p.enemyMinions)
 				{
-					if (m.entitiyID == target.entitiyID) continue;
+					if (m.entityID == target.entityID) continue;
 					if (RaceUtils.MinionBelongsToRace(m.handcard.card.GetRaces(), races))
 						p.minionGetBuffed(m, 1, 2);
 				}

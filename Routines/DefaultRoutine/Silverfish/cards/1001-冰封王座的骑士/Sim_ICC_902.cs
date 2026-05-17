@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,13 +23,13 @@ namespace HREngine.Bots
             bool another = false;
             foreach (Minion m in p.ownMinions)
             {
-                if (m.name == CardDB.cardNameEN.mindbreaker && own.entitiyID != m.entitiyID) another = true;
+                if (m.name == CardDB.cardNameEN.mindbreaker && own.entityID != m.entityID) another = true;
             }
             if (!another)
             {
                 foreach (Minion m in p.enemyMinions)
                 {
-                    if (m.name == CardDB.cardNameEN.mindbreaker && own.entitiyID != m.entitiyID) another = true;
+                    if (m.name == CardDB.cardNameEN.mindbreaker && own.entityID != m.entityID) another = true;
                 }
             }
             if (!another)

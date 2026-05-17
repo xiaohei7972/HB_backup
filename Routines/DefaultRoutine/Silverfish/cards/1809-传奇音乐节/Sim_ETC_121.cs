@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace HREngine.Bots
 			if (own.own)
 			{
 				List<CardDB.Race> races = new List<CardDB.Race>();
-				foreach (Handmanager.Handcard hc in p.owncards)
+				foreach (Handmanager.Handcard hc in p.owncards.ToArray())
 				{
 					foreach (CardDB.Race race in hc.card.GetRaces())
 					{
@@ -42,3 +42,4 @@ namespace HREngine.Bots
 
 	}
 }
+

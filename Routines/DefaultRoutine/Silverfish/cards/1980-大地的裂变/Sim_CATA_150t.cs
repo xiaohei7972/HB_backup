@@ -4,14 +4,24 @@ using System.Text;
 
 namespace HREngine.Bots
 {
-	//随从 战士 费用：1 攻击力：2 生命值：1
-	//Hand of Ragnaros
+	//中立 战士 费用：1 攻击力：2 生命值：1
+	//Hand of Ragnaros (Colossal appendage)
 	//拉格纳罗斯之手
-	//[x]<b>Deathrattle:</b> Deal {0} damageto a random enemy.<i><b>Herald</b> twice to upgrade.</i>@[x]<b>Deathrattle:</b> Deal {0} damageto a random enemy.<i><b>Herald</b> once to upgrade.</i>@[x]<b>Deathrattle:</b> Deal {0} damageto a random enemy.
-	//<b>亡语：</b>随机对一个敌人造成{0}点伤害。<i><b>兆示</b>两次后升级。</i>@<b>亡语：</b>随机对一个敌人造成{0}点伤害。<i><b>兆示</b>一次后升级。</i>@<b>亡语：</b>随机对一个敌人造成{0}点伤害。
+	//Deathrattle: Deal 2 damage to a random enemy.
+	//亡语：对一个随机敌人造成2点伤害。
 	class Sim_CATA_150t : SimTemplate
 	{
-		
-		
+		public override void onDeathrattle(Playfield p, Minion m)
+		{
+			if (p.enemyMinions.Count > 0)
+			{
+				Minion target = p.enemyMinions[0];
+				p.minionGetDamageOrHeal(target, 2);
+			}
+			else
+			{
+				p.minionGetDamageOrHeal(p.enemyHero, 2);
+			}
+		}
 	}
 }

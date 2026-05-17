@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
         public override void onCardPlay(Playfield p, bool ownplay, Minion target, int choice, Handmanager.Handcard hc)
         {
             // 检查目标随从是否具有圣盾
-            if (target != null && target.divineshild)
+            if (target != null && target.divineShield)
             {
                 // 给目标随从+2攻击力和+3生命值
                 p.minionGetBuffed(target, 2, 3);

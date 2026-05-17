@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -513,7 +513,7 @@ namespace HREngine.Bots
             //             this.minionGetDamageOrHeal(mTarget, 3, true);
             //             break;
             //         case CardDB.cardNameEN.fjolalightbane:
-            //             target.divineshild = true;
+            //             target.divineShield = true;
             //             break;
             //         default:
             //             break;
@@ -623,10 +623,10 @@ namespace HREngine.Bots
                 cardClass = hc.card.KeepHeroClass == 1 ? this.ownHeroStartClass : (TAG_CLASS)hc.card.Class,
                 own = true,
                 isHero = true,
-                entitiyID = hc.entity,
+                entityID = hc.entity,
                 // playedThisTurn = true,
                 // numAttacksThisTurn = 0,
-                divineshild = ownHero.divineshild,
+                divineShield = ownHero.divineShield,
                 lifesteal = ownHero.lifesteal,
                 // stealth = ownHero.stealth,
                 name = hc.card.nameEN,

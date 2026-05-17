@@ -11,7 +11,9 @@ namespace HREngine.Bots
 	//<b>休眠</b>5回合。<b>突袭</b>。在你使用一张最新扩展包的牌后，提前1回合唤醒。
 	class Sim_TIME_063 : SimTemplate
 	{
-		
-		
+		public override void getBattlecryEffect(Playfield p, Minion own, Minion target, int choice)
+		{
+			own.dormant = 5;
+		}
 	}
 }

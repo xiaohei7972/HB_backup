@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +15,7 @@ namespace HREngine.Bots
             {
                 foreach (Minion m in p.ownMinions)
                 {
-                    if (m.entitiyID == triggerEffectMinion.entitiyID) continue;
+                    if (m.entityID == triggerEffectMinion.entityID) continue;
                     if (m.playedThisTurn || m.playedPrevTurn)
                     {
                         if (PenalityManager.Instance.ownSummonFromDeathrattle.ContainsKey(m.name)) continue;
